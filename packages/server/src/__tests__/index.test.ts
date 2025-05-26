@@ -31,7 +31,7 @@ describe('@mcp-ui/server', () => {
 
     it('should create a text-based external URL resource', () => {
       const options = {
-        uri: 'ui-app://test-url',
+        uri: 'ui://test-url',
         content: {
           type: 'externalUrl' as const,
           iframeUrl: 'https://example.com',
@@ -39,14 +39,15 @@ describe('@mcp-ui/server', () => {
         delivery: 'text' as const,
       };
       const resource = createHtmlResource(options);
-      expect(resource.resource.uri).toBe('ui-app://test-url');
+      expect(resource.resource.uri).toBe('ui://test-url');
+      expect(resource.resource.mimeType).toBe('text/uri-list');
       expect(resource.resource.text).toBe('https://example.com');
       expect(resource.resource.blob).toBeUndefined();
     });
 
     it('should create a blob-based external URL resource', () => {
       const options = {
-        uri: 'ui-app://test-url-blob',
+        uri: 'ui://test-url-blob',
         content: {
           type: 'externalUrl' as const,
           iframeUrl: 'https://example.com/blob',
@@ -54,8 +55,23 @@ describe('@mcp-ui/server', () => {
         delivery: 'blob' as const,
       };
       const resource = createHtmlResource(options);
+      expect(resource.resource.mimeType).toBe('text/uri-list');
       expect(resource.resource.blob).toBe(
         Buffer.from('https://example.com/blob').toString('base64'),
+      );
+      expect(resource.resource.text).toBeUndefined();
+    });
+
+    it('should create a blob-based direct HTML resource with correct mimetype', () => {
+      const options = {
+        uri: 'ui://test-html-blob',
+        content: { type: 'rawHtml' as const, htmlString: '<h1>Blob</h1>' },
+        delivery: 'blob' as const,
+      };
+      const resource = createHtmlResource(options);
+      expect(resource.resource.mimeType).toBe('text/html');
+      expect(resource.resource.blob).toBe(
+        Buffer.from('<h1>Blob</h1>').toString('base64'),
       );
       expect(resource.resource.text).toBeUndefined();
     });
@@ -81,7 +97,7 @@ describe('@mcp-ui/server', () => {
         delivery: 'text' as const,
       };
       expect(() => createHtmlResource(options)).toThrow(
-        "MCP SDK: URI must start with 'ui-app://' when content.type is 'externalUrl'.",
+        "MCP SDK: URI must start with 'ui://' when content.type is 'externalUrl'.",
       );
     });
   });

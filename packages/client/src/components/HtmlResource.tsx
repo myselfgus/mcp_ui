@@ -32,41 +32,63 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
       setIframeSrc(null);
       setIframeRenderMode('srcDoc'); // Default to srcDoc
 
-      if (resource.mimeType !== 'text/html') {
-        setError('Resource is not of type text/html.');
+      if (resource.mimeType !== 'text/html' && resource.mimeType !== 'text/uri-list') {
+        setError('Resource must be of type text/html (for HTML content) or text/uri-list (for URL content).');
         setIsLoading(false);
         return;
       }
 
-      if (resource.uri?.startsWith('ui-app://')) {
+      if (resource.mimeType === 'text/uri-list') {
+        // Handle URL content (external apps)
+        // Note: While text/uri-list format supports multiple URLs, MCP-UI requires a single URL.
+        // If multiple URLs are provided, only the first will be used and others will be logged as warnings.
         setIframeRenderMode('src');
+        let urlContent = '';
+        
         if (typeof resource.text === 'string' && resource.text.trim() !== '') {
-          setIframeSrc(resource.text);
+          urlContent = resource.text;
         } else if (typeof resource.blob === 'string') {
           try {
-            const decodedUrl = new TextDecoder().decode(
+            urlContent = new TextDecoder().decode(
               Uint8Array.from(atob(resource.blob), (c) => c.charCodeAt(0)),
             );
-            if (decodedUrl.trim() !== '') {
-              setIframeSrc(decodedUrl);
-            } else {
-              setError('Decoded blob for ui-app:// URL is empty.');
-            }
           } catch (e) {
-            console.error('Error decoding base64 blob for ui-app URL:', e);
-            setError('Error decoding URL from blob for ui-app://.');
+            console.error('Error decoding base64 blob for URL content:', e);
+            setError('Error decoding URL from blob.');
+            setIsLoading(false);
+            return;
           }
         } else {
           setError(
-            'ui-app:// resource expects a non-empty text or blob field containing the URL.',
+            'URL resource expects a non-empty text or blob field containing the URL.',
           );
+          setIsLoading(false);
+          return;
         }
-      } else if (
-        resource.uri?.startsWith('ui://') ||
-        (!resource.uri &&
-          (typeof resource.text === 'string' ||
-            typeof resource.blob === 'string'))
-      ) {
+
+        if (urlContent.trim() === '') {
+          setError('URL content is empty.');
+          setIsLoading(false);
+          return;
+        }
+
+        // Parse uri-list format: URIs separated by newlines, comments start with #
+        // MCP-UI requires a single URL - if multiple are found, use first and warn about others
+        const lines = urlContent.split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('#'));
+        
+        if (lines.length === 0) {
+          setError('No valid URLs found in uri-list content.');
+          setIsLoading(false);
+          return;
+        }
+
+        if (lines.length > 1) {
+          console.warn(`Multiple URLs found in uri-list content. Using the first URL: "${lines[0]}". Other URLs ignored:`, lines.slice(1));
+        }
+
+        setIframeSrc(lines[0]);
+      } else if (resource.mimeType === 'text/html') {
+        // Handle HTML content
         setIframeRenderMode('srcDoc');
         if (typeof resource.text === 'string') {
           setHtmlString(resource.text);
@@ -80,15 +102,12 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
             console.error('Error decoding base64 blob for HTML content:', e);
             setError('Error decoding HTML content from blob.');
           }
-        } else if (resource.uri?.startsWith('ui://')) {
-          // This case implies uri is 'ui://' but no text AND no blob.
-          setError('ui:// HTML resource requires text or blob content.');
+        } else {
+          setError('HTML resource requires text or blob content.');
         }
-        // If !resource.uri, the outer condition ensures text or blob is present.
       } else {
-        // MimeType is text/html, but no uri, or URI schema not handled, and no direct text/blob.
         setError(
-          'HTML resource has no suitable content (text, blob, or interpretable URI).',
+          'Unsupported mimeType. Expected text/html or text/uri-list.',
         );
       }
       setIsLoading(false);

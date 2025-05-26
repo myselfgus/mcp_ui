@@ -155,7 +155,7 @@ export class MyMCP extends McpAgent {
 
         // Generate a unique URI for this specific invocation of the file picker UI.
         // This URI identifies the resource block itself, not the content of the iframe.
-        const uniqueUiAppUri = `ui-app://task-manager/${Date.now()}`;
+        const uniqueUiAppUri = `ui://task-manager/${Date.now()}`;
         const resourceBlock = createHtmlResource({
           uri: uniqueUiAppUri,
           content: { type: 'externalUrl', iframeUrl: pickerPageUrl },
@@ -181,7 +181,7 @@ export class MyMCP extends McpAgent {
 
         // Generate a unique URI for this specific invocation of the file picker UI.
         // This URI identifies the resource block itself, not the content of the iframe.
-        const uniqueUiAppUri = `ui-app://user-profile/${Date.now()}`;
+        const uniqueUiAppUri = `ui://user-profile/${Date.now()}`;
         const resourceBlock = createHtmlResource({
           uri: uniqueUiAppUri,
           content: { type: 'externalUrl', iframeUrl: pickerPageUrl },

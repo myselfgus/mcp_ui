@@ -1,6 +1,6 @@
 # @mcp-ui/client Usage & Examples
 
-Here’s how to use the `<HtmlResource />` component from `@mcp-ui/client`.
+Here's how to use the `<HtmlResource />` component from `@mcp-ui/client`.
 
 ## Installation
 
@@ -42,8 +42,8 @@ const fetchMcpResource = async (id: string): Promise<HtmlResource> => {
     return {
       type: 'resource',
       resource: {
-        uri: 'ui-app://example/external-site',
-        mimeType: 'text/html',
+        uri: 'ui://example/external-site',
+        mimeType: 'text/uri-list',
         text: 'https://vitepress.dev',
       },
     };
@@ -125,4 +125,4 @@ export default App;
 
 ---
 
-That’s it! Just use `<HtmlResource />` with the right props and you’re ready to render interactive HTML from MCP resources in your React app. If you need more details, check out the [HtmlResource Component](./html-resource.md) page.
+That's it! Just use `<HtmlResource />` with the right props and you're ready to render interactive HTML from MCP resources in your React app. If you need more details, check out the [HtmlResource Component](./html-resource.md) page.
