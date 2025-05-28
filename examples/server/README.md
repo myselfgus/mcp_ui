@@ -111,8 +111,8 @@ yarn add @mcp-ui/server @mcp-ui/client
        return (
          <HtmlResource
            resource={mcpResource.resource}
-           onUiAction={(tool, params) => {
-             console.log('Action:', tool, params);
+           onUiAction={(result) => {
+             console.log('Action:', result);
              return { status: 'ok' };
            }}
          />

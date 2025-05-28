@@ -4,7 +4,13 @@
  */
 
 // Import types first
-import { CreateHtmlResourceOptions } from './types.js';
+import {
+  CreateHtmlResourceOptions,
+  UiActionResult,
+  UiActionResultLink,
+  UiActionResultPrompt,
+  UiActionResultToolCall,
+} from './types.js';
 
 export interface HtmlResourceBlock {
   type: 'resource';
@@ -133,4 +139,44 @@ export function escapeAttribute(unsafe: string): string {
 export type {
   CreateHtmlResourceOptions as CreateResourceOptions,
   ResourceContentPayload,
+  UiActionResult,
 } from './types.js';
+
+export function postUiActionResult(result: UiActionResult): void {
+  if (window.parent) {
+    window.parent.postMessage(result, '*');
+  }
+}
+
+export function uiActionResultToolCall(
+  toolName: string,
+  params: Record<string, unknown>,
+): UiActionResultToolCall {
+  return {
+    type: 'tool',
+    payload: {
+      toolName,
+      params,
+    },
+  };
+}
+
+export function uiActionResultPrompt(
+  prompt: string,
+): UiActionResultPrompt {
+  return {
+    type: 'prompt',
+    payload: {
+      prompt,
+    },
+  };
+}
+
+export function uiActionResultLink(url: string): UiActionResultLink {
+  return {
+    type: 'link',
+    payload: {
+      url,
+    },
+  };
+}
