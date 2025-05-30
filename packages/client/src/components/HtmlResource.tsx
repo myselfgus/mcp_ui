@@ -32,13 +32,17 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
       setIframeSrc(null);
       setIframeRenderMode('srcDoc'); // Default to srcDoc
 
-      if (resource.mimeType !== 'text/html' && resource.mimeType !== 'text/uri-list') {
+      // Backwards compatibility: if URI starts with ui-app://, treat as URL content
+      const isLegacyExternalApp = typeof resource.uri === 'string' && resource.uri.startsWith('ui-app://');
+      const effectiveMimeType = isLegacyExternalApp ? 'text/uri-list' : resource.mimeType;
+
+      if (effectiveMimeType !== 'text/html' && effectiveMimeType !== 'text/uri-list') {
         setError('Resource must be of type text/html (for HTML content) or text/uri-list (for URL content).');
         setIsLoading(false);
         return;
       }
 
-      if (resource.mimeType === 'text/uri-list') {
+      if (effectiveMimeType === 'text/uri-list') {
         // Handle URL content (external apps)
         // Note: While text/uri-list format supports multiple URLs, MCP-UI requires a single URL.
         // If multiple URLs are provided, only the first will be used and others will be logged as warnings.
@@ -87,7 +91,12 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
         }
 
         setIframeSrc(lines[0]);
-      } else if (resource.mimeType === 'text/html') {
+
+        // Log backwards compatibility usage
+        if (isLegacyExternalApp) {
+          console.warn(`Detected legacy ui-app:// URI: "${resource.uri}". Update server to use ui:// with mimeType: 'text/uri-list' for future compatibility.`);
+        }
+      } else if (effectiveMimeType === 'text/html') {
         // Handle HTML content
         setIframeRenderMode('srcDoc');
         if (typeof resource.text === 'string') {

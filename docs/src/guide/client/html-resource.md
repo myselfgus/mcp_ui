@@ -74,6 +74,26 @@ function App({ mcpResource }) {
 
 This pattern allows the `HtmlResource` component to handle mimeType-based rendering internally, making your code more future-proof as new content types (like `application/javascript`) are added.
 
+## Backwards Compatibility
+
+The `HtmlResource` component maintains backwards compatibility with the legacy `ui-app://` URI scheme:
+
+- **Legacy Support**: Resources with `ui-app://` URIs are automatically treated as URL content (equivalent to `mimeType: 'text/uri-list'`) even when they have the historically incorrect `mimeType: 'text/html'`
+- **Automatic Detection**: The component detects legacy URIs and processes them correctly without requiring code changes
+- **MimeType Override**: Ignores the incorrect `text/html` mimeType and treats content as URLs
+- **Migration Encouragement**: A warning is logged when legacy URIs are detected, encouraging server updates
+- **Seamless Transition**: Existing clients continue working with older servers during migration periods
+
+### Legacy URI Handling
+
+```tsx
+// Both patterns work identically:
+// Legacy (automatically detected and corrected):
+<HtmlResource resource={{ uri: 'ui-app://widget/123', mimeType: 'text/html', text: 'https://example.com/widget' }} />
+// Modern (recommended):
+<HtmlResource resource={{ uri: 'ui://widget/123', mimeType: 'text/uri-list', text: 'https://example.com/widget' }} />
+```
+
 ## Security Notes
 
 - **`sandbox` attribute**: Restricts what the iframe can do. `allow-scripts` is needed for interactivity. `allow-same-origin` is external apps. Caution - the external app method isn's not a secure way to render untrusted code. We're working on new methods to alleviate security concerns.
