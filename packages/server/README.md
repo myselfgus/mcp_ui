@@ -44,10 +44,10 @@ The primary payload exchanged between the server and the client:
 interface HtmlResourceBlock {
   type: 'resource';
   resource: {
-    uri: string;       // e.g. "ui://component/id"instance"
-    mimeType: 'text/html' | 'text/uri-list'; // text/html for HTML content (), text/uri-list for URL content
+    uri: string;       // e.g. "ui://component/id"
+    mimeType: 'text/html' | 'text/uri-list'; // text/html for HTML content, text/uri-list for URL content
     text?: string;      // Inline HTML or external URL
-    blob?: string;      // Base64-encoded HTML or URL (for large payloads)
+    blob?: string;      // Base64-encoded HTML or URL
   };
 }
 ```
