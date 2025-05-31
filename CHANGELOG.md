@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/idosal/mcp-ui/compare/v2.0.0...v2.1.0) (2025-05-31)
+
+
+### Features
+
+* consolidate ui:// and ui-app:// ([#8](https://github.com/idosal/mcp-ui/issues/8)) ([2e08035](https://github.com/idosal/mcp-ui/commit/2e08035676bb6a46ef3c94dba916bc895f1fa3cc))
+
 # [2.0.0](https://github.com/idosal/mcp-ui/compare/v1.1.0...v2.0.0) (2025-05-23)
 
 

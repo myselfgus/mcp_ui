@@ -6,31 +6,32 @@
 </p>
 
 <p align="center">
-  <a href="#-what-is-mcp-ui">What Is `mcp-ui`</a> •
+  <a href="#-what-is-mcp-ui">What's mcp-ui?</a> •
   <a href="#-installation">Installation</a> •
   <a href="#-quickstart">Quickstart</a> •
   <a href="#-core-concepts">Core Concepts</a> •
-  <a href="#-example-server">Example Implementation</a> •
+  <a href="#-examples">Examples</a> •
   <a href="#-roadmap">Roadmap</a> •
   <a href="#-contributing">Contributing</a> •
   <a href="#-license">License</a>
 </p>
 
+----
 
-**`mcp-ui`** brings interactive web components to your [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP) workflow. Build on the server, render on the client — let your MCP server deliver dynamic HTML resources out of the box.
+**`mcp-ui`** brings interactive web components to the [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP). Deliver rich, dynamic UI resources directly from your MCP server to be rendered by the client. Take AI interaction to the next level!
 
 > *This project is an experimental playground for MCP UI ideas. Expect rapid iteration and community-driven enhancements!*
 
 <video src="https://github.com/user-attachments/assets/51f7c712-8133-4d7c-86d3-fdca550b9767"></video>
 
-## 💡 What Is `mcp-ui`?
+## 💡 What's `mcp-ui`?
 
 `mcp-ui` is a TypeScript SDK comprising two packages:
 
 * **`@mcp-ui/server`**: Utilities to generate `HtmlResourceBlock` objects on your MCP server.
 * **`@mcp-ui/client`**: UI components (e.g., `<HtmlResource />`) to render those blocks in the browser and handle their events.
 
-Together, they let you define reusable HTML resource blocks on the server side and seamlessly display them and react to their actions in any MCP host environment.
+Together, they let you define reusable UI resource blocks on the server side, seamlessly display them in the client, and react to their actions in the MCP host environment.
 
 
 ## ✨ Core Concepts
@@ -43,18 +44,18 @@ The primary payload exchanged between the server and the client:
 interface HtmlResourceBlock {
   type: 'resource';
   resource: {
-    uri: string;       // e.g. "ui://component/id" or "ui-app://app/instance"
-    mimeType: 'text/html';
+    uri: string;       // e.g. "ui://component/id"
+    mimeType: 'text/html' | 'text/uri-list'; // text/html for HTML content, text/uri-list for URL content
     text?: string;      // Inline HTML or external URL
-    blob?: string;      // Base64-encoded HTML or URL (for large payloads)
+    blob?: string;      // Base64-encoded HTML or URL
   };
 }
 ```
 
 * **`uri`**: Unique identifier for caching and routing
-  * `ui://…` — self-contained HTML (rendered via `<iframe srcDoc>`)
-  * `ui-app://…` — external app/site (rendered via `<iframe src>`)
-* **`mimeType`**: Always `text/html`
+  * `ui://…` — UI resources (rendering method determined by mimeType)
+* **`mimeType`**: `text/html` for HTML content (iframe srcDoc), `text/uri-list` for URL content (iframe src)
+  * **MCP-UI requires a single URL**: While `text/uri-list` format supports multiple URLs, MCP-UI uses only the first valid URL and logs others
 * **`text` vs. `blob`**: Choose `text` for simple strings; use `blob` for larger or encoded content.
 
 It's rendered in the client with the `<HtmlResource>` React component.
@@ -70,6 +71,9 @@ UI blocks must be able to interact with the agent. In `mcp-ui`, this is done by 
 ```bash
 # using npm
 npm install @mcp-ui/server @mcp-ui/client
+
+# or pnpm
+pnpm add @mcp-ui/server @mcp-ui/client
 
 # or yarn
 yarn add @mcp-ui/server @mcp-ui/client
@@ -91,7 +95,7 @@ yarn add @mcp-ui/server @mcp-ui/client
 
    // External URL
    const external = createHtmlResource({
-     uri: 'ui-app://widget/session-42',
+     uri: 'ui://widget/session-42',
      content: { type: 'externalUrl', iframeUrl: 'https://example.com/widget' },
      delivery: 'text',
    });
@@ -106,7 +110,7 @@ yarn add @mcp-ui/server @mcp-ui/client
    function App({ mcpResource }) {
      if (
        mcpResource.type === 'resource' &&
-       mcpResource.resource.mimeType === 'text/html'
+       mcpResource.resource.uri?.startsWith('ui://')
      ) {
        return (
          <HtmlResource
@@ -124,13 +128,14 @@ yarn add @mcp-ui/server @mcp-ui/client
 
 3. **Enjoy** interactive MCP UIs — no extra configuration required.
 
-## 🌍 Example implementation
+## 🌍 Examples
 
 **Client example**
-https://github.com/modelcontextprotocol/inspector/pull/413
+* [ui-inspector](https://github.com/idosal/ui-inspector) - inspect local `mcp-ui`-enabled servers. Check out the [hosted version](https://scira-mcp-chat-git-main-idosals-projects.vercel.app/)!
+* [MCP-UI Chat](https://github.com/idosal/scira-mcp-ui-chat) - interactive chat built with the `mcp-ui` client.
 
 **Server example**
-Try out the hosted app at -
+Try out the hosted app -
 * **HTTP Streaming**: `https://remote-mcp-server-authless.idosalomon.workers.dev/mcp`
 * **SSE**: `https://remote-mcp-server-authless.idosalomon.workers.dev/sse`
 
@@ -138,16 +143,19 @@ The app is deployed from `examples/server`.
 
 Drop those URLs into any MCP-compatible host to see `mcp-ui` in action.
 
+
 ## 🛣️ Roadmap
 
-- [ ] Support new SSR methods (e.g., RSC)
-- [ ] Support additional client-side libraries
-- [ ] Expand UI Action API
+- [X] Add online playground
+- [ ] Support React Server Components
+- [ ] Support Remote-DOM
+- [ ] Support additional client-side libraries (e.g., Vue)
+- [ ] Expand UI Action API (beyond tool calls)
 - [ ] Do more with Resources and Sampling
 
 ## 🤝 Contributing
 
-Contributions, ideas, and bug reports are welcome! See our [contribution guidelines](https://github.com/idosal/mco-ui/blob/main/.github/CONTRIBUTING.md) to get started.
+Contributions, ideas, and bug reports are welcome! See the [contribution guidelines](https://github.com/idosal/mcp-ui/blob/main/.github/CONTRIBUTING.md) to get started.
 
 
 ## 📄 License
@@ -156,4 +164,4 @@ Apache License 2.0 © [The MCP UI Authors](LICENSE)
 
 ## Disclaimer
 
-This project is provided “as is”, without warranty of any kind. The `mcp-ui` authors and contributors shall not be held liable for any damages, losses, or issues arising from the use of this software. Use at your own risk.
+This project is provided "as is", without warranty of any kind. The `mcp-ui` authors and contributors shall not be held liable for any damages, losses, or issues arising from the use of this software. Use at your own risk.

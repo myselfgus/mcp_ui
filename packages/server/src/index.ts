@@ -17,10 +17,10 @@ import {
 export interface HtmlResourceBlock {
   type: 'resource';
   resource: {
-    uri: string; // Primary identifier. Starts with "ui://" or "ui-app://"
-    mimeType: 'text/html'; // Always text/html
-    text?: string; // HTML content if uri starts with "ui://", or iframe URL if uri starts with "ui-app://"
-    blob?: string; // Base64 encoded HTML content if uri starts with "ui://", or iframe URL if uri starts with "ui-app://"
+    uri: string; // Primary identifier. Starts with "ui://"
+    mimeType: 'text/html' | 'text/uri-list'; // text/html for rawHtml content, text/uri-list for externalUrl content
+    text?: string; // HTML content (for mimeType `text/html`), or iframe URL (for mimeType `text/uri-list`)
+    blob?: string; // Base64 encoded HTML content (for mimeType `text/html`), or iframe URL (for mimeType `text/uri-list`)
   };
 }
 
@@ -68,6 +68,7 @@ export function createHtmlResource(
   options: CreateHtmlResourceOptions,
 ): HtmlResourceBlock {
   let actualContentString: string;
+  let mimeType: 'text/html' | 'text/uri-list';
 
   if (options.content.type === 'rawHtml') {
     if (!options.uri.startsWith('ui://')) {
@@ -81,10 +82,11 @@ export function createHtmlResource(
         "MCP SDK: content.htmlString must be provided as a string when content.type is 'rawHtml'.",
       );
     }
+    mimeType = 'text/html';
   } else if (options.content.type === 'externalUrl') {
-    if (!options.uri.startsWith('ui-app://')) {
+    if (!options.uri.startsWith('ui://')) {
       throw new Error(
-        "MCP SDK: URI must start with 'ui-app://' when content.type is 'externalUrl'.",
+        "MCP SDK: URI must start with 'ui://' when content.type is 'externalUrl'.",
       );
     }
     actualContentString = options.content.iframeUrl;
@@ -93,6 +95,7 @@ export function createHtmlResource(
         "MCP SDK: content.iframeUrl must be provided as a string when content.type is 'externalUrl'.",
       );
     }
+    mimeType = 'text/uri-list';
   } else {
     // This case should ideally be prevented by TypeScript's discriminated union checks
     const exhaustiveCheckContent: never = options.content;
@@ -103,7 +106,7 @@ export function createHtmlResource(
 
   const resource: HtmlResourceBlock['resource'] = {
     uri: options.uri,
-    mimeType: 'text/html',
+    mimeType: mimeType,
   };
 
   switch (options.delivery) {

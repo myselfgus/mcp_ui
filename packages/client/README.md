@@ -44,8 +44,8 @@ The primary payload exchanged between the server and the client:
 interface HtmlResourceBlock {
   type: 'resource';
   resource: {
-    uri: string;       // e.g. "ui://component/id" or "ui-app://app/instance"
-    mimeType: 'text/html';
+    uri: string;       // e.g. "ui://component/id"
+    mimeType: 'text/html' | 'text/uri-list'; // text/html for HTML content, text/uri-list for URL content
     text?: string;      // Inline HTML or external URL
     blob?: string;      // Base64-encoded HTML or URL (for large payloads)
   };
@@ -53,9 +53,9 @@ interface HtmlResourceBlock {
 ```
 
 * **`uri`**: Unique identifier for caching and routing
-  * `ui://…` — self-contained HTML (rendered via `<iframe srcDoc>`)
-  * `ui-app://…` — external app/site (rendered via `<iframe src>`)
-* **`mimeType`**: Always `text/html`
+  * `ui://…` — UI resources (rendering method determined by mimeType)
+* **`mimeType`**: `text/html` for HTML content (iframe srcDoc), `text/uri-list` for URL content (iframe src)
+  * **MCP-UI requires a single URL**: While `text/uri-list` format supports multiple URLs, MCP-UI uses only the first valid URL and logs others
 * **`text` vs. `blob`**: Choose `text` for simple strings; use `blob` for larger or encoded content.
 
 It's rendered in the client with the `<HtmlResource>` React component.
@@ -95,7 +95,7 @@ yarn add @mcp-ui/server @mcp-ui/client
 
    // External URL
    const external = createHtmlResource({
-     uri: 'ui-app://widget/session-42',
+     uri: 'ui://widget/session-42',
      content: { type: 'externalUrl', iframeUrl: 'https://example.com/widget' },
      delivery: 'text',
    });
@@ -110,7 +110,7 @@ yarn add @mcp-ui/server @mcp-ui/client
    function App({ mcpResource }) {
      if (
        mcpResource.type === 'resource' &&
-       mcpResource.resource.mimeType === 'text/html'
+       mcpResource.resource.uri?.startsWith('ui://')
      ) {
        return (
          <HtmlResource
@@ -146,14 +146,16 @@ Drop those URLs into any MCP-compatible host to see `mcp-ui` in action.
 
 ## 🛣️ Roadmap
 
-- [ ] Support new SSR methods (e.g., RSC)
-- [ ] Support additional client-side libraries
-- [ ] Expand UI Action API
+- [X] Add online playground
+- [ ] Support React Server Components
+- [ ] Support Remote-DOM
+- [ ] Support additional client-side libraries (e.g., Vue)
+- [ ] Expand UI Action API (beyond tool calls)
 - [ ] Do more with Resources and Sampling
 
 ## 🤝 Contributing
 
-Contributions, ideas, and bug reports are welcome! See the [contribution guidelines](https://github.com/idosal/mco-ui/blob/main/.github/CONTRIBUTING.md) to get started.
+Contributions, ideas, and bug reports are welcome! See the [contribution guidelines](https://github.com/idosal/mcp-ui/blob/main/.github/CONTRIBUTING.md) to get started.
 
 
 ## 📄 License
@@ -162,4 +164,4 @@ Apache License 2.0 © [The MCP UI Authors](LICENSE)
 
 ## Disclaimer
 
-This project is provided “as is”, without warranty of any kind. The `mcp-ui` authors and contributors shall not be held liable for any damages, losses, or issues arising from the use of this software. Use at your own risk.
+This project is provided "as is", without warranty of any kind. The `mcp-ui` authors and contributors shall not be held liable for any damages, losses, or issues arising from the use of this software. Use at your own risk.
