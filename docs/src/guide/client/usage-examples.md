@@ -82,6 +82,12 @@ const App: React.FC = () => {
     } else if (result.type === 'link') {
       console.log(`Link received in host app:`, result.payload.url);
       setLastAction({ url: result.payload.url });
+    } else if (result.type === 'intent') {
+      console.log(`Intent received in host app:`, result.payload.intent);
+      setLastAction({ intent: result.payload.intent });
+    } else if (result.type === 'notification') {
+      console.log(`Notification received in host app:`, result.payload.message);
+      setLastAction({ message: result.payload.message });
     }
     return {
       status: 'Action handled by host application',

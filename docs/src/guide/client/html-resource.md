@@ -10,21 +10,20 @@ import type { Resource } from '@modelcontextprotocol/sdk/types';
 export interface HtmlResourceProps {
   resource: Partial<Resource>;
   onUiAction?: (result: UiActionResult) => Promise<any>;
-  onUiActionResultToolCall?: (
-    toolName: string,
-    params: Record<string, unknown>,
-  ) => Promise<unknown>;
-  onUiActionResultPrompt?: (prompt: string) => Promise<unknown>;
-  onUiActionResultLink?: (url: string) => Promise<unknown>;
   style?: React.CSSProperties;
 }
 ```
 
 - **`resource`**: The resource object from an `HtmlResourceBlock`. It should include `uri`, `mimeType`, and either `text` or `blob`.
-- **`onUiAction`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like `{ type: 'tool' | 'prompt' | 'link', payload: { toolName?: string, prompt?: string, url?: string } }`. If you don't provide a callback for a specific type, the default handler will be used.
-- **`onUiActionResultToolCall`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like `{ type: 'tool', payload: { toolName: string, params: Record<string, unknown> } }`.
-- **`onUiActionResultPrompt`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like `{ type: 'prompt', payload: { prompt: string } }`.
-- **`onUiActionResultLink`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like `{ type: 'link', payload: { url: string } }`.
+- **`onUiAction`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like:
+  ```typescript
+  { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
+  { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
+  { type: 'prompt', payload: { prompt: string } } |
+  { type: 'notification', payload: { message: string } } |
+  { type: 'link', payload: { url: string } } |
+  ```
+  If you don't provide a callback for a specific type, the default handler will be used.
 - **`style`** (optional): Custom styles for the iframe.
 
 ## How It Works

@@ -9,7 +9,7 @@ export interface CreateHtmlResourceOptions {
   delivery: 'text' | 'blob'; // REQUIRED. How the content string (htmlString or iframeUrl) should be packaged.
 }
 
-export type UiActionType = 'tool' | 'prompt' | 'link';
+export type UiActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notification';
 
 export type UiActionResultToolCall = {
   type: 'tool';
@@ -33,7 +33,24 @@ export type UiActionResultLink = {
   };
 };
 
+export type UiActionResultIntent = {
+  type: 'intent';
+  payload: {
+    intent: string;
+    params: Record<string, unknown>;
+  };
+};
+
+export type UiActionResultNotification = {
+  type: 'notification';
+  payload: {
+    message: string;
+  };
+};
+
 export type UiActionResult =
   | UiActionResultToolCall
   | UiActionResultPrompt
-  | UiActionResultLink;
+  | UiActionResultLink
+  | UiActionResultIntent
+  | UiActionResultNotification;

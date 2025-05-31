@@ -5,21 +5,12 @@ import { UiActionResult } from '../types';
 export interface RenderHtmlResourceProps {
   resource: Partial<Resource>;
   onUiAction?: (result: UiActionResult) => Promise<unknown>;
-  onUiActionResultToolCall?: (
-    toolName: string,
-    params: Record<string, unknown>,
-  ) => Promise<unknown>;
-  onUiActionResultPrompt?: (prompt: string) => Promise<unknown>;
-  onUiActionResultLink?: (url: string) => Promise<unknown>;
   style?: React.CSSProperties;
 }
 
 export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
   resource,
   onUiAction,
-  onUiActionResultToolCall,
-  onUiActionResultPrompt,
-  onUiActionResultLink,
   style,
 }) => {
   const [htmlString, setHtmlString] = useState<string | null>(null);
@@ -115,30 +106,7 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
         if (!uiActionResult) {
           return;
         }
-        const { type, payload } = uiActionResult;
-        let resultHandled: Promise<unknown> | undefined;
-        switch (type) {
-          case 'tool':
-            resultHandled = onUiActionResultToolCall?.(
-              payload.toolName,
-              payload.params,
-            );
-            break;
-          case 'prompt':
-            resultHandled = onUiActionResultPrompt?.(payload.prompt);
-            break;
-          case 'link':
-            resultHandled = onUiActionResultLink?.(payload.url);
-            break;
-          default:
-            console.error('Unknown UI action type');
-            break;
-        }
-        // If no handler is provided, use the default handler.
-        if (!resultHandled) {
-          resultHandled = onUiAction?.(uiActionResult);
-        }
-        resultHandled?.catch((err) => {
+        onUiAction?.(uiActionResult)?.catch((err) => {
           console.error(
             'Error handling UI action result in RenderHtmlResource:',
             err,
@@ -148,12 +116,7 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
     }
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [
-    onUiAction,
-    onUiActionResultToolCall,
-    onUiActionResultPrompt,
-    onUiActionResultLink,
-  ]);
+  }, [onUiAction]);
 
   if (isLoading) return <p>Loading HTML content...</p>;
   if (error) return <p className="text-red-500">{error}</p>;

@@ -8,7 +8,9 @@ import {
   CreateHtmlResourceOptions,
   UiActionResult,
   UiActionResultLink,
+  UiActionResultNotification,
   UiActionResultPrompt,
+  UiActionResultIntent,
   UiActionResultToolCall,
 } from './types.js';
 
@@ -177,6 +179,30 @@ export function uiActionResultLink(url: string): UiActionResultLink {
     type: 'link',
     payload: {
       url,
+    },
+  };
+}
+
+export function uiActionResultIntent(
+  intent: string,
+  params: Record<string, unknown>,
+): UiActionResultIntent {
+  return {
+    type: 'intent',
+    payload: {
+      intent,
+      params,
+    },
+  };
+}
+
+export function uiActionResultNotification(
+  message: string,
+): UiActionResultNotification {
+  return {  
+    type: 'notification',
+    payload: {
+      message,
     },
   };
 }
