@@ -2,18 +2,18 @@
 export type URI = `ui://${string}`;
 
 // text/html for rawHtml content, text/uri-list for externalUrl content
-export type mimeType = 'text/html' | 'text/uri-list';
+export type MimeType = 'text/html' | 'text/uri-list';
 
 export type HtmlTextContent = {
   uri: URI;
-  mimeType: mimeType;
+  mimeType: MimeType;
   text: string; // HTML content (for mimeType `text/html`), or iframe URL (for mimeType `text/uri-list`)
   blob?: never;
 };
 
 export type Base64BlobContent = {
   uri: URI;
-  mimeType: mimeType;
+  mimeType: MimeType;
   blob: string; //  Base64 encoded HTML content (for mimeType `text/html`), or iframe URL (for mimeType `text/uri-list`)
   text?: never;
 };
@@ -29,7 +29,12 @@ export interface CreateHtmlResourceOptions {
   delivery: 'text' | 'blob'; // REQUIRED. How the content string (htmlString or iframeUrl) should be packaged.
 }
 
-export type UiActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notification';
+export type UiActionType =
+  | 'tool'
+  | 'prompt'
+  | 'link'
+  | 'intent'
+  | 'notification';
 
 export type UiActionResultToolCall = {
   type: 'tool';

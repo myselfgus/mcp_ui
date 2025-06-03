@@ -8,13 +8,13 @@ import {
   Base64BlobContent,
   CreateHtmlResourceOptions,
   HtmlTextContent,
-  mimeType,
+  MimeType,
   UiActionResult,
   UiActionResultLink,
   UiActionResultNotification,
   UiActionResultPrompt,
   UiActionResultIntent,
-  UiActionResultToolCall
+  UiActionResultToolCall,
 } from './types.js';
 
 export type HtmlResourceBlock = {
@@ -66,7 +66,7 @@ export function createHtmlResource(
   options: CreateHtmlResourceOptions,
 ): HtmlResourceBlock {
   let actualContentString: string;
-  let mimeType: mimeType;
+  let mimeType: MimeType;
 
   if (options.content.type === 'rawHtml') {
     if (!options.uri.startsWith('ui://')) {
@@ -173,9 +173,7 @@ export function uiActionResultToolCall(
   };
 }
 
-export function uiActionResultPrompt(
-  prompt: string,
-): UiActionResultPrompt {
+export function uiActionResultPrompt(prompt: string): UiActionResultPrompt {
   return {
     type: 'prompt',
     payload: {
@@ -209,7 +207,7 @@ export function uiActionResultIntent(
 export function uiActionResultNotification(
   message: string,
 ): UiActionResultNotification {
-  return {  
+  return {
     type: 'notification',
     payload: {
       message,
