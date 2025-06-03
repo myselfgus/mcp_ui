@@ -9,6 +9,12 @@ import {
   CreateHtmlResourceOptions,
   HtmlTextContent,
   mimeType,
+  UiActionResult,
+  UiActionResultLink,
+  UiActionResultNotification,
+  UiActionResultPrompt,
+  UiActionResultIntent,
+  UiActionResultToolCall
 } from './types.js';
 
 export type HtmlResourceBlock = {
@@ -145,4 +151,68 @@ export function escapeAttribute(unsafe: string): string {
 export type {
   CreateHtmlResourceOptions as CreateResourceOptions,
   ResourceContentPayload,
+  UiActionResult,
 } from './types.js';
+
+export function postUiActionResult(result: UiActionResult): void {
+  if (window.parent) {
+    window.parent.postMessage(result, '*');
+  }
+}
+
+export function uiActionResultToolCall(
+  toolName: string,
+  params: Record<string, unknown>,
+): UiActionResultToolCall {
+  return {
+    type: 'tool',
+    payload: {
+      toolName,
+      params,
+    },
+  };
+}
+
+export function uiActionResultPrompt(
+  prompt: string,
+): UiActionResultPrompt {
+  return {
+    type: 'prompt',
+    payload: {
+      prompt,
+    },
+  };
+}
+
+export function uiActionResultLink(url: string): UiActionResultLink {
+  return {
+    type: 'link',
+    payload: {
+      url,
+    },
+  };
+}
+
+export function uiActionResultIntent(
+  intent: string,
+  params: Record<string, unknown>,
+): UiActionResultIntent {
+  return {
+    type: 'intent',
+    payload: {
+      intent,
+      params,
+    },
+  };
+}
+
+export function uiActionResultNotification(
+  message: string,
+): UiActionResultNotification {
+  return {  
+    type: 'notification',
+    payload: {
+      message,
+    },
+  };
+}

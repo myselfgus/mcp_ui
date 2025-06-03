@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
+import { UiActionResult } from '../types';
 
 export interface RenderHtmlResourceProps {
   resource: Partial<Resource>;
-  onUiAction?: (
-    tool: string,
-    params: Record<string, unknown>,
-  ) => Promise<unknown>;
+  onUiAction?: (result: UiActionResult) => Promise<unknown>;
   style?: React.CSSProperties;
 }
 
@@ -129,13 +127,18 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
     function handleMessage(event: MessageEvent) {
       // Only process the message if it came from this specific iframe
       if (
-        onUiAction &&
         iframeRef.current &&
-        event.source === iframeRef.current.contentWindow &&
-        event.data?.tool
+        event.source === iframeRef.current.contentWindow
       ) {
-        onUiAction(event.data.tool, event.data.params || {}).catch((err) => {
-          console.error('Error from onUiAction in RenderHtmlResource:', err);
+        const uiActionResult = event.data as UiActionResult;
+        if (!uiActionResult) {
+          return;
+        }
+        onUiAction?.(uiActionResult)?.catch((err) => {
+          console.error(
+            'Error handling UI action result in RenderHtmlResource:',
+            err,
+          );
         });
       }
     }

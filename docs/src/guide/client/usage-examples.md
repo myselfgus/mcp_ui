@@ -14,7 +14,7 @@ pnpm add @mcp-ui/client react @modelcontextprotocol/sdk
 
 ```tsx
 import React, { useState } from 'react';
-import { HtmlResource } from '@mcp-ui/client';
+import { HtmlResource, UiActionResult } from '@mcp-ui/client';
 
 // Simulate fetching an MCP resource block
 const fetchMcpResource = async (id: string): Promise<HtmlResource> => {
@@ -24,12 +24,12 @@ const fetchMcpResource = async (id: string): Promise<HtmlResource> => {
       resource: {
         uri: 'ui://example/direct-html',
         mimeType: 'text/html',
-        text: "<h1>Direct HTML via Text</h1><p>Content loaded directly.</p><button onclick=\"window.parent.postMessage({tool: 'uiInteraction', params: { action: 'directClick', value: Date.now() }}, '*')\">Click Me (Direct)</button>",
+        text: "<h1>Direct HTML via Text</h1><p>Content loaded directly.</p><button onclick=\"window.parent.postMessage({ type: 'tool', payload: { toolName: 'uiInteraction', params: { action: 'directClick', value: Date.now() } } }, '*')\">Click Me (Direct)</button>",
       },
     };
   } else if (id === 'blob') {
     const html =
-      "<h1>HTML from Blob</h1><p>Content was Base64 encoded.</p><button onclick=\"window.parent.postMessage({tool: 'uiInteraction', params: { action: 'blobClick', value: 'test' }}, '*')\">Click Me (Blob)</button>";
+      "<h1>HTML from Blob</h1><p>Content was Base64 encoded.</p><button onclick=\"window.parent.postMessage({ type: 'tool', payload: { toolName: 'uiInteraction', params: { action: 'blobClick', value: 'test' } } }, '*')\">Click Me (Blob)</button>";
     return {
       type: 'resource',
       resource: {
@@ -72,12 +72,23 @@ const App: React.FC = () => {
     setLoading(false);
   };
 
-  const handleGenericMcpAction = async (
-    tool: string,
-    params: Record<string, unknown>,
-  ) => {
-    console.log(`Action received in host app - Tool: ${tool}, Params:`, params);
-    setLastAction({ tool, params });
+  const handleGenericMcpAction = async (result: UiActionResult) => {
+    if (result.type === 'tool') {
+      console.log(`Action received in host app - Tool: ${result.payload.toolName}, Params:`, result.payload.params);
+      setLastAction({ tool: result.payload.toolName, params: result.payload.params });
+    } else if (result.type === 'prompt') {
+      console.log(`Prompt received in host app:`, result.payload.prompt);
+      setLastAction({ prompt: result.payload.prompt });
+    } else if (result.type === 'link') {
+      console.log(`Link received in host app:`, result.payload.url);
+      setLastAction({ url: result.payload.url });
+    } else if (result.type === 'intent') {
+      console.log(`Intent received in host app:`, result.payload.intent);
+      setLastAction({ intent: result.payload.intent });
+    } else if (result.type === 'notification') {
+      console.log(`Notification received in host app:`, result.payload.message);
+      setLastAction({ message: result.payload.message });
+    }
     return {
       status: 'Action handled by host application',
       receivedParams: params,

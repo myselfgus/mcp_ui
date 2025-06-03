@@ -100,7 +100,10 @@ For `ui://` resources, you can use `window.parent.postMessage` to send data or a
     const data = { action: 'formData', value: 'someValue' };
     // IMPORTANT: Always specify the targetOrigin for security!
     // Use '*' only if the parent origin is unknown or variable and security implications are understood.
-    window.parent.postMessage({ tool: 'myCustomTool', params: data }, '*');
+    window.parent.postMessage(
+      { type: 'tool', payload: { toolName: 'myCustomTool', params: data } },
+      '*',
+    );
   }
 </script>
 ```

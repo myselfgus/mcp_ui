@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/idosal/mcp-ui/compare/v2.1.0...v2.2.0) (2025-06-03)
+
+
+### Features
+
+* support ui action result types ([#6](https://github.com/idosal/mcp-ui/issues/6)) ([899d152](https://github.com/idosal/mcp-ui/commit/899d1527286a281a23fbb8f3a207d435dfc3fe96))
+
 # [2.1.0](https://github.com/idosal/mcp-ui/compare/v2.0.0...v2.1.0) (2025-05-31)
 
 

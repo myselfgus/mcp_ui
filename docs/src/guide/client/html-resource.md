@@ -9,16 +9,21 @@ import type { Resource } from '@modelcontextprotocol/sdk/types';
 
 export interface HtmlResourceProps {
   resource: Partial<Resource>;
-  onUiAction?: (
-    tool: string,
-    params: Record<string, unknown>,
-  ) => Promise<any>;
+  onUiAction?: (result: UiActionResult) => Promise<any>;
   style?: React.CSSProperties;
 }
 ```
 
 - **`resource`**: The resource object from an `HtmlResourceBlock`. It should include `uri`, `mimeType`, and either `text` or `blob`.
-- **`onUiAction`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like `{ tool: string, params: Record<string, unknown> }`.
+- **`onUiAction`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like:
+  ```typescript
+  { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
+  { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
+  { type: 'prompt', payload: { prompt: string } } |
+  { type: 'notification', payload: { message: string } } |
+  { type: 'link', payload: { url: string } } |
+  ```
+  If you don't provide a callback for a specific type, the default handler will be used.
 - **`style`** (optional): Custom styles for the iframe.
 
 ## How It Works
