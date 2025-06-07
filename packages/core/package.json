@@ -1,0 +1,24 @@
+{
+  "name": "@mcp-ui/core",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "@mcp-ui/eslint-config": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "license": "Apache-2.0"
+}

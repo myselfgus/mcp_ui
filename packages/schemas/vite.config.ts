@@ -1,14 +1,21 @@
 import { defineConfig } from 'vite';
 import path from 'path';
-import dts from 'vite-plugin-dts';
+import dts from 'vite-plugin-dts'; // For generating type definitions
 
 export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'MCPShared', // Or an appropriate name
+      name: 'MCPUISchemas',
       fileName: (format) => `index.${format}.js`,
       formats: ['es', 'umd', 'cjs']
+    },
+    rollupOptions: {
+      // Externalize peer dependencies
+      external: [],
+      output: {
+        globals: {}
+      }
     },
     sourcemap: true,
   },

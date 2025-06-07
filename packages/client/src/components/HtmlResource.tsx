@@ -1,8 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import type { Resource } from '@modelcontextprotocol/sdk/types.js';
+import React, { useEffect, useRef, useState } from 'react';
+// Use the HtmlResource type from @mcp-ui/shared which now includes mcpToolSchema
+import { HtmlResource as SharedHtmlResource } from '@mcp-ui/shared';
+import { SchemaDrivenUIRenderer } from '../../SchemaDrivenUIRenderer'; // Adjusted path
+// MCPToolSchema is implicitly part of SharedHtmlResource now, direct import not strictly needed here
+// import { MCPToolSchema } from '@mcp-ui/schemas';
+import { generateUIFromSchema } from '@mcp-ui/generators';
 
 export interface RenderHtmlResourceProps {
-  resource: Partial<Resource>;
+  // resource prop should now conform to the updated SharedHtmlResource type
+  resource: SharedHtmlResource['resource']; // Use the 'resource' sub-object from the shared type
   onUiAction?: (
     tool: string,
     params: Record<string, unknown>,
@@ -11,10 +18,19 @@ export interface RenderHtmlResourceProps {
 }
 
 export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
-  resource,
+  resource, // resource is now the sub-object
   onUiAction,
   style,
 }) => {
+  const mcpToolSchema = resource.mcpToolSchema; // <<< ACCESS IT HERE
+
+  // Early return for SchemaDrivenUIRenderer if mcpToolSchema is provided
+  if (mcpToolSchema) {
+    const formDefinition = generateUIFromSchema(mcpToolSchema);
+    // TODO: Pass onUiAction or a submit handler to SchemaDrivenUIRenderer if/when it supports it
+    return <SchemaDrivenUIRenderer formDefinition={formDefinition} />;
+  }
+
   const [htmlString, setHtmlString] = useState<string | null>(null);
   const [iframeSrc, setIframeSrc] = useState<string | null>(null);
   const [iframeRenderMode, setIframeRenderMode] = useState<'srcDoc' | 'src'>(
@@ -32,11 +48,12 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
       setIframeSrc(null);
       setIframeRenderMode('srcDoc'); // Default to srcDoc
 
-      if (resource.mimeType !== 'text/html') {
-        setError('Resource is not of type text/html.');
-        setIsLoading(false);
-        return;
-      }
+      // resource.mimeType is fixed to 'text/html' in SharedHtmlResource, so direct check isn't strictly needed
+      // if (resource.mimeType !== 'text/html') {
+      //   setError('Resource is not of type text/html.');
+      //   setIsLoading(false);
+      //   return;
+      // }
 
       if (resource.uri?.startsWith('ui-app://')) {
         setIframeRenderMode('src');

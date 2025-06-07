@@ -5,14 +5,44 @@
 
 // Import types first
 import { CreateHtmlResourceOptions } from './types.js';
+import { MCPToolSchema } from '@mcp-ui/schemas';
 
+/**
+ * Defines the structure of an interactive HTML resource block
+ * that the server can send to the client. This block can contain
+ * either direct HTML content, a URL to an external HTML application,
+ * and optionally an `MCPToolSchema` for schema-driven UI generation.
+ */
 export interface HtmlResourceBlock {
+  /** Indicates the type of content block, always 'resource' for this type. */
   type: 'resource';
+  /** Contains the details of the HTML resource. */
   resource: {
-    uri: string; // Primary identifier. Starts with "ui://" or "ui-app://"
-    mimeType: 'text/html'; // Always text/html
-    text?: string; // HTML content if uri starts with "ui://", or iframe URL if uri starts with "ui-app://"
-    blob?: string; // Base64 encoded HTML content if uri starts with "ui://", or iframe URL if uri starts with "ui-app://"
+    /**
+     * Primary identifier for the resource.
+     * Must start with "ui://" if `content.type` in `CreateHtmlResourceOptions` is "rawHtml".
+     * Must start with "ui-app://" if `content.type` is "externalUrl".
+     */
+    uri: string;
+    /** The MIME type of the resource, always 'text/html' for this block. */
+    mimeType: 'text/html';
+    /**
+     * The HTML content string or the URL for an iframe.
+     * Populated if `delivery` in `CreateHtmlResourceOptions` is 'text'.
+     */
+    text?: string;
+    /**
+     * Base64 encoded HTML content string or URL for an iframe.
+     * Populated if `delivery` in `CreateHtmlResourceOptions` is 'blob'.
+     */
+    blob?: string;
+    /**
+     * Optional schema definition for an MCP tool. If provided, clients can use this
+     * to dynamically generate a UI for interacting with the tool, potentially
+     * instead of or in conjunction with the HTML content in `text` or `blob`.
+     * @see MCPToolSchema from '@mcp-ui/schemas'
+     */
+    mcpToolSchema?: MCPToolSchema;
   };
 }
 
@@ -51,14 +81,44 @@ function robustUtf8ToBase64(str: string): string {
 }
 
 /**
- * Creates an HtmlResourceBlock.
- * This is the object that should be included in the 'content' array of a toolResult.
- * @param options Configuration for the interactive resource.
- * @returns An HtmlResourceBlock.
+ * Creates an `HtmlResourceBlock` object, which is suitable for inclusion in the
+ * 'content' array of a tool result in the Model Context Protocol.
+ *
+ * This function packages HTML content (either raw or as a URL) for delivery to a client,
+ * and can now optionally include an `MCPToolSchema` to enable schema-driven UI generation
+ * on the client side.
+ *
+ * @param options - Configuration options for creating the HTML resource.
+ *   Includes the URI, content payload (raw HTML or external URL), delivery method (text or blob),
+ *   and an optional `mcpToolSchema`.
+ * @returns An `HtmlResourceBlock` object structured for MCP.
+ * @throws If URI prefixes do not match the content type (e.g., 'ui://' for rawHtml, 'ui-app://' for externalUrl).
+ * @throws If content string is not provided for the specified content type.
+ *
+ * @example
+ * ```typescript
+ * import { createHtmlResource, MCPToolSchema } from '@mcp-ui/server'; // Assuming MCPToolSchema is re-exported or directly available
+ *
+ * const myToolSchema: MCPToolSchema = {
+ *   tool: 'example_tool',
+ *   parameters: { type: 'object', properties: { param1: { type: 'string' } } },
+ *   // ... other schema details
+ * };
+ *
+ * const resource = createHtmlResource({
+ *   uri: 'ui://my-tool-interface',
+ *   content: { type: 'rawHtml', htmlString: '<h1>Hello World</h1><p>Interact with my tool.</p>' },
+ *   delivery: 'text',
+ *   mcpToolSchema: myToolSchema
+ * });
+ *
+ * // This 'resource' can then be sent as part of an MCP message.
+ * ```
  */
 export function createHtmlResource(
   options: CreateHtmlResourceOptions,
 ): HtmlResourceBlock {
+  const { mcpToolSchema } = options; // <<< DESTRUCTURE
   let actualContentString: string;
 
   if (options.content.type === 'rawHtml') {
@@ -96,6 +156,7 @@ export function createHtmlResource(
   const resource: HtmlResourceBlock['resource'] = {
     uri: options.uri,
     mimeType: 'text/html',
+    mcpToolSchema: mcpToolSchema, // <<< ASSIGN
   };
 
   switch (options.delivery) {

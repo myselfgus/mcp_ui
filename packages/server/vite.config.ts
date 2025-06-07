@@ -17,8 +17,14 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'McpUiServer',
-      formats: ['es', 'cjs'], // cjs for Node compatibility
-      fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
+      formats: ['es', 'umd', 'cjs'], // cjs for Node compatibility
+      fileName: (format) => `index.${format}.js`,
+    },
+    rollupOptions: {
+      external: [], // Add any server-side specific externals if needed
+      output: {
+        globals: {}
+      }
     },
     target: 'node18',
     sourcemap: true,

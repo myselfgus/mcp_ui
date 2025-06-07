@@ -1,3 +1,5 @@
 packages:
-  # all packages in subdirs of packages/
   - 'packages/*'
+  - 'examples/*'
+  - 'docs' # if docs is considered a separate workspace package
+  - 'tools/*' # even if initially empty
