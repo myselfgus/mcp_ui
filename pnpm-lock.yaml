@@ -33,7 +33,7 @@ importers:
         specifier: ^29.5.11
         version: 29.5.14
       '@types/node':
-        specifier: ^22.0.0
+        specifier: ^22.15.18
         version: 22.15.18
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.13.2

@@ -7,6 +7,7 @@
 import { CreateHtmlResourceOptions } from './types.js';
 import { MCPToolSchema } from '@mcp-ui/schemas';
 
+
 /**
  * Defines the structure of an interactive HTML resource block
  * that the server can send to the client. This block can contain
@@ -120,6 +121,7 @@ export function createHtmlResource(
 ): HtmlResourceBlock {
   const { mcpToolSchema } = options; // <<< DESTRUCTURE
   let actualContentString: string;
+  let mimeType: 'text/html' | 'text/uri-list';
 
   if (options.content.type === 'rawHtml') {
     if (!options.uri.startsWith('ui://')) {
@@ -133,10 +135,11 @@ export function createHtmlResource(
         "MCP SDK: content.htmlString must be provided as a string when content.type is 'rawHtml'.",
       );
     }
+    mimeType = 'text/html';
   } else if (options.content.type === 'externalUrl') {
-    if (!options.uri.startsWith('ui-app://')) {
+    if (!options.uri.startsWith('ui://')) {
       throw new Error(
-        "MCP SDK: URI must start with 'ui-app://' when content.type is 'externalUrl'.",
+        "MCP SDK: URI must start with 'ui://' when content.type is 'externalUrl'.",
       );
     }
     actualContentString = options.content.iframeUrl;
@@ -145,6 +148,7 @@ export function createHtmlResource(
         "MCP SDK: content.iframeUrl must be provided as a string when content.type is 'externalUrl'.",
       );
     }
+    mimeType = 'text/uri-list';
   } else {
     // This case should ideally be prevented by TypeScript's discriminated union checks
     const exhaustiveCheckContent: never = options.content;
@@ -157,6 +161,7 @@ export function createHtmlResource(
     uri: options.uri,
     mimeType: 'text/html',
     mcpToolSchema: mcpToolSchema, // <<< ASSIGN
+
   };
 
   switch (options.delivery) {
@@ -194,4 +199,68 @@ export function escapeAttribute(unsafe: string): string {
 export type {
   CreateHtmlResourceOptions as CreateResourceOptions,
   ResourceContentPayload,
+  UiActionResult,
 } from './types.js';
+
+export function postUiActionResult(result: UiActionResult): void {
+  if (window.parent) {
+    window.parent.postMessage(result, '*');
+  }
+}
+
+export function uiActionResultToolCall(
+  toolName: string,
+  params: Record<string, unknown>,
+): UiActionResultToolCall {
+  return {
+    type: 'tool',
+    payload: {
+      toolName,
+      params,
+    },
+  };
+}
+
+export function uiActionResultPrompt(
+  prompt: string,
+): UiActionResultPrompt {
+  return {
+    type: 'prompt',
+    payload: {
+      prompt,
+    },
+  };
+}
+
+export function uiActionResultLink(url: string): UiActionResultLink {
+  return {
+    type: 'link',
+    payload: {
+      url,
+    },
+  };
+}
+
+export function uiActionResultIntent(
+  intent: string,
+  params: Record<string, unknown>,
+): UiActionResultIntent {
+  return {
+    type: 'intent',
+    payload: {
+      intent,
+      params,
+    },
+  };
+}
+
+export function uiActionResultNotification(
+  message: string,
+): UiActionResultNotification {
+  return {  
+    type: 'notification',
+    payload: {
+      message,
+    },
+  };
+}

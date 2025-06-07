@@ -65,7 +65,7 @@ console.log(
 // Example 3: External URL, text delivery
 const dashboardUrl = 'https://my.analytics.com/dashboard/123';
 const resource3 = createHtmlResource({
-  uri: 'ui-app://analytics-dashboard/main',
+  uri: 'ui://analytics-dashboard/main',
   content: { type: 'externalUrl', iframeUrl: dashboardUrl },
   delivery: 'text',
 });
@@ -74,8 +74,8 @@ console.log('Resource 3:', JSON.stringify(resource3, null, 2));
 {
   "type": "resource",
   "resource": {
-    "uri": "ui-app://analytics-dashboard/main",
-    "mimeType": "text/html",
+    "uri": "ui://analytics-dashboard/main",
+    "mimeType": "text/uri-list",
     "text": "https://my.analytics.com/dashboard/123"
   }
 }
@@ -84,7 +84,7 @@ console.log('Resource 3:', JSON.stringify(resource3, null, 2));
 // Example 4: External URL, blob delivery (URL is Base64 encoded)
 const chartApiUrl = 'https://charts.example.com/api?type=pie&data=1,2,3';
 const resource4 = createHtmlResource({
-  uri: 'ui-app://live-chart/session-xyz',
+  uri: 'ui://live-chart/session-xyz',
   content: { type: 'externalUrl', iframeUrl: chartApiUrl },
   delivery: 'blob',
 });
@@ -96,8 +96,8 @@ console.log(
 {
   "type": "resource",
   "resource": {
-    "uri": "ui-app://live-chart/session-xyz",
-    "mimeType": "text/html",
+    "uri": "ui://live-chart/session-xyz",
+    "mimeType": "text/uri-list",
     "blob": "aHR0cHM6Ly9jaGFydHMuZXhhbXBsZS5jb20vYXBpP3R5cGU9cGllJmRhdGE9MSwyLDM="
   }
 }
@@ -105,24 +105,51 @@ console.log(
 
 // These resource objects would then be included in the 'content' array
 // of a toolResult in an MCP interaction.
+
+## Advanced URI List Example
+
+You can provide multiple URLs in the `text/uri-list` format for fallback purposes. However, **MCP-UI requires a single URL** and will only use the first valid URL found:
+
+```typescript
+// Example 5: Multiple URLs with fallbacks (MCP-UI uses only the first)
+const multiUrlContent = `# Primary dashboard
+https://dashboard.example.com/main
+
+# Backup dashboard (will be logged but not used)
+https://backup.dashboard.example.com/main
+
+# Emergency fallback (will be logged but not used)  
+https://emergency.dashboard.example.com/main`;
+
+const resource5 = createHtmlResource({
+  uri: 'ui://dashboard-with-fallbacks/session-123',
+  content: { type: 'externalUrl', iframeUrl: multiUrlContent },
+  delivery: 'text',
+});
+
+/* The client will:
+ * 1. Use https://dashboard.example.com/main for rendering
+ * 2. Log a warning about the ignored backup URLs
+ * This allows you to specify fallback URLs in the standard format while MCP-UI focuses on the primary URL
+ */
 ```
 
 ## Error Handling
 
 The `createHtmlResource` function will throw errors if invalid combinations are provided, for example:
 
-- URI `ui://` with `content.type: 'externalUrl'`
-- URI `ui-app://` with `content.type: 'rawHtml'`
+- URI not starting with `ui://` for any content type
+- Invalid content type specified
 
 ```typescript
 try {
   createHtmlResource({
-    uri: 'ui://should-be-direct-html',
+    uri: 'invalid://should-be-ui',
     content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
     delivery: 'text',
   });
 } catch (e: any) {
   console.error('Caught expected error:', e.message);
-  // MCP SDK: URI must start with 'ui-app://' when content.type is 'externalUrl'. (Or similar, error message might vary slightly)
+  // MCP SDK: URI must start with 'ui://' when content.type is 'externalUrl'.
 }
 ```

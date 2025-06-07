@@ -23,7 +23,7 @@ export interface HtmlResource {
   type: 'resource'; // Fixed type identifier
   resource: {
     uri: string; // Unique identifier. Governs rendering behavior.
-    mimeType: 'text/html'; // Must be text/html.
+    mimeType: 'text/html' | 'text/uri-list'; // text/html for HTML content, text/uri-list for URL content
     text?: string; // Raw HTML string or an iframe URL string.
     blob?: string; // Base64 encoded HTML string or iframe URL string.
   };
@@ -33,13 +33,11 @@ export interface HtmlResource {
 ### Key Field Details:
 
 - **`uri` (Uniform Resource Identifier)**:
-  - If starts with `ui://` (e.g., `ui://my-custom-form/instance-01`):
-    - The client should render the HTML content (from `text` or `blob`) directly, typically within a sandboxed `<iframe>` using the `srcdoc` attribute.
-    - This is for self-contained HTML snippets or components.
-  - If starts with `ui-app://` (e.g., `ui-app://external-dashboard/user-xyz`):
-    - The client should render the URL (from `text` or `blob`) within an `<iframe>` using the `src` attribute.
-    - This is for embedding full external web applications or pages.
-- **`mimeType`**: Must be `"text/html"` for this protocol.
+  - All UI resources use the `ui://` scheme (e.g., `ui://my-custom-form/instance-01`)
+  - The rendering method is determined by the `mimeType`:
+    - `mimeType: 'text/html'` → HTML content rendered via `<iframe srcdoc>`
+    - `mimeType: 'text/uri-list'` → URL content rendered via `<iframe src>`
+- **`mimeType`**: `'text/html'` for HTML content, `'text/uri-list'` for URL content
 - **`text` or `blob` Content Delivery**:
   - `text`: The HTML string or URL is provided directly.
   - `blob`: The HTML string or URL is Base64 encoded. Useful for complex HTML, ensuring integrity, or avoiding issues with JSON encoding of special characters.

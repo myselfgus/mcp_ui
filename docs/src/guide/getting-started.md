@@ -101,11 +101,18 @@ function App() {
     setMcpData(fakeMcpResponse);
   }, []);
 
-  const handleResourceAction = async (
-    tool: string,
-    params: Record<string, unknown>,
-  ) => {
-    console.log(`Action from resource (tool: ${tool}):`, params);
+  const handleResourceAction = async (result: UiActionResult) => {
+    if (result.type === 'tool') {
+      console.log(`Action from resource (tool: ${result.payload.toolName}):`, result.payload.params);
+    } else if (result.type === 'prompt') {
+      console.log(`Prompt from resource:`, result.payload.prompt);
+    } else if (result.type === 'link') {
+      console.log(`Link from resource:`, result.payload.url);
+    } else if (result.type === 'intent') {
+      console.log(`Intent from resource:`, result.payload.intent);
+    } else if (result.type === 'notification') {
+      console.log(`Notification from resource:`, result.payload.message);
+    }
     // Add your handling logic (e.g., initiate followup tool call)
     return { status: 'Action received by client' };
   };
