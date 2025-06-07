@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { HtmlResource, RenderHtmlResourceProps } from '../HtmlResource.js';
 import { vi, Mock, MockInstance } from 'vitest';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
+import { UiActionResult } from '../../types.js';
 
 describe('HtmlResource component', () => {
   const mockOnUiAction = vi.fn().mockResolvedValue(undefined);
@@ -44,10 +45,11 @@ describe('HtmlResource component', () => {
   });
 
   it('renders iframe with src for ui-app:// URI with text', () => {
+
     const props: RenderHtmlResourceProps = {
       resource: {
-        uri: 'ui-app://my-app',
-        mimeType: 'text/html',
+        uri: 'ui://my-app',
+        mimeType: 'text/uri-list',
         text: 'https://example.com/app',
       },
       onUiAction: mockOnUiAction,
@@ -76,18 +78,20 @@ describe('HtmlResource component', () => {
     // This assertion depends heavily on the refined async logic of HtmlResource.
     // For now, let's expect the fallback paragraph because no content is provided.
     expect(
-      screen.getByText('ui:// HTML resource requires text or blob content.'),
+      screen.getByText('HTML resource requires text or blob content.'),
     ).toBeInTheDocument();
   });
 
-  it('displays an error message if resource mimeType is not text/html', () => {
+  it('displays an error message if resource mimeType is not text/html or text/uri-list', () => {
     const props: RenderHtmlResourceProps = {
       resource: { mimeType: 'application/json', text: '{}' },
       onUiAction: mockOnUiAction,
     };
     render(<HtmlResource {...props} />);
     expect(
-      screen.getByText('Resource is not of type text/html.'),
+      screen.getByText(
+        'Resource must be of type text/html (for HTML content) or text/uri-list (for URL content).',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -109,13 +113,13 @@ describe('HtmlResource component', () => {
     expect(iframe.srcdoc).toContain(html);
   });
 
-  it('decodes URL from blob for ui-app:// resource', () => {
+  it('decodes URL from blob for ui:// resource with text/uri-list mimetype', () => {
     const url = 'https://example.com/blob-app';
     const encodedUrl = Buffer.from(url).toString('base64');
     const props: RenderHtmlResourceProps = {
       resource: {
-        uri: 'ui-app://blob-app-test',
-        mimeType: 'text/html',
+        uri: 'ui://blob-app-test',
+        mimeType: 'text/uri-list',
         blob: encodedUrl,
       },
       onUiAction: mockOnUiAction,
@@ -125,6 +129,120 @@ describe('HtmlResource component', () => {
       'MCP HTML Resource (URL)',
     ) as HTMLIFrameElement;
     expect(iframe.src).toBe(url);
+  });
+
+  it('handles multiple URLs in uri-list format and uses the first one', () => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
+    const uriList =
+      'https://example.com/first\nhttps://example.com/second\nhttps://example.com/third';
+    const props: RenderHtmlResourceProps = {
+      resource: {
+        uri: 'ui://multi-url-test',
+        mimeType: 'text/uri-list',
+        text: uriList,
+      },
+      onUiAction: mockOnUiAction,
+    };
+    render(<HtmlResource {...props} />);
+    const iframe = screen.getByTitle(
+      'MCP HTML Resource (URL)',
+    ) as HTMLIFrameElement;
+    expect(iframe.src).toBe('https://example.com/first');
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      'Multiple URLs found in uri-list content. Using the first URL: "https://example.com/first". Other URLs ignored:',
+      ['https://example.com/second', 'https://example.com/third'],
+    );
+    consoleWarnSpy.mockRestore();
+  });
+
+  it('handles uri-list format with comments and empty lines', () => {
+    const uriList = `# This is a comment
+https://example.com/main
+
+# Another comment
+https://example.com/backup
+`;
+    const props: RenderHtmlResourceProps = {
+      resource: {
+        uri: 'ui://uri-list-with-comments',
+        mimeType: 'text/uri-list',
+        text: uriList,
+      },
+      onUiAction: mockOnUiAction,
+    };
+    render(<HtmlResource {...props} />);
+    const iframe = screen.getByTitle(
+      'MCP HTML Resource (URL)',
+    ) as HTMLIFrameElement;
+    expect(iframe.src).toBe('https://example.com/main');
+  });
+
+  it('shows error when uri-list contains no valid URLs', () => {
+    const uriList = `# Only comments
+# No actual URLs
+`;
+    const props: RenderHtmlResourceProps = {
+      resource: {
+        uri: 'ui://empty-uri-list',
+        mimeType: 'text/uri-list',
+        text: uriList,
+      },
+      onUiAction: mockOnUiAction,
+    };
+    render(<HtmlResource {...props} />);
+    expect(
+      screen.getByText('No valid URLs found in uri-list content.'),
+    ).toBeInTheDocument();
+  });
+
+  it('supports backwards compatibility with ui-app:// URI scheme', () => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
+    const props: RenderHtmlResourceProps = {
+      resource: {
+        uri: 'ui-app://legacy-external-app',
+        mimeType: 'text/html', // Historically incorrect mimeType, but should be treated as URL content
+        text: 'https://legacy.example.com/app',
+      },
+      onUiAction: mockOnUiAction,
+    };
+    render(<HtmlResource {...props} />);
+    const iframe = screen.getByTitle(
+      'MCP HTML Resource (URL)',
+    ) as HTMLIFrameElement;
+    expect(iframe.src).toBe('https://legacy.example.com/app');
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      'Detected legacy ui-app:// URI: "ui-app://legacy-external-app". Update server to use ui:// with mimeType: \'text/uri-list\' for future compatibility.',
+    );
+    consoleWarnSpy.mockRestore();
+  });
+
+  it('handles legacy ui-app:// with blob content', () => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
+    const url = 'https://legacy.example.com/blob-app';
+    const encodedUrl = Buffer.from(url).toString('base64');
+    const props: RenderHtmlResourceProps = {
+      resource: {
+        uri: 'ui-app://legacy-blob-app',
+        mimeType: 'text/html', // Historically incorrect mimeType
+        blob: encodedUrl,
+      },
+      onUiAction: mockOnUiAction,
+    };
+    render(<HtmlResource {...props} />);
+    const iframe = screen.getByTitle(
+      'MCP HTML Resource (URL)',
+    ) as HTMLIFrameElement;
+    expect(iframe.src).toBe(url);
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      'Detected legacy ui-app:// URI: "ui-app://legacy-blob-app". Update server to use ui:// with mimeType: \'text/uri-list\' for future compatibility.',
+    );
+    consoleWarnSpy.mockRestore();
   });
 });
 
@@ -148,7 +266,7 @@ const dispatchMessage = (
 };
 
 describe('HtmlResource - onUiAction', () => {
-  let mockOnUiAction: Mock<[string, Record<string, unknown>], Promise<unknown>>;
+  let mockOnUiAction: Mock<[UiActionResult], Promise<unknown>>;
   let consoleErrorSpy: MockInstance<Parameters<Console['error']>, void>;
 
   beforeEach(() => {
@@ -178,11 +296,14 @@ describe('HtmlResource - onUiAction', () => {
       'MCP HTML Resource (Embedded Content)',
     )) as HTMLIFrameElement;
 
-    const eventData = { tool: 'testTool', params: { foo: 'bar' } };
+    const eventData = {
+      type: 'tool',
+      payload: { toolName: 'testTool', params: { foo: 'bar' } },
+    };
     dispatchMessage(iframe.contentWindow, eventData);
 
     expect(mockOnUiAction).toHaveBeenCalledTimes(1);
-    expect(mockOnUiAction).toHaveBeenCalledWith('testTool', { foo: 'bar' });
+    expect(mockOnUiAction).toHaveBeenCalledWith(eventData);
   });
 
   it('should use empty params if event.data.params is missing', async () => {
@@ -195,7 +316,7 @@ describe('HtmlResource - onUiAction', () => {
     dispatchMessage(iframe.contentWindow, eventData);
 
     expect(mockOnUiAction).toHaveBeenCalledTimes(1);
-    expect(mockOnUiAction).toHaveBeenCalledWith('testTool', {});
+    expect(mockOnUiAction).toHaveBeenCalledWith(eventData);
   });
 
   it('should not call onUiAction if the message event is not from the iframe', async () => {
@@ -203,20 +324,11 @@ describe('HtmlResource - onUiAction', () => {
     // Ensure iframe is rendered before dispatching an event from the wrong source
     await screen.findByTitle('MCP HTML Resource (Embedded Content)');
 
-    const eventData = { tool: 'testTool', params: { foo: 'bar' } };
+    const eventData = {
+      type: 'tool',
+      payload: { toolName: 'testTool', params: { foo: 'bar' } },
+    };
     dispatchMessage(window, eventData); // Source is the main window
-
-    expect(mockOnUiAction).not.toHaveBeenCalled();
-  });
-
-  it('should not call onUiAction if event.data.tool is missing', async () => {
-    renderComponentForUiActionTests();
-    const iframe = (await screen.findByTitle(
-      'MCP HTML Resource (Embedded Content)',
-    )) as HTMLIFrameElement;
-
-    const eventData = { params: { foo: 'bar' } }; // Missing 'tool'
-    dispatchMessage(iframe.contentWindow, eventData);
 
     expect(mockOnUiAction).not.toHaveBeenCalled();
   });
@@ -273,7 +385,7 @@ describe('HtmlResource - onUiAction', () => {
     });
     await waitFor(() => {
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Error from onUiAction in RenderHtmlResource:',
+        'Error handling UI action result in RenderHtmlResource:',
         expect.objectContaining({ message: errorMessage }),
       );
     });
@@ -285,6 +397,7 @@ describe('HtmlResource - onUiAction', () => {
       [string, Record<string, unknown>],
       Promise<unknown>
     >();
+
     render(
       <HtmlResource
         resource={{ mimeType: 'text/plain', text: 'not html' }} // Invalid mimeType

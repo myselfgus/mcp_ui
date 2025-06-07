@@ -9,17 +9,22 @@ import type { Resource } from '@modelcontextprotocol/sdk/types';
 
 export interface HtmlResourceProps {
   resource: Partial<Resource>;
-  onUiAction?: (
-    tool: string,
-    params: Record<string, unknown>,
-  ) => Promise<any>;
+  onUiAction?: (result: UiActionResult) => Promise<any>;
   style?: React.CSSProperties;
   renderMode?: 'iframe' | 'secure';
 }
 ```
 
 - **`resource`**: The resource object from an `HtmlResourceBlock`. It should include `uri`, `mimeType`, and either `text` or `blob`.
-- **`onUiAction`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like `{ tool: string, params: Record<string, unknown> }`.
+- **`onUiAction`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like:
+  ```typescript
+  { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
+  { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
+  { type: 'prompt', payload: { prompt: string } } |
+  { type: 'notification', payload: { message: string } } |
+  { type: 'link', payload: { url: string } } |
+  ```
+  If you don't provide a callback for a specific type, the default handler will be used.
 - **`style`** (optional): Custom styles for the iframe.
 - **`renderMode`** (optional): `'iframe'` (default) or `'secure'`. Secure mode
   sanitizes the HTML and renders it directly without an iframe. Actions are
@@ -27,14 +32,17 @@ export interface HtmlResourceProps {
 
 ## How It Works
 
-1.  **Checks Content Type**: If `resource.mimeType` isn't `"text/html"`, you'll see an error.
+1.  **Checks Content Type**: If `resource.mimeType` isn't `"text/html"` or `"text/uri-list"`, you'll see an error.
 2.  **Handles URI Schemes**:
-    - For `ui-app://` URIs:
-      - Expects `resource.text` or `resource.blob` to contain a URL.
+    - For resources with `mimeType: 'text/uri-list'`:
+      - Expects `resource.text` or `resource.blob` to contain a single URL in URI list format
+      - **MCP-UI requires a single URL**: While the format supports multiple URLs, only the first valid URL is used
+      - Multiple URLs are supported for fallback specification but will trigger warnings
+      - Ignores comment lines starting with `#` and empty lines
       - If using `blob`, it decodes it from Base64.
-      - Renders an `<iframe>` with its `src` set to the URL.
+      - Renders an `<iframe>` with its `src` set to the first valid URL.
       - Sandbox: `allow-scripts allow-same-origin` (needed for some external sites; be mindful of security).
-    - For `ui://` URIs (or if there's no URI but you provide HTML in `text`/`blob`):
+    - For resources with `mimeType: 'text/html'`:
       - Expects `resource.text` or `resource.blob` to contain HTML.
       - If using `blob`, it decodes it from Base64.
       - Renders an `<iframe>` with its `srcdoc` set to the HTML.

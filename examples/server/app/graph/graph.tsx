@@ -402,11 +402,14 @@ const CustomAvatarXAxisTick = (props: {
     // @ts-expect-error - window is not typed correctly
     if (memberInfo && window.parent) {
       const message = {
-        tool: 'show_user_status',
-        params: {
-          id: memberInfo.id,
-          name: memberInfo.name,
-          avatarUrl: memberInfo.avatarUrl,
+        type: 'tool',
+        payload: {
+          toolName: 'show_user_status',
+          params: {
+            id: memberInfo.id,
+            name: memberInfo.name,
+            avatarUrl: memberInfo.avatarUrl,
+          },
         },
       };
       // @ts-expect-error - window is not typed correctly

@@ -32,9 +32,12 @@ export function User({ user }: { user: UserInfo }) {
     // @ts-expect-error - window is not typed correctly
     if (user.id && window.parent) {
       const message = {
-        tool: 'nudge_team_member',
-        params: {
-          name: user.name,
+        type: 'tool',
+        payload: {
+          toolName: 'nudge_team_member',
+          params: {
+            name: user.name,
+          },
         },
       };
       // @ts-expect-error - window is not typed correctly
