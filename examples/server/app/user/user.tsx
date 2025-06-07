@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { postMessageToParent } from '../utils/messageUtils';
 
 interface UserInfo {
   id: string;
@@ -29,8 +30,7 @@ export function User({ user }: { user: UserInfo }) {
   );
 
   const handleNudge = () => {
-    // @ts-expect-error - window is not typed correctly
-    if (user.id && window.parent) {
+    if (user.id) {
       const message = {
         type: 'tool',
         payload: {
@@ -40,9 +40,18 @@ export function User({ user }: { user: UserInfo }) {
           },
         },
       };
-      // @ts-expect-error - window is not typed correctly
-      window.parent.postMessage(message, '*');
+      postMessageToParent(message);
     }
+  };
+
+  const handleAskChat = (taskTitle: string) => {
+    const message = {
+      type: 'prompt',
+      payload: {
+        prompt: `How do I ${taskTitle}?`,
+      },
+    };
+    postMessageToParent(message);
   };
 
   return (
@@ -123,6 +132,54 @@ export function User({ user }: { user: UserInfo }) {
             <div style={styles.tileLabel}>{tile.label}</div>
           </div>
         ))}
+      </div>
+
+      {/* blocked tasks */}
+      <div style={styles.blockedSection}>
+        <h3 style={styles.sectionTitle}>Blocked Tasks</h3>
+        <div style={styles.tasksList}>
+          {[
+            {
+              id: 1,
+              title: 'Add a route to React Router app',
+              priority: 'High',
+            },
+            {
+              id: 2,
+              title: 'Fix database connection timeout issue',
+              priority: 'Medium',
+            },
+            {
+              id: 3,
+              title: 'Update user authentication middleware',
+              priority: 'High',
+            },
+          ].map((task) => (
+            <div key={task.id} style={styles.taskItem}>
+              <div style={styles.taskContent}>
+                <div style={styles.taskPriority}>
+                  <span
+                    style={{
+                      ...styles.priorityBadge,
+                      ...(task.priority === 'High'
+                        ? styles.priorityHigh
+                        : styles.priorityMedium),
+                    }}
+                  >
+                    {task.priority}
+                  </span>
+                </div>
+                <div style={styles.taskTitle}>{task.title}</div>
+              </div>
+              <button
+                style={styles.askChatButton}
+                onClick={() => handleAskChat(task.title)}
+              >
+                Ask Chat
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* nudge button */}
@@ -216,5 +273,68 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '1rem',
     fontWeight: 500,
     cursor: 'pointer',
+  },
+  blockedSection: {
+    padding: '0 16px',
+    borderTop: '1px solid #f0f0f0',
+    paddingTop: 16,
+  },
+  tasksList: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: 8,
+    marginBottom: 16,
+  },
+  taskItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 12,
+    background: '#FAFAFA',
+    borderRadius: 6,
+    border: '1px solid #E0E0E0',
+  },
+  taskContent: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row' as const,
+    gap: 4,
+  },
+  taskTitle: {
+    fontSize: '0.9rem',
+    color: '#333',
+    fontWeight: 500,
+  },
+  taskPriority: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  priorityBadge: {
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    padding: '2px 6px',
+    borderRadius: 3,
+    textTransform: 'uppercase' as const,
+  },
+  priorityHigh: {
+    background: '#FFEBEE',
+    color: '#C62828',
+    marginRight: '30px',
+  },
+  priorityMedium: {
+    background: '#FFF3E0',
+    color: '#E65100',
+    marginRight: '10px',
+  },
+  askChatButton: {
+    padding: '6px 12px',
+    border: 'none',
+    background: '#E3F2FD',
+    color: '#1976D2',
+    fontSize: '0.8rem',
+    fontWeight: 500,
+    borderRadius: 4,
+    cursor: 'pointer',
+    marginLeft: 12,
   },
 };

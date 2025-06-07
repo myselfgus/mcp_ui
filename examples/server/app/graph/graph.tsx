@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
+import { postMessageToParent } from '../utils/messageUtils';
 
 interface TaskDetails {
   remaining: number;
@@ -399,8 +400,7 @@ const CustomAvatarXAxisTick = (props: {
   const [isHovered, setIsHovered] = useState(false); // State for hover effect
 
   const handleAvatarClick = () => {
-    // @ts-expect-error - window is not typed correctly
-    if (memberInfo && window.parent) {
+    if (memberInfo) {
       const message = {
         type: 'tool',
         payload: {
@@ -412,8 +412,7 @@ const CustomAvatarXAxisTick = (props: {
           },
         },
       };
-      // @ts-expect-error - window is not typed correctly
-      window.parent.postMessage(message, '*');
+      postMessageToParent(message);
     }
   };
 
