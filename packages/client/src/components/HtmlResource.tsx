@@ -1,18 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
 import { UiActionResult } from '../types';
 
-export interface RenderHtmlResourceProps {
+export type RenderHtmlResourceProps = {
   resource: Partial<Resource>;
   onUiAction?: (result: UiActionResult) => Promise<unknown>;
   style?: React.CSSProperties;
-}
+  iframeProps?: Omit<
+    React.HTMLAttributes<HTMLIFrameElement>,
+    'src' | 'srcDoc' | 'ref' | 'style'
+  >;
+};
 
-export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
-  resource,
-  onUiAction,
-  style,
-}) => {
+export const HtmlResource = React.forwardRef<
+  HTMLIFrameElement,
+  RenderHtmlResourceProps
+>(({ resource, onUiAction, style, iframeProps }, ref) => {
   const [htmlString, setHtmlString] = useState<string | null>(null);
   const [iframeSrc, setIframeSrc] = useState<string | null>(null);
   const [iframeRenderMode, setIframeRenderMode] = useState<'srcDoc' | 'src'>(
@@ -21,6 +24,7 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  useImperativeHandle(ref, () => iframeRef.current!, []);
 
   useEffect(() => {
     const processResource = async () => {
@@ -31,11 +35,20 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
       setIframeRenderMode('srcDoc'); // Default to srcDoc
 
       // Backwards compatibility: if URI starts with ui-app://, treat as URL content
-      const isLegacyExternalApp = typeof resource.uri === 'string' && resource.uri.startsWith('ui-app://');
-      const effectiveMimeType = isLegacyExternalApp ? 'text/uri-list' : resource.mimeType;
+      const isLegacyExternalApp =
+        typeof resource.uri === 'string' &&
+        resource.uri.startsWith('ui-app://');
+      const effectiveMimeType = isLegacyExternalApp
+        ? 'text/uri-list'
+        : resource.mimeType;
 
-      if (effectiveMimeType !== 'text/html' && effectiveMimeType !== 'text/uri-list') {
-        setError('Resource must be of type text/html (for HTML content) or text/uri-list (for URL content).');
+      if (
+        effectiveMimeType !== 'text/html' &&
+        effectiveMimeType !== 'text/uri-list'
+      ) {
+        setError(
+          'Resource must be of type text/html (for HTML content) or text/uri-list (for URL content).',
+        );
         setIsLoading(false);
         return;
       }
@@ -46,7 +59,7 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
         // If multiple URLs are provided, only the first will be used and others will be logged as warnings.
         setIframeRenderMode('src');
         let urlContent = '';
-        
+
         if (typeof resource.text === 'string' && resource.text.trim() !== '') {
           urlContent = resource.text;
         } else if (typeof resource.blob === 'string') {
@@ -76,8 +89,11 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
 
         // Parse uri-list format: URIs separated by newlines, comments start with #
         // MCP-UI requires a single URL - if multiple are found, use first and warn about others
-        const lines = urlContent.split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('#'));
-        
+        const lines = urlContent
+          .split('\n')
+          .map((line) => line.trim())
+          .filter((line) => line && !line.startsWith('#'));
+
         if (lines.length === 0) {
           setError('No valid URLs found in uri-list content.');
           setIsLoading(false);
@@ -85,14 +101,19 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
         }
 
         if (lines.length > 1) {
-          console.warn(`Multiple URLs found in uri-list content. Using the first URL: "${lines[0]}". Other URLs ignored:`, lines.slice(1));
+          console.warn(
+            `Multiple URLs found in uri-list content. Using the first URL: "${lines[0]}". Other URLs ignored:`,
+            lines.slice(1),
+          );
         }
 
         setIframeSrc(lines[0]);
 
         // Log backwards compatibility usage
         if (isLegacyExternalApp) {
-          console.warn(`Detected legacy ui-app:// URI: "${resource.uri}". Update server to use ui:// with mimeType: 'text/uri-list' for future compatibility.`);
+          console.warn(
+            `Detected legacy ui-app:// URI: "${resource.uri}". Update server to use ui:// with mimeType: 'text/uri-list' for future compatibility.`,
+          );
         }
       } else if (effectiveMimeType === 'text/html') {
         // Handle HTML content
@@ -113,9 +134,7 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
           setError('HTML resource requires text or blob content.');
         }
       } else {
-        setError(
-          'Unsupported mimeType. Expected text/html or text/uri-list.',
-        );
+        setError('Unsupported mimeType. Expected text/html or text/uri-list.');
       }
       setIsLoading(false);
     };
@@ -158,11 +177,12 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
     }
     return (
       <iframe
-        ref={iframeRef}
         srcDoc={htmlString}
         sandbox="allow-scripts"
         style={{ width: '100%', minHeight: 200, ...style }}
         title="MCP HTML Resource (Embedded Content)"
+        {...iframeProps}
+        ref={iframeRef}
       />
     );
   } else if (iframeRenderMode === 'src') {
@@ -176,14 +196,17 @@ export const HtmlResource: React.FC<RenderHtmlResourceProps> = ({
     }
     return (
       <iframe
-        ref={iframeRef}
         src={iframeSrc}
         sandbox="allow-scripts allow-same-origin" // unsafe
         style={{ width: '100%', minHeight: 200, ...style }}
         title="MCP HTML Resource (URL)"
+        {...iframeProps}
+        ref={iframeRef}
       />
     );
   }
 
   return <p className="text-gray-500">Initializing HTML resource display...</p>;
-};
+});
+
+HtmlResource.displayName = 'HtmlResource';
