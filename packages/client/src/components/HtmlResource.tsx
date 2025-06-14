@@ -13,7 +13,7 @@ export type RenderHtmlResourceProps = {
 };
 
 export const HtmlResource = React.forwardRef<
-  HTMLIFrameElement,
+  HTMLIFrameElement | null,
   RenderHtmlResourceProps
 >(({ resource, onUiAction, style, iframeProps }, ref) => {
   const [htmlString, setHtmlString] = useState<string | null>(null);
@@ -23,8 +23,8 @@ export const HtmlResource = React.forwardRef<
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  useImperativeHandle(ref, () => iframeRef.current!, []);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  useImperativeHandle(ref, () => iframeRef.current as HTMLIFrameElement);
 
   useEffect(() => {
     const processResource = async () => {
