@@ -1,4 +1,12 @@
-export type UiActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notification';
+export type UiActionType =
+  | 'tool'
+  | 'prompt'
+  | 'link'
+  | 'intent'
+  | 'notification';
+
+export const ALL_RESOURCE_CONTENT_TYPES = ['rawHtml', 'externalUrl'] as const;
+export type ResourceContentType = (typeof ALL_RESOURCE_CONTENT_TYPES)[number];
 
 export type UiActionResultToolCall = {
   type: 'tool';

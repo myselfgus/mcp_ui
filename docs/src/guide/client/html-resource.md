@@ -14,6 +14,8 @@ export interface HtmlResourceProps {
 }
 ```
 
+The component accepts the following props:
+
 - **`resource`**: The resource object from an `HtmlResourceBlock`. It should include `uri`, `mimeType`, and either `text` or `blob`.
 - **`onUiAction`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like:
   ```typescript
@@ -24,7 +26,9 @@ export interface HtmlResourceProps {
   { type: 'link', payload: { url: string } } |
   ```
   If you don't provide a callback for a specific type, the default handler will be used.
-- **`style`** (optional): Custom styles for the iframe.
+- **`supportedContentTypes`**: (Optional) An array of content types to allow. Can include `'rawHtml'` and/or `'externalUrl'`. If omitted, all supported types are rendered. This is useful for restricting content types due to capability or security considerations.
+- **`style`**: (Optional) Custom styles for the iframe.
+- ** `iframeProps` **: (Optional) Custom props for the iframe.
 
 ## How It Works
 
@@ -101,6 +105,6 @@ The `HtmlResource` component maintains backwards compatibility with the legacy `
 
 ## Security Notes
 
-- **`sandbox` attribute**: Restricts what the iframe can do. `allow-scripts` is needed for interactivity. `allow-same-origin` is external apps. Caution - the external app method isn's not a secure way to render untrusted code. We're working on new methods to alleviate security concerns.
+- **`sandbox` attribute**: Restricts what the iframe can do. `allow-scripts` is needed for interactivity. `allow-same-origin` is external apps. Caution - the external app method isn't not a secure way to render untrusted code. We're working on new methods to alleviate security concerns.
 - **`postMessage` origin**: When sending messages from the iframe, always specify the target origin for safety. The component listens globally, so your iframe content should be explicit.
 - **Content Sanitization**: HTML is rendered as-is. If you don't fully trust the source, sanitize the HTML before passing it in, or rely on the iframe's sandboxing.

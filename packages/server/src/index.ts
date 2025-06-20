@@ -120,11 +120,7 @@ export function createHtmlResource(
       };
       break;
     default:
-      // Exhaustive check
-      (() => {
-        const exhaustiveCheck: never = options.delivery;
-        throw new Error(`Invalid delivery type: ${exhaustiveCheck}`);
-      })();
+        throw new Error(`Invalid delivery type: ${options.delivery}`);
   }
 
   return {

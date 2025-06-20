@@ -227,6 +227,83 @@ https://example.com/backup
   });
 });
 
+describe('supportedContentTypes', () => {
+  it('renders raw HTML when supportedContentTypes includes "rawHtml"', () => {
+    const props: RenderHtmlResourceProps = {
+      resource: { mimeType: 'text/html', text: '<p>Supported HTML</p>' },
+      supportedContentTypes: ['rawHtml'],
+    };
+    render(<HtmlResource {...props} />);
+    const iframe = screen.getByTitle('MCP HTML Resource (Embedded Content)');
+    expect(iframe).toBeInTheDocument();
+    expect(iframe.getAttribute('srcdoc')).toContain('<p>Supported HTML</p>');
+  });
+
+  it('shows an error for raw HTML when supportedContentTypes does not include "rawHtml"', () => {
+    const props: RenderHtmlResourceProps = {
+      resource: { mimeType: 'text/html', text: '<p>Unsupported HTML</p>' },
+      supportedContentTypes: ['externalUrl'],
+    };
+    render(<HtmlResource {...props} />);
+    expect(
+      screen.getByText('Raw HTML content type (text/html) is not supported.'),
+    ).toBeInTheDocument();
+  });
+
+  it('renders external URL when supportedContentTypes includes "externalUrl"', () => {
+    const props: RenderHtmlResourceProps = {
+      resource: {
+        mimeType: 'text/uri-list',
+        text: 'https://supported.example.com',
+      },
+      supportedContentTypes: ['externalUrl'],
+    };
+    render(<HtmlResource {...props} />);
+    const iframe = screen.getByTitle('MCP HTML Resource (URL)');
+    expect(iframe).toBeInTheDocument();
+    expect(iframe.getAttribute('src')).toBe('https://supported.example.com');
+  });
+
+  it('shows an error for external URL when supportedContentTypes does not include "externalUrl"', () => {
+    const props: RenderHtmlResourceProps = {
+      resource: {
+        mimeType: 'text/uri-list',
+        text: 'https://unsupported.example.com',
+      },
+      supportedContentTypes: ['rawHtml'],
+    };
+    render(<HtmlResource {...props} />);
+    expect(
+      screen.getByText(
+        'External URL content type (text/uri-list) is not supported.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('renders content by default when supportedContentTypes is not provided', () => {
+    // Test raw HTML
+    let props: RenderHtmlResourceProps = {
+      resource: { mimeType: 'text/html', text: '<p>Default HTML</p>' },
+    };
+    const { rerender } = render(<HtmlResource {...props} />);
+    let iframe = screen.getByTitle('MCP HTML Resource (Embedded Content)');
+    expect(iframe).toBeInTheDocument();
+    expect(iframe.getAttribute('srcdoc')).toContain('<p>Default HTML</p>');
+
+    // Test external URL
+    props = {
+      resource: {
+        mimeType: 'text/uri-list',
+        text: 'https://default.example.com',
+      },
+    };
+    rerender(<HtmlResource {...props} />);
+    iframe = screen.getByTitle('MCP HTML Resource (URL)');
+    expect(iframe).toBeInTheDocument();
+    expect(iframe.getAttribute('src')).toBe('https://default.example.com');
+  });
+});
+
 const mockResourceBaseForUiActionTests: Partial<Resource> = {
   mimeType: 'text/html',
   text: '<html><body><h1>Test Content</h1><script>console.log("iframe script loaded for onUiAction tests")</script></body></html>',

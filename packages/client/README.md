@@ -20,7 +20,7 @@
 
 **`mcp-ui`** brings interactive web components to the [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP). Deliver rich, dynamic UI resources directly from your MCP server to be rendered by the client. Take AI interaction to the next level!
 
-> *This project is an experimental playground for MCP UI ideas. Expect rapid iteration and community-driven enhancements!*
+> *This project is an experimental community playground for MCP UI ideas. Expect rapid iteration and enhancements!*
 
 <video src="https://github.com/user-attachments/assets/51f7c712-8133-4d7c-86d3-fdca550b9767"></video>
 
@@ -33,6 +33,11 @@
 
 Together, they let you define reusable UI resource blocks on the server side, seamlessly display them in the client, and react to their actions in the MCP host environment.
 
+**North star** -
+* Enable servers to deliver rich, interactive UIs with ergonomic APIs
+* Allow any host to support UI with its own look-and-feel
+* Eliminate security concerns (limit/remove local code execution)
+
 
 ## ✨ Core Concepts
 
@@ -44,10 +49,10 @@ The primary payload exchanged between the server and the client:
 interface HtmlResourceBlock {
   type: 'resource';
   resource: {
-    uri: string;       // e.g. "ui://component/id"
+    uri: string;       // ui://component/id"
     mimeType: 'text/html' | 'text/uri-list'; // text/html for HTML content, text/uri-list for URL content
     text?: string;      // Inline HTML or external URL
-    blob?: string;      // Base64-encoded HTML or URL (for large payloads)
+    blob?: string;      // Base64-encoded HTML or URL
   };
 }
 ```
@@ -59,8 +64,15 @@ interface HtmlResourceBlock {
 * **`text` vs. `blob`**: Choose `text` for simple strings; use `blob` for larger or encoded content.
 
 It's rendered in the client with the `<HtmlResource>` React component.
+The component accepts the following props:
 
-The HTML method is limited, and the external app method isn't secure enough for untrusted 3rd party sites. We need a better method. Some ideas we should explore: RSC, remotedom, etc.
+*   **`resource`**: The `resource` object from an MCP message.
+*   **`onUiAction`**: A callback function to handle events from the resource.
+*   **`supportedContentTypes`**: (Optional) An array of content types to allow. Can include `'rawHtml'` and/or `'externalUrl'`. If omitted, all supported types are rendered. This is useful for restricting content types due to capability or security considerations.
+*   **`style`**: (Optional) Custom styles for the iframe.
+*   **`iframeProps`**: (Optional) Custom iframe props.
+
+The HTML method is limited, and the external app method isn't secure enough for untrusted sites. We need a better method. We're exploring web components and remote-dom as alternatives that can allow the servers to render their components with the host's look-and-feel without local code execution.
 
 ### UI Action
 
@@ -115,6 +127,7 @@ yarn add @mcp-ui/server @mcp-ui/client
        return (
          <HtmlResource
            resource={mcpResource.resource}
+           supportedContentTypes={['rawHtml']}
            onUiAction={(result) => {
              console.log('Action:', result);
              return { status: 'ok' };
@@ -147,11 +160,12 @@ Drop those URLs into any MCP-compatible host to see `mcp-ui` in action.
 ## 🛣️ Roadmap
 
 - [X] Add online playground
-- [ ] Support React Server Components
-- [ ] Support Remote-DOM
-- [ ] Support additional client-side libraries (e.g., Vue)
-- [ ] Expand UI Action API (beyond tool calls)
-- [ ] Do more with Resources and Sampling
+- [X] Expand UI Action API (beyond tool calls)
+- [ ] Add
+- [ ] Support Web Components (in progress)
+- [ ] Support Remote-DOM (in progress)
+- [ ] Add component libraries (in progress)
+- [ ] Support additional client-side libraries and render engines (e.g., Vue, TUI, etc.)
 
 ## 🤝 Contributing
 
