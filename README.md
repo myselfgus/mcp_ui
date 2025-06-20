@@ -49,7 +49,7 @@ The primary payload exchanged between the server and the client:
 interface HtmlResourceBlock {
   type: 'resource';
   resource: {
-    uri: string;       // ui://component/id"
+    uri: string;       // ui://component/id
     mimeType: 'text/html' | 'text/uri-list'; // text/html for HTML content, text/uri-list for URL content
     text?: string;      // Inline HTML or external URL
     blob?: string;      // Base64-encoded HTML or URL
