@@ -105,6 +105,6 @@ The `HtmlResource` component maintains backwards compatibility with the legacy `
 
 ## Security Notes
 
-- **`sandbox` attribute**: Restricts what the iframe can do. `allow-scripts` is needed for interactivity. `allow-same-origin` is external apps. Caution - the external app method isn't not a secure way to render untrusted code. We're working on new methods to alleviate security concerns.
+- **`sandbox` attribute**: Restricts what the iframe can do. `allow-scripts` is needed for interactivity. `allow-same-origin` is external apps. Caution - the external app method isn't a secure way to render untrusted code. We're working on new methods to alleviate security concerns.
 - **`postMessage` origin**: When sending messages from the iframe, always specify the target origin for safety. The component listens globally, so your iframe content should be explicit.
 - **Content Sanitization**: HTML is rendered as-is. If you don't fully trust the source, sanitize the HTML before passing it in, or rely on the iframe's sandboxing.
