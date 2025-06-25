@@ -1,3 +1,5 @@
+import {RemoteReceiver} from '@remote-dom/core/receivers';
+
 export type UiActionType =
   | 'tool'
   | 'prompt'
@@ -5,7 +7,12 @@ export type UiActionType =
   | 'intent'
   | 'notification';
 
-export const ALL_RESOURCE_CONTENT_TYPES = ['rawHtml', 'externalUrl'] as const;
+export const ALL_RESOURCE_CONTENT_TYPES = [
+  'rawHtml',
+  'externalUrl',
+  'declarativeUi',
+  'remoteDom',
+] as const;
 export type ResourceContentType = (typeof ALL_RESOURCE_CONTENT_TYPES)[number];
 
 export type UiActionResultToolCall = {
@@ -51,3 +58,38 @@ export type UiActionResult =
   | UiActionResultLink
   | UiActionResultIntent
   | UiActionResultNotification;
+
+/**
+ * This is the API that the remote environment (iframe) exports to the host.
+ * The host can call these methods on the thread.
+ */
+export interface SandboxAPI {
+  render: (
+    options: RenderOptions,
+    receiver: RemoteReceiver,
+  ) => void | Promise<void>;
+}
+
+export * from './remote-elements';
+
+export interface RemoteElementConfiguration {
+  tagName: string;
+  remoteAttributes?: string[];
+  remoteEvents?: string[];
+}
+export interface RenderOptions {
+  code: string;
+  componentLibrary?: string;
+  useReactRenderer?: boolean;
+  remoteElements?: RemoteElementConfiguration[];
+}
+
+export interface ComponentLibrary {
+  [key: string]: React.ComponentType<Record<string, unknown>>;
+}
+
+export interface ComponentLibraryElement {
+  type: string;
+  props?: {[key: string]: unknown};
+  children?: (ComponentLibraryElement | string)[];
+}

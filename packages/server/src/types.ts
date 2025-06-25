@@ -2,7 +2,11 @@
 export type URI = `ui://${string}`;
 
 // text/html for rawHtml content, text/uri-list for externalUrl content
-export type MimeType = 'text/html' | 'text/uri-list';
+export type MimeType =
+  | 'text/html'
+  | 'text/uri-list'
+  | 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react'
+  | 'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents';
 
 export type HtmlTextContent = {
   uri: URI;
@@ -20,13 +24,17 @@ export type Base64BlobContent = {
 
 export type ResourceContentPayload =
   | { type: 'rawHtml'; htmlString: string }
-  | { type: 'externalUrl'; iframeUrl: string };
+  | { type: 'externalUrl'; iframeUrl: string }
+  | {
+      type: 'remoteDom';
+      script: string;
+      flavor: 'react' | 'webcomponents';
+    };
 
 export interface CreateHtmlResourceOptions {
-  uri: URI; // REQUIRED. Must start with "ui://" if content.type is "rawHtml",
-  // or "ui-app://" if content.type is "externalUrl".
-  content: ResourceContentPayload; // REQUIRED. The actual content payload.
-  delivery: 'text' | 'blob'; // REQUIRED. How the content string (htmlString or iframeUrl) should be packaged.
+  uri: URI;
+  content: ResourceContentPayload;
+  delivery: 'text' | 'blob';
 }
 
 export type UiActionType =

@@ -94,6 +94,20 @@ export function createHtmlResource(
       );
     }
     mimeType = 'text/uri-list';
+  } else if (options.content.type === 'remoteDom') {
+    if (!options.uri.startsWith('ui://')) {
+      throw new Error(
+        "MCP SDK: URI must start with 'ui://' when content.type is 'remoteDom'.",
+      );
+    }
+    actualContentString = options.content.script;
+    if (typeof actualContentString !== 'string') {
+      throw new Error(
+        "MCP SDK: content.script must be provided as a string when content.type is 'remoteDom'.",
+      );
+    }
+    mimeType =
+      `application/vnd.mcp-ui.remote-dom+javascript; flavor=${options.content.flavor}`;
   } else {
     // This case should ideally be prevented by TypeScript's discriminated union checks
     const exhaustiveCheckContent: never = options.content;
@@ -108,14 +122,14 @@ export function createHtmlResource(
     case 'text':
       resource = {
         uri: options.uri,
-        mimeType: mimeType,
+        mimeType: mimeType as MimeType,
         text: actualContentString,
       };
       break;
     case 'blob':
       resource = {
         uri: options.uri,
-        mimeType: mimeType,
+        mimeType: mimeType as MimeType,
         blob: robustUtf8ToBase64(actualContentString),
       };
       break;
@@ -132,25 +146,8 @@ export function createHtmlResource(
   };
 }
 
-// --- HTML Escaping Utilities ---
-// These are kept as they can be useful for consumers preparing HTML strings.
-export function escapeHtml(unsafe: string): string {
-  return unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-
-export function escapeAttribute(unsafe: string): string {
-  // Simplified: primarily for quotes. More robust escaping might be needed
-  // depending on context, but for attributes, quotes are key.
-  return unsafe.replace(/"/g, '&quot;');
-}
-
 export type {
-  CreateHtmlResourceOptions as CreateResourceOptions,
+  CreateHtmlResourceOptions,
   ResourceContentPayload,
   UiActionResult,
 } from './types.js';

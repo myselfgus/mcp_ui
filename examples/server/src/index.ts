@@ -2,7 +2,9 @@ import { McpAgent } from 'agents/mcp';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { createRequestHandler } from 'react-router';
-import { createHtmlResource } from '@mcp-ui/server';
+import {
+  createHtmlResource,
+} from '@mcp-ui/server';
 
 declare module 'react-router' {
   export interface AppLoadContext {
@@ -193,6 +195,50 @@ export class MyMCP extends McpAgent {
         };
       },
     );
+
+    this.server.tool('show_remote_dom_react', 'Shows a react remote-dom component', async () => {
+      const resourceBlock = createHtmlResource({
+        uri: `ui://remote-dom-react/${Date.now()}` as `ui://${string}`,
+        delivery: 'text',
+        content: {
+          type: 'remoteDom',
+          flavor: 'react',
+          script: `
+            const { createRemoteRoot, render } = await import("https://cdn.jsdelivr.net/npm/@remote-dom/core@1.0.0-beta.19/dist/elements.js");
+            const root = createRemoteRoot(connection);
+            const button = root.createElement('ui-button');
+            button.textContent = 'Click me (React)!';
+            root.appendChild(button);
+            await root.mount();
+          `,
+        }
+      });
+      return {
+        content: [resourceBlock],
+      };
+    });
+
+    this.server.tool('show_remote_dom_web_components', 'Shows a web components remote-dom component', async () => {
+      const resourceBlock = createHtmlResource({
+        uri: `ui://remote-dom-wc/${Date.now()}` as `ui://${string}`,
+        delivery: 'text',
+        content: {
+          type: 'remoteDom',
+          flavor: 'webcomponents',
+          script: `
+            const { createRemoteRoot, render } = await import("https://cdn.jsdelivr.net/npm/@remote-dom/core@1.0.0-beta.19/dist/elements.js");
+            const root = createRemoteRoot(connection);
+            const button = root.createElement('ui-button');
+            button.textContent = 'Click me (Web Components)!';
+            root.appendChild(button);
+            await root.mount();
+          `,
+        }
+      });
+      return {
+        content: [resourceBlock],
+      };
+    });
   }
 }
 

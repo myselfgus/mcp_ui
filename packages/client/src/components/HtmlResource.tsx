@@ -1,6 +1,6 @@
 import React, { useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
-import { UiActionResult, ResourceContentType } from '../types';
+import { UiActionResult } from '../types';
 import { processResource } from '../utils/processResource';
 
 export type RenderHtmlResourceProps = {
@@ -11,7 +11,6 @@ export type RenderHtmlResourceProps = {
     React.HTMLAttributes<HTMLIFrameElement>,
     'src' | 'srcDoc' | 'ref' | 'style'
   >;
-  supportedContentTypes?: ResourceContentType[];
 };
 
 export const HtmlResource = React.forwardRef<
@@ -19,15 +18,15 @@ export const HtmlResource = React.forwardRef<
   RenderHtmlResourceProps
 >(
   (
-    { resource, onUiAction, style, iframeProps, supportedContentTypes },
+    { resource, onUiAction, style, iframeProps },
     ref,
   ) => {
     const iframeRef = useRef<HTMLIFrameElement | null>(null);
     useImperativeHandle(ref, () => iframeRef.current as HTMLIFrameElement);
 
     const { error, iframeSrc, iframeRenderMode, htmlString } = useMemo(
-      () => processResource(resource, supportedContentTypes),
-      [resource, supportedContentTypes],
+      () => processResource(resource),
+      [resource],
     );
 
     useEffect(() => {

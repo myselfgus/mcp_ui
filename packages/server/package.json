@@ -19,11 +19,11 @@
   ],
   "devDependencies": {
     "@types/node": "^18.19.100",
+    "@vitest/coverage-v8": "^1.0.0",
     "typescript": "^5.0.0",
     "vite": "^5.0.0",
     "vite-plugin-dts": "^3.6.0",
-    "vitest": "^1.0.0",
-    "@vitest/coverage-v8": "^1.0.0"
+    "vitest": "^1.0.0"
   },
   "scripts": {
     "dev": "vite",
@@ -35,5 +35,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "*"
+  }
 }

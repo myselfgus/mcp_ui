@@ -1,6 +1,4 @@
 import { Resource } from '@modelcontextprotocol/sdk/types.js';
-import { ResourceContentType, ALL_RESOURCE_CONTENT_TYPES } from '../types';
-
 
 type ProcessResourceResult = {
   error?: string;
@@ -11,10 +9,7 @@ type ProcessResourceResult = {
 
 export function processResource(
   resource: Partial<Resource>,
-  supportedContentTypes?: ResourceContentType[],
 ): ProcessResourceResult {
-  const supported = supportedContentTypes || ALL_RESOURCE_CONTENT_TYPES;
-
   // Backwards compatibility: if URI starts with ui-app://, treat as URL content
   const isLegacyExternalApp =
     typeof resource.uri === 'string' && resource.uri.startsWith('ui-app://');
@@ -29,21 +24,6 @@ export function processResource(
     return {
       error:
         'Resource must be of type text/html (for HTML content) or text/uri-list (for URL content).',
-    };
-  }
-
-  if (effectiveMimeType === 'text/html' && !supported.includes('rawHtml')) {
-    return {
-      error: 'Raw HTML content type (text/html) is not supported.',
-    };
-  }
-
-  if (
-    effectiveMimeType === 'text/uri-list' &&
-    !supported.includes('externalUrl')
-  ) {
-    return {
-      error: 'External URL content type (text/uri-list) is not supported.',
     };
   }
 
