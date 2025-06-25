@@ -1,22 +1,19 @@
 # @mcp-ui/client Overview
 
-The `@mcp-ui/client` package helps you render HTML resource sent from an MCP-enabled server. For example, `HtmlResource` is a React component that handles the logic.
+The `@mcp-ui/client` package helps you render UI resources sent from an MCP-enabled server. The primary component for this is `<ResourceRenderer />`, which automatically detects the resource type and renders the appropriate component for it.
 
 ## What’s Included?
 
-- **`HtmlResource` (React Component)**:
-  The primary component for rendering an interactive HTML resource. It handles:
-  - Decoding Base64 blobs if necessary.
-  - Rendering content using `srcDoc` for the `text/html` mimeType.
-  - Rendering content using `src` for the `text/uri-list` mimeType.
-  - Setting up a `message` event listener to receive actions from `ui://` iframes.
-- **(Other potential exports might include context providers or hooks if the client SDK grows more complex).**
+- **`<ResourceRenderer />`**: The main component you'll use. It inspects the resource's `mimeType` and renders either `<HtmlResource />` or `<RemoteDomResource />`.
+- **`<HtmlResource />`**: Renders traditional HTML content, either from a string or an external URL, inside a sandboxed `<iframe>`.
+- **`<RemoteDomResource />`**: Renders a UI described by `remote-dom`, allowing for host-native components that match your application's look and feel.
+- **Component Libraries**: A mapping of remote element names to your own React components, used by `<RemoteDomResource />`.
 
 ## Purpose
 
-- **Simplified Rendering**: Abstract away the complexities of handling different URI schemes and content delivery methods (`text` vs. `blob`).
-- **Security**: Encourages rendering user-provided HTML within sandboxed iframes.
-- **Interactivity**: Provides a basic mechanism (`onUiAction` prop) for iframe content to communicate back to the host application.
+- **Simplified Rendering**: Abstract away the complexities of handling different resource types.
+- **Security**: Encourages rendering user-provided HTML and scripts within sandboxed iframes and web workers.
+- **Interactivity**: Provides a unified mechanism (`onUiAction` prop) for UI resources to communicate back to the host application.
 
 ## Building
 
@@ -31,4 +28,5 @@ pnpm build --filter @mcp-ui/client
 See the following pages for more details:
 
 - [HtmlResource Component](./html-resource.md)
+- [RemoteDomResource Component](./remote-dom-resource.md)
 - [Client SDK Usage & Examples](./usage-examples.md)

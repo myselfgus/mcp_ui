@@ -85,7 +85,7 @@ export const HtmlResource = React.forwardRef<
       return (
         <iframe
           src={iframeSrc}
-          sandbox="allow-scripts allow-same-origin" // unsafe
+          sandbox="allow-scripts allow-same-origin"
           style={{ width: '100%', minHeight: 200, ...style }}
           title="MCP HTML Resource (URL)"
           {...iframeProps}

@@ -49,6 +49,10 @@ export default defineConfig({
               text: 'HtmlResource Component',
               link: '/guide/client/html-resource',
             },
+            {
+              text: 'RemoteDomResource Component',
+              link: '/guide/client/remote-dom-resource',
+            },
             { text: 'Usage & Examples', link: '/guide/client/usage-examples' },
             // { text: 'API', link: '/guide/client/api' } // Placeholder
           ],
