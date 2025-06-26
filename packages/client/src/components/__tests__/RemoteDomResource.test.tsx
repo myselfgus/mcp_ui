@@ -86,7 +86,7 @@ describe('<RemoteDomResource />', () => {
     expect(remoteRootRendererMock).toHaveBeenCalled();
 
     const props = remoteRootRendererMock.mock.calls[0][0];
-    const componentsMap = props.components as Map<string, any>;
+    const componentsMap = props.components as Map<string, unknown>;
 
     expect(componentsMap).toBeInstanceOf(Map);
     basicComponentLibrary.elements.forEach((element) => {
