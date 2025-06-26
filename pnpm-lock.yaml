@@ -7,19 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@mcp-ui/client':
-        specifier: ^2.4.0
-        version: 2.4.0
-      '@remote-dom/core':
-        specifier: ^1.8.0
-        version: 1.8.1(@preact/signals-core@1.10.0)
-      '@remote-dom/react':
-        specifier: ^1.2.2
-        version: 1.2.2(@preact/signals-core@1.10.0)(react@19.1.0)
-      vite-plugin-lib-inject-css:
-        specifier: ^2.2.2
-        version: 2.2.2(vite@5.4.19(@types/node@22.15.33)(lightningcss@1.30.1))
     devDependencies:
       '@semantic-release/changelog':
         specifier: ^6.0.3
@@ -483,64 +470,6 @@ packages:
 
   '@asamuzakjp/dom-selector@2.0.2':
     resolution: {integrity: sha512-x1KXOatwofR6ZAYzXRBL5wrdV0vwNxlTCK9NCuLqAzQYARqGcvFwiJA6A1ERuh+dgeA4Dxm3JBYictIes+SqUQ==}
-
-  '@ast-grep/napi-darwin-arm64@0.36.3':
-    resolution: {integrity: sha512-uM0Hrm5gcHqaBL64ktmPBFMTorTlPKWsUfi0E2Cg09GJfeYWvZmicCqgd7qVtjURmQvFQdb4JSqHIkJvws6Uqw==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [darwin]
-
-  '@ast-grep/napi-darwin-x64@0.36.3':
-    resolution: {integrity: sha512-wEMeQw8lRL66puG2m8m0kDRQDtubygj59HA/cmut2V5SPx/13BN3wuEk6JPv97gqGUCUGhG2+5Z6UZ/Ll2q01Q==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [darwin]
-
-  '@ast-grep/napi-linux-arm64-gnu@0.36.3':
-    resolution: {integrity: sha512-sMsTMaUjW7SM8KPbLviCSBuM4zgJcwvie1yZI92HKSlFzC7ABe7X7UvyUREB+JwqccDVEL5yOJAjqB8eFSCizw==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [linux]
-
-  '@ast-grep/napi-linux-arm64-musl@0.36.3':
-    resolution: {integrity: sha512-2XRmNYuovZu0Pa4J3or4PKMkQZnXXfpVcCrPwWB/2ytX7XUo+TWLgYE8rPVnJOyw5zujkveFb0XUrro9mQgLzw==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [linux]
-
-  '@ast-grep/napi-linux-x64-gnu@0.36.3':
-    resolution: {integrity: sha512-mTwPRbBi1feGqR2b5TWC5gkEDeRi8wfk4euF5sKNihfMGHj6pdfINHQ3QvLVO4C7z0r/wgWLAvditFA0b997dg==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-
-  '@ast-grep/napi-linux-x64-musl@0.36.3':
-    resolution: {integrity: sha512-tMGPrT+zuZzJK6n1cD1kOii7HYZE9gUXjwtVNE/uZqXEaWP6lmkfoTMbLjnxEe74VQbmaoDGh1/cjrDBnqC6Uw==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-
-  '@ast-grep/napi-win32-arm64-msvc@0.36.3':
-    resolution: {integrity: sha512-7pFyr9+dyV+4cBJJ1I57gg6PDXP3GBQeVAsEEitzEruxx4Hb4cyNro54gGtlsS+6ty+N0t004tPQxYO2VrsPIg==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [win32]
-
-  '@ast-grep/napi-win32-ia32-msvc@0.36.3':
-    resolution: {integrity: sha512-MPAgccH9VscRaFuEBMzDGPS+3c4cKNVGIVJ7WSNa1nZtLQ0eFEaPJ7pyDnCezgVSxfNFVYBvKyyF/vcm7Qc9+A==}
-    engines: {node: '>= 10'}
-    cpu: [ia32]
-    os: [win32]
-
-  '@ast-grep/napi-win32-x64-msvc@0.36.3':
-    resolution: {integrity: sha512-TIVtuSbXhty9kaSEfr4ULWx5PAuUeGgUkFaR60lmOs7sGTWgpig+suwKfTmevoAblFknCW/aMHOwziwJoUZA6A==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [win32]
-
-  '@ast-grep/napi@0.36.3':
-    resolution: {integrity: sha512-ExypohE8L7FvKBHxu7UpwcV9XVfyS+AqNZKyKIfxYwJyD9l7Gw6pmMYd7J2uopJsPEIUf44/emEFds6nFUx/dw==}
-    engines: {node: '>= 10'}
 
   '@babel/code-frame@7.27.1':
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
@@ -1653,9 +1582,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
-
-  '@mcp-ui/client@2.4.0':
-    resolution: {integrity: sha512-jgPIe63MOmDzhFS/jWKASt4NuVfXkZscmMMNseFzgsy4DpaVw+U6QsuI7PmF3JgPogV0nnKtvBC1BT5UyzyZRw==}
 
   '@mcp-ui/server@2.4.0':
     resolution: {integrity: sha512-1SagTQ6SKcH+5YJ1asCKOS1e0Ge6eShBsBt2QlWoX/tvdiixqBeHoEYb9/vGrZnXUK5GmjA2HrU66hhXdIuA3Q==}
@@ -7090,11 +7016,6 @@ packages:
       vite:
         optional: true
 
-  vite-plugin-lib-inject-css@2.2.2:
-    resolution: {integrity: sha512-NF30p0GwtfSAmVlxo2NgPXM2rEdtgV7LFi4lkzajKD7P3Ru/ZAFmI533M0Z5qyMZpvNMxVGkewzpjD0HOWtbDQ==}
-    peerDependencies:
-      vite: '*'
-
   vite-tsconfig-paths@5.1.4:
     resolution: {integrity: sha512-cYj0LRuLV2c2sMqhqhGpaO3LretdtMn/BVX4cPLanIZuwwrkVl+lK84E/miEXkCHWXuq65rhNN4rXsBcOB3S4w==}
     peerDependencies:
@@ -7597,45 +7518,6 @@ snapshots:
       bidi-js: 1.0.3
       css-tree: 2.3.1
       is-potential-custom-element-name: 1.0.1
-
-  '@ast-grep/napi-darwin-arm64@0.36.3':
-    optional: true
-
-  '@ast-grep/napi-darwin-x64@0.36.3':
-    optional: true
-
-  '@ast-grep/napi-linux-arm64-gnu@0.36.3':
-    optional: true
-
-  '@ast-grep/napi-linux-arm64-musl@0.36.3':
-    optional: true
-
-  '@ast-grep/napi-linux-x64-gnu@0.36.3':
-    optional: true
-
-  '@ast-grep/napi-linux-x64-musl@0.36.3':
-    optional: true
-
-  '@ast-grep/napi-win32-arm64-msvc@0.36.3':
-    optional: true
-
-  '@ast-grep/napi-win32-ia32-msvc@0.36.3':
-    optional: true
-
-  '@ast-grep/napi-win32-x64-msvc@0.36.3':
-    optional: true
-
-  '@ast-grep/napi@0.36.3':
-    optionalDependencies:
-      '@ast-grep/napi-darwin-arm64': 0.36.3
-      '@ast-grep/napi-darwin-x64': 0.36.3
-      '@ast-grep/napi-linux-arm64-gnu': 0.36.3
-      '@ast-grep/napi-linux-arm64-musl': 0.36.3
-      '@ast-grep/napi-linux-x64-gnu': 0.36.3
-      '@ast-grep/napi-linux-x64-musl': 0.36.3
-      '@ast-grep/napi-win32-arm64-msvc': 0.36.3
-      '@ast-grep/napi-win32-ia32-msvc': 0.36.3
-      '@ast-grep/napi-win32-x64-msvc': 0.36.3
 
   '@babel/code-frame@7.27.1':
     dependencies:
@@ -8666,13 +8548,6 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@mcp-ui/client@2.4.0':
-    dependencies:
-      '@modelcontextprotocol/sdk': 1.13.1
-      react: 18.3.1
-    transitivePeerDependencies:
-      - supports-color
-
   '@mcp-ui/server@2.4.0': {}
 
   '@microsoft/api-extractor-model@7.28.13(@types/node@18.19.112)':
@@ -9176,17 +9051,6 @@ snapshots:
       htm: 3.1.1
     optionalDependencies:
       react: 18.3.1
-    transitivePeerDependencies:
-      - '@preact/signals-core'
-      - preact
-
-  '@remote-dom/react@1.2.2(@preact/signals-core@1.10.0)(react@19.1.0)':
-    dependencies:
-      '@remote-dom/core': 1.8.1(@preact/signals-core@1.10.0)
-      '@types/react': 18.3.23
-      htm: 3.1.1
-    optionalDependencies:
-      react: 19.1.0
     transitivePeerDependencies:
       - '@preact/signals-core'
       - preact
@@ -14925,13 +14789,6 @@ snapshots:
       - '@types/node'
       - rollup
       - supports-color
-
-  vite-plugin-lib-inject-css@2.2.2(vite@5.4.19(@types/node@22.15.33)(lightningcss@1.30.1)):
-    dependencies:
-      '@ast-grep/napi': 0.36.3
-      magic-string: 0.30.17
-      picocolors: 1.1.1
-      vite: 5.4.19(@types/node@22.15.33)(lightningcss@1.30.1)
 
   vite-tsconfig-paths@5.1.4(typescript@5.8.3)(vite@6.3.5(@types/node@20.19.1)(jiti@2.4.2)(lightningcss@1.30.1)):
     dependencies:
