@@ -10,7 +10,6 @@ export type UiActionType =
 export const ALL_RESOURCE_CONTENT_TYPES = [
   'rawHtml',
   'externalUrl',
-  'declarativeUi',
   'remoteDom',
 ] as const;
 export type ResourceContentType = (typeof ALL_RESOURCE_CONTENT_TYPES)[number];
