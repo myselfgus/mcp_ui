@@ -91,7 +91,7 @@ yarn add @mcp-ui/server @mcp-ui/client
 1. **Server-side**: Build your resource blocks
 
    ```ts
-   import { createHtmlResource, createRemoteDomResource } from '@mcp-ui/server';
+   import { createHtmlResource } from '@mcp-ui/server';
    import {
     createRemoteComponent,
     createRemoteDocument,
@@ -105,15 +105,11 @@ yarn add @mcp-ui/server @mcp-ui/client
      delivery: 'text',
    });
 
-   // Remote DOM
-   const document = createRemoteDocument();
-   const button = createRemoteComponent('button');
-   const text = createRemoteText('Click me!');
-   button.appendChild(text);
-   document.appendChild(button);
-   const remoteDomResource = createRemoteDomResource({
-     uri: 'ui://my-button/1',
-     document,
+   // External URL
+   const externalUrlResource = createHtmlResource({
+     uri: 'ui://greeting/1',
+     content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
+     delivery: 'text',
    });
    ```
 
@@ -147,8 +143,9 @@ yarn add @mcp-ui/server @mcp-ui/client
 ## 🌍 Examples
 
 **Client example**
-* [ui-inspector](https://github.com/idosal/ui-inspector) - inspect local `mcp-ui`-enabled servers. Check out the [hosted version](https://scira-mcp-chat-git-main-idosals-projects.vercel.app/)!
-* [MCP-UI Chat](https://github.com/idosal/scira-mcp-ui-chat) - interactive chat built with the `mcp-ui` client.
+* [ui-inspector](https://github.com/idosal/ui-inspector) - inspect local `mcp-ui`-enabled servers. 
+* [MCP-UI Chat](https://github.com/idosal/scira-mcp-ui-chat) - interactive chat built with the `mcp-ui` client. Check out the [hosted version](https://scira-mcp-chat-git-main-idosals-projects.vercel.app/)!
+* MCP-UI RemoteDOM Playground - local demo app to test RemoteDOM resources (intended for hosts)
 
 **Server example**
 Try out the hosted app -
@@ -164,7 +161,6 @@ Drop those URLs into any MCP-compatible host to see `mcp-ui` in action.
 
 - [X] Add online playground
 - [X] Expand UI Action API (beyond tool calls)
-- [ ] Add
 - [X] Support Web Components
 - [X] Support Remote-DOM
 - [ ] Add component libraries (in progress)

@@ -173,7 +173,7 @@ function App() {
       </div>
       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
         <p style={{ fontSize: '0.9em', color: '#666', marginBottom: '1rem' }}>
-          Edit the JavaScript code below to see the changes reflected in all
+          Edit the Resource's `script` content below to see the changes reflected in all
           examples:
         </p>
         <textarea
