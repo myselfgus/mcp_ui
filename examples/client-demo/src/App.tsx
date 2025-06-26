@@ -6,7 +6,7 @@ import {
   remoteStackDefinition,
   remoteImageDefinition,
 } from '@mcp-ui/client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import { defineWebComponents } from './libraries/webcomponents';
 import { radixComponentLibrary } from './libraries/radix';
 import './libraries/radix-styles.css';
@@ -18,9 +18,7 @@ const remoteElements = [
   remoteImageDefinition,
 ];
 
-const defaultRemoteDomScript = `
-// Create a state variable to track the current logo
-let isDarkMode = false;
+const defaultRemoteDomScript = `let isDarkMode = false;
 
 // Create the main container stack with centered alignment
 const stack = document.createElement('ui-stack');
@@ -77,32 +75,48 @@ root.appendChild(stack);
 
 function App() {
   const [scriptContent, setScriptContent] = useState(defaultRemoteDomScript);
-  const [renderKey, setRenderKey] = useState(0);
+  const [inputValue, setInputValue] = useState(defaultRemoteDomScript);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     // Always define web components for the web components example
     defineWebComponents();
   }, []);
 
-  // Force re-render when script content changes
+  // Debounce the script content updates
   useEffect(() => {
-    setRenderKey((prev) => prev + 1);
-  }, [scriptContent]);
+    const handler = setTimeout(() => {
+      startTransition(() => {
+        setScriptContent(inputValue);
+      });
+    }, 300);
 
-  const mockResourceReact = {
-    mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
-    content: scriptContent,
-  };
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [inputValue]);
 
-  const mockResourceWebComponents = {
-    mimeType:
-      'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents',
-    content: scriptContent,
-  };
+  const mockResourceReact = useMemo(
+    () => ({
+      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
+      content: scriptContent,
+    }),
+    [scriptContent],
+  );
+
+  const mockResourceWebComponents = useMemo(
+    () => ({
+      mimeType:
+        'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents',
+      content: scriptContent,
+    }),
+    [scriptContent],
+  );
 
   return (
     <div
       style={{
+        opacity: isPending ? 0.8 : 1,
         maxWidth: '1400px',
         margin: '0 auto',
         padding: '2rem',
@@ -130,7 +144,7 @@ function App() {
           <h2 style={{ textAlign: 'center' }}>Basic React Components</h2>
 
           <RemoteDomResource
-            key={`basic-${renderKey}`}
+            key={`basic-${scriptContent}`}
             resource={mockResourceReact}
             library={basicComponentLibrary}
             remoteElements={remoteElements}
@@ -147,7 +161,7 @@ function App() {
           <h2 style={{ textAlign: 'center' }}>Radix React Components</h2>
 
           <RemoteDomResource
-            key={`radix-${renderKey}`}
+            key={`radix-${scriptContent}`}
             resource={mockResourceReact}
             library={radixComponentLibrary}
             remoteElements={remoteElements}
@@ -164,7 +178,7 @@ function App() {
           <h2 style={{ textAlign: 'center' }}>Web Components</h2>
 
           <RemoteDomResource
-            key={`webcomponents-${renderKey}`}
+            key={`webcomponents-${scriptContent}`}
             resource={mockResourceWebComponents}
             library={basicComponentLibrary}
             remoteElements={remoteElements}
@@ -173,12 +187,11 @@ function App() {
       </div>
       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
         <p style={{ fontSize: '0.9em', color: '#666', marginBottom: '1rem' }}>
-          Edit the Resource's `script` content below to see the changes reflected in all
-          examples:
+          Edit the Server's Resource `script` below to see the changes reflected in the host:
         </p>
         <textarea
-          value={scriptContent}
-          onChange={(e) => setScriptContent(e.target.value)}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           style={{
             width: '100%',
             height: '300px',
