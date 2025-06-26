@@ -164,7 +164,7 @@ export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
       {useReactRenderer && components ? (
         <RemoteRootRenderer receiver={receiver as RemoteReceiver} components={components} />
       ) : (
-        <div ref={containerRef} />
+        <div ref={containerRef} data-testid="standard-dom-renderer-container" />
       )}
     </>
   );

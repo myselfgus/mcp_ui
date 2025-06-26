@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import { vi, type Mock } from 'vitest';
 import { RemoteDomResource } from '../RemoteDomResource';
 import '@testing-library/jest-dom';
 import { basicComponentLibrary } from '../../component-libraries/basic';
+import { RemoteRootRenderer } from '@remote-dom/react/host';
 
 // Mock child components and dependencies
 vi.mock('@remote-dom/react/host', async (importOriginal) => {
@@ -37,8 +38,8 @@ describe('<RemoteDomResource />', () => {
 
     render(<RemoteDomResource resource={resource} library={basicComponentLibrary} />);
     
-    expect(screen.getByText('Using React renderer: Yes')).toBeInTheDocument();
     expect(screen.getByTestId('remote-root-renderer')).toBeInTheDocument();
+    expect(screen.queryByTestId('standard-dom-renderer-container')).not.toBeInTheDocument();
   });
 
   it('should use standard DOM renderer when mimeType includes "flavor=webcomponents"', () => {
@@ -49,8 +50,7 @@ describe('<RemoteDomResource />', () => {
 
     render(<RemoteDomResource resource={resource} />);
     
-    expect(screen.getByText('Using React renderer: No')).toBeInTheDocument();
-    expect(screen.getByText('Standard Remote DOM container:')).toBeInTheDocument();
+    expect(screen.getByTestId('standard-dom-renderer-container')).toBeInTheDocument();
     expect(screen.queryByTestId('remote-root-renderer')).not.toBeInTheDocument();
   });
 
@@ -59,8 +59,7 @@ describe('<RemoteDomResource />', () => {
 
     render(<RemoteDomResource resource={resource} />);
     
-    expect(screen.getByText('Using React renderer: No')).toBeInTheDocument();
-    expect(screen.getByText('Standard Remote DOM container:')).toBeInTheDocument();
+    expect(screen.getByTestId('standard-dom-renderer-container')).toBeInTheDocument();
     expect(screen.queryByTestId('remote-root-renderer')).not.toBeInTheDocument();
   });
 
@@ -72,8 +71,7 @@ describe('<RemoteDomResource />', () => {
 
     render(<RemoteDomResource resource={resource} />);
     
-    expect(screen.getByText('Using React renderer: No')).toBeInTheDocument();
-    expect(screen.getByText('Standard Remote DOM container:')).toBeInTheDocument();
+    expect(screen.getByTestId('standard-dom-renderer-container')).toBeInTheDocument();
     expect(screen.queryByTestId('remote-root-renderer')).not.toBeInTheDocument();
   });
 
@@ -83,6 +81,16 @@ describe('<RemoteDomResource />', () => {
       mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
     };
     render(<RemoteDomResource resource={resource} library={basicComponentLibrary} />);
-    expect(screen.getByText('Component library: basic')).toBeInTheDocument();
+
+    const remoteRootRendererMock = RemoteRootRenderer as Mock;
+    expect(remoteRootRendererMock).toHaveBeenCalled();
+
+    const props = remoteRootRendererMock.mock.calls[0][0];
+    const componentsMap = props.components as Map<string, any>;
+
+    expect(componentsMap).toBeInstanceOf(Map);
+    basicComponentLibrary.elements.forEach((element) => {
+      expect(componentsMap.has(element.tagName)).toBe(true);
+    });
   });
 }); 
