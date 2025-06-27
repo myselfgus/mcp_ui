@@ -50,9 +50,7 @@ export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
       const componentMap = new Map();
       
       if (componentLibrary) {
-        console.log('RemoteDomResource - creating React components for library:', componentLibrary.name);
         componentLibrary.elements.forEach(elementDef => {
-          console.log('Creating remote component renderer for:', elementDef.tagName);
           const WrappedComponent = createRemoteComponentRenderer(elementDef.component);
           componentMap.set(elementDef.tagName, WrappedComponent);
         });
@@ -73,7 +71,6 @@ export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
 
   useEffect(() => {
     if (!useReactRenderer && containerRef.current && receiver instanceof DOMRemoteReceiver) {
-      console.log('RemoteDomResource - connecting DOM receiver to container');
       receiver.connect(containerRef.current);
       
       return () => {
@@ -121,23 +118,17 @@ export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
   }, [componentKey]);
 
   const handleIframeLoad = () => {
-    console.log('RemoteDomResource - iframe loaded');
     const iframe = iframeRef.current;
     
-    // This check is now safe. It prevents setting up a thread if onLoad fires
-    // multiple times, but allows setup for a new iframe because the effect
-    // above has already cleared threadRef.current.
     if (!iframe || threadRef.current) {
       return;
     }
 
-    console.log('Setting up ThreadIframe to proxy communication.');
     const thread = new ThreadIframe<SandboxAPI>(iframe);
     threadRef.current = thread;
 
     if (resource.content && typeof resource.content === 'string' && receiver?.connection) {
-      console.log('Calling remote render method via thread.imports.render()');
-      const options = {
+        const options = {
         code: resource.content,
         remoteElements,
         useReactRenderer,
