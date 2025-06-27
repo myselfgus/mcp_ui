@@ -11,6 +11,7 @@ import { ThreadIframe } from '@quilted/threads';
 import type { SandboxAPI, RemoteElementConfiguration, UiActionResult } from '../types';
 import type { ComponentLibrary } from '../types/componentLibrary';
 import { basicComponentLibrary } from '../component-libraries/basic';
+import { RemoteDomRenderer } from './RemoteDomRenderer';
 
 export type RemoteDomResourceProps = {
   resource: Partial<Resource>;
@@ -26,7 +27,6 @@ export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
   onUiAction,
 }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const threadRef = useRef<ThreadIframe<SandboxAPI> | null>(null);
 
   const flavor = useMemo(() => {
@@ -38,46 +38,41 @@ export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
     return 'webcomponents';
   }, [resource.mimeType]);
 
-  const useReactRenderer = flavor === 'react';
 
-  const componentKey = `${library?.name}-${useReactRenderer}`;
+  const componentKey = `${library?.name}-${flavor}`;
 
   const { receiver, components } = useMemo(() => {
-    if (useReactRenderer) {
-      const reactReceiver = new RemoteReceiver();
-      const componentLibrary = library || basicComponentLibrary;
-      
-      const componentMap = new Map();
-      
-      if (componentLibrary) {
-        componentLibrary.elements.forEach(elementDef => {
-          const WrappedComponent = createRemoteComponentRenderer(elementDef.component);
-          componentMap.set(elementDef.tagName, WrappedComponent);
-        });
+    switch (flavor) {
+      case 'react': {
+        const reactReceiver = new RemoteReceiver();
+        const componentLibrary = library || basicComponentLibrary;
+        
+        const componentMap = new Map();
+        
+        if (componentLibrary) {
+          componentLibrary.elements.forEach((elementDef) => {
+            const WrappedComponent = createRemoteComponentRenderer(
+              elementDef.component,
+            );
+            componentMap.set(elementDef.tagName, WrappedComponent);
+          });
+        }
+        
+        return {
+          receiver: reactReceiver,
+          components: componentMap,
+        };
       }
-      
-      return {
-        receiver: reactReceiver,
-        components: componentMap,
-      };
-    } else {
-      const domReceiver = new DOMRemoteReceiver();
-      return {
-        receiver: domReceiver,
-        components: null,
-      };
+      case 'webcomponents': 
+      default: {
+        const domReceiver = new DOMRemoteReceiver();
+        return {
+          receiver: domReceiver,
+          components: null,
+        };
+      }
     }
   }, [resource, library, remoteElements]);
-
-  useEffect(() => {
-    if (!useReactRenderer && containerRef.current && receiver instanceof DOMRemoteReceiver) {
-      receiver.connect(containerRef.current);
-      
-      return () => {
-        receiver.disconnect();
-      };
-    }
-  }, [receiver, useReactRenderer]);
 
   useEffect(() => {
     function handleMessage(event: MessageEvent) {
@@ -131,7 +126,7 @@ export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
         const options = {
         code: resource.content,
         remoteElements,
-        useReactRenderer,
+        useReactRenderer: flavor === 'react',
         componentLibrary: library?.name,
       };
       thread.imports
@@ -152,10 +147,10 @@ export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
         onLoad={handleIframeLoad}
       />
       
-      {useReactRenderer && components ? (
+      {flavor === 'react' && components ? (
         <RemoteRootRenderer receiver={receiver as RemoteReceiver} components={components} />
       ) : (
-        <div ref={containerRef} data-testid="standard-dom-renderer-container" />
+        <RemoteDomRenderer receiver={receiver as DOMRemoteReceiver} />
       )}
     </>
   );

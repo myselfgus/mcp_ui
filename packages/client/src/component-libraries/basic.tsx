@@ -18,13 +18,9 @@ const UIButton = React.forwardRef<HTMLButtonElement, {
   onPress?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
   onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
   children?: React.ReactNode 
-}>(({ label, onPress, onClick, children, ...props }, ref) => {
-  console.log('UIButton props:', { label, onPress, onClick, children, onPressType: typeof onPress, onClickType: typeof onClick });
-  
+}>(({ label, onPress, onClick, children, ...props }, ref) => {  
   // Handle both onPress (from remote press event) and onClick (standard React)
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log('UIButton clicked, calling handlers:', { onPress: !!onPress, onClick: !!onClick });
-    
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {    
     // Call onPress if it exists (from remote press event)
     if (onPress) {
       onPress();
