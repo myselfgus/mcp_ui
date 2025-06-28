@@ -69,8 +69,6 @@ export interface SandboxAPI {
   ) => void | Promise<void>;
 }
 
-export * from './remote-dom/remote-elements';
-
 export interface RemoteElementConfiguration {
   tagName: string;
   remoteAttributes?: string[];

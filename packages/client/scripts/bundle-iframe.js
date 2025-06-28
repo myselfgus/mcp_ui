@@ -43,7 +43,7 @@ ${bundledCode}
 export const IFRAME_SRC_DOC = \`${iframeSrcDoc.replace(/`/g, '\\`').replace(/\${/g, '\\${')}\`;
 `;
   
-  writeFileSync(join(__dirname, '..', 'src', 'iframe-bundle.ts'), outputContent);
+  writeFileSync(join(__dirname, '..', 'src', 'remote-dom', 'iframe-bundle.ts'), outputContent);
   console.log('✅ Successfully bundled iframe source with @remote-dom/core');
 } catch (error) {
   console.error('❌ Failed to bundle iframe source:', error);
