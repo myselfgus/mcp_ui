@@ -4,7 +4,7 @@ import { ResourceRenderer } from '../ResourceRenderer';
 import '@testing-library/jest-dom';
 import { HtmlResource } from '../HtmlResource';
 import { RemoteDomResource } from '../RemoteDomResource';
-import { basicComponentLibrary } from '../../component-libraries/basic';
+import { basicComponentLibrary } from '../../remote-dom/component-libraries/basic';
 
 vi.mock('../HtmlResource', () => ({
   HtmlResource: vi.fn(() => <div data-testid="html-resource" />),

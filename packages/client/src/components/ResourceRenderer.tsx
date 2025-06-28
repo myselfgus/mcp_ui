@@ -6,7 +6,7 @@ import {
   RemoteDomResource,
   RemoteDomResourceProps,
 } from './RemoteDomResource';
-import { basicComponentLibrary } from '../component-libraries/basic';
+import { basicComponentLibrary } from '../remote-dom/component-libraries/basic';
 
 type ResourceRendererProps = Omit<
   RenderHtmlResourceProps & RemoteDomResourceProps,

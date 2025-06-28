@@ -69,7 +69,7 @@ export interface SandboxAPI {
   ) => void | Promise<void>;
 }
 
-export * from './remote-elements';
+export * from './remote-dom/remote-elements';
 
 export interface RemoteElementConfiguration {
   tagName: string;

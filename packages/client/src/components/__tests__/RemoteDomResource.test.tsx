@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 import { RemoteDomResource } from '../RemoteDomResource';
 import '@testing-library/jest-dom';
-import { basicComponentLibrary } from '../../component-libraries/basic';
+import { basicComponentLibrary } from '../../remote-dom/component-libraries/basic';
 import { RemoteRootRenderer } from '@remote-dom/react/host';
 
 // Mock child components and dependencies

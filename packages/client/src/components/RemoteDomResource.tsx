@@ -6,11 +6,11 @@ import {
   RemoteReceiver,
 } from '@remote-dom/react/host';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
-import { IFRAME_SRC_DOC } from '../iframe-bundle';
+import { IFRAME_SRC_DOC } from '../remote-dom/iframe-bundle';
 import { ThreadIframe } from '@quilted/threads';
 import type { SandboxAPI, RemoteElementConfiguration, UiActionResult } from '../types';
-import type { ComponentLibrary } from '../types/componentLibrary';
-import { basicComponentLibrary } from '../component-libraries/basic';
+import type { ComponentLibrary } from '../remote-dom/types/componentLibrary';
+import { basicComponentLibrary } from '../remote-dom/component-libraries/basic';
 import { RemoteDomRenderer } from './RemoteDomRenderer';
 
 export type RemoteDomResourceProps = {
