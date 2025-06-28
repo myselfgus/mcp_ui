@@ -82,13 +82,3 @@ export interface RenderOptions {
   useReactRenderer?: boolean;
   remoteElements?: RemoteElementConfiguration[];
 }
-
-export interface ComponentLibrary {
-  [key: string]: React.ComponentType<Record<string, unknown>>;
-}
-
-export interface ComponentLibraryElement {
-  type: string;
-  props?: {[key: string]: unknown};
-  children?: (ComponentLibraryElement | string)[];
-}

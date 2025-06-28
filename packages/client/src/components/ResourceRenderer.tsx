@@ -1,11 +1,9 @@
 import React from 'react';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
-import { ComponentLibrary, ResourceContentType } from '../types';
+import { ResourceContentType } from '../types';
+import { ComponentLibrary } from '../remote-dom/types/componentLibrary';
 import { HtmlResource, RenderHtmlResourceProps } from './HtmlResource';
-import {
-  RemoteDomResource,
-  RemoteDomResourceProps,
-} from './RemoteDomResource';
+import { RemoteDomResource, RemoteDomResourceProps } from './RemoteDomResource';
 import { basicComponentLibrary } from '../remote-dom/component-libraries/basic';
 
 type ResourceRendererProps = Omit<
@@ -52,9 +50,7 @@ export const ResourceRenderer: React.FC<ResourceRendererProps> = (props) => {
     !supportedContentTypes.includes(contentType)
   ) {
     return (
-      <p className="text-red-500">
-        Unsupported content type: {contentType}.
-      </p>
+      <p className="text-red-500">Unsupported content type: {contentType}.</p>
     );
   }
 
@@ -71,7 +67,7 @@ export const ResourceRenderer: React.FC<ResourceRendererProps> = (props) => {
       );
     case 'remoteDom':
       return (
-        <RemoteDomResource 
+        <RemoteDomResource
           resource={resource}
           onUiAction={onUiAction}
           library={library || basicComponentLibrary}
@@ -80,4 +76,4 @@ export const ResourceRenderer: React.FC<ResourceRendererProps> = (props) => {
     default:
       return <p className="text-red-500">Unsupported resource type.</p>;
   }
-}; 
+};
