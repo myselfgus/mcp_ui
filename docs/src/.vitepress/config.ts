@@ -85,13 +85,6 @@ export default defineConfig({
             { text: 'Usage & Examples', link: '/guide/client/usage-examples' },
           ],
         },
-        {
-          text: 'Shared SDK',
-          collapsed: false,
-          items: [
-            { text: 'Overview', link: '/guide/shared/overview' },
-          ],
-        },
       ],
     },
 
