@@ -24,7 +24,7 @@ features:
   - title: ⚛️ Client SDK
     details: React components and hooks for seamless frontend integration. Render interactive UI resources with the ResourceRenderer component and handle UI actions effortlessly.
   - title: 🛠️ Server SDK
-    details: Powerful utilities to construct interactive resource blocks for MCP servers. Create HTML, React, Web Components, and external app UI with ergonomic API.
+    details: Powerful utilities to construct interactive UI Snippetsfor MCP servers. Create HTML, React, Web Components, and external app UI with ergonomic API.
   - title: 🔒 Secure
     details: All remote code executes in sandboxed iframes, ensuring host and user security while maintaining rich interactivity.
   - title: 🎨 Flexible
@@ -48,9 +48,9 @@ features:
 **Server Side** - Create interactive resources to return in your MCP tool results:
 
 ```typescript
-import { createHtmlResource } from '@mcp-ui/server';
+import { createUiSnippetResource } from '@mcp-ui/server';
 
-const interactiveForm = createHtmlResource({
+const interactiveForm = createUiSnippetResource({
   uri: 'ui://user-form/1',
   content: { 
     type: 'externalUrl', 

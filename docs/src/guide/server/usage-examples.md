@@ -12,18 +12,18 @@ npm i @mcp-ui/server
 
 ## Basic Usage
 
-The core function is `createHtmlResource`.
+The core function is `createUiSnippetResource`.
 
 ```typescript
 import {
-  createHtmlResource,
+  createUiSnippetResource,
 } from '@mcp-ui/server';
 
 // Using a shared enum value (just for demonstration)
 console.log('Shared Enum from server usage:', PlaceholderEnum.FOO);
 
 // Example 1: Direct HTML, delivered as text
-const resource1 = createHtmlResource({
+const resource1 = createUiSnippetResource({
   uri: 'ui://my-component/instance-1',
   content: { type: 'rawHtml', htmlString: '<p>Hello World</p>' },
   delivery: 'text',
@@ -41,7 +41,7 @@ console.log('Resource 1:', JSON.stringify(resource1, null, 2));
 */
 
 // Example 2: Direct HTML, delivered as a Base64 blob
-const resource2 = createHtmlResource({
+const resource2 = createUiSnippetResource({
   uri: 'ui://my-component/instance-2',
   content: { type: 'rawHtml', htmlString: '<h1>Complex HTML</h1>' },
   delivery: 'blob',
@@ -63,7 +63,7 @@ console.log(
 
 // Example 3: External URL, text delivery
 const dashboardUrl = 'https://my.analytics.com/dashboard/123';
-const resource3 = createHtmlResource({
+const resource3 = createUiSnippetResource({
   uri: 'ui://analytics-dashboard/main',
   content: { type: 'externalUrl', iframeUrl: dashboardUrl },
   delivery: 'text',
@@ -82,7 +82,7 @@ console.log('Resource 3:', JSON.stringify(resource3, null, 2));
 
 // Example 4: External URL, blob delivery (URL is Base64 encoded)
 const chartApiUrl = 'https://charts.example.com/api?type=pie&data=1,2,3';
-const resource4 = createHtmlResource({
+const resource4 = createUiSnippetResource({
   uri: 'ui://live-chart/session-xyz',
   content: { type: 'externalUrl', iframeUrl: chartApiUrl },
   delivery: 'blob',
@@ -120,7 +120,7 @@ https://backup.dashboard.example.com/main
 # Emergency fallback (will be logged but not used)  
 https://emergency.dashboard.example.com/main`;
 
-const resource5 = createHtmlResource({
+const resource5 = createUiSnippetResource({
   uri: 'ui://dashboard-with-fallbacks/session-123',
   content: { type: 'externalUrl', iframeUrl: multiUrlContent },
   delivery: 'text',
@@ -135,14 +135,14 @@ const resource5 = createHtmlResource({
 
 ## Error Handling
 
-The `createHtmlResource` function will throw errors if invalid combinations are provided, for example:
+The `createUiSnippetResource` function will throw errors if invalid combinations are provided, for example:
 
 - URI not starting with `ui://` for any content type
 - Invalid content type specified
 
 ```typescript
 try {
-  createHtmlResource({
+  createUiSnippetResource({
     uri: 'invalid://should-be-ui',
     content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
     delivery: 'text',

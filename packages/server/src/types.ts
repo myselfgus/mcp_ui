@@ -31,7 +31,7 @@ export type ResourceContentPayload =
       flavor: 'react' | 'webcomponents';
     };
 
-export interface CreateHtmlResourceOptions {
+export interface CreateUiSnippetResourceOptions {
   uri: URI;
   content: ResourceContentPayload;
   delivery: 'text' | 'blob';

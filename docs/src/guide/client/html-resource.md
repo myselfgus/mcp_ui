@@ -17,7 +17,7 @@ export interface HtmlResourceProps {
 
 The component accepts the following props:
 
-- **`resource`**: The resource object from an `HtmlResourceBlock`. It should include `uri`, `mimeType`, and either `text` or `blob`.
+- **`resource`**: The resource object from an `UiSnippetResource`. It should include `uri`, `mimeType`, and either `text` or `blob`.
 - **`onUiAction`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like:
   ```typescript
   { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |

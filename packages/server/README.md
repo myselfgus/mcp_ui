@@ -35,7 +35,7 @@
 
 `mcp-ui` is a TypeScript SDK comprising two packages:
 
-* **`@mcp-ui/server`**: Utilities to generate UI snippets (`HtmlResourceBlock`) on your MCP server.
+* **`@mcp-ui/server`**: Utilities to generate UI snippets (`UiSnippetResource`) on your MCP server.
 * **`@mcp-ui/client`**: UI components (e.g., `<ResourceRenderer />`) to render those snippets and handle their events.
 
 Together, they let you define reusable UI snippets on the server side, seamlessly and securely render them in the client, and react to their actions in the MCP host environment.
@@ -44,11 +44,11 @@ Together, they let you define reusable UI snippets on the server side, seamlessl
 
 In essence, by using `mcp-ui` SDKs, servers and hosts can agree on contracts that enable them to create and render interactive UI snippets (as a path to a standardized UI approach in MCP).
 
-### HTML Resource Block
-The primary payload returned from the server to the client is the `HtmlResourceBlock`:
+### UI Snippet Resource
+The primary payload returned from the server to the client is the `UiSnippetResource`:
 
 ```ts
-interface HtmlResourceBlock {
+interface UiSnippetResource {
   type: 'resource';
   resource: {
     uri: string;       // ui://component/id
@@ -67,7 +67,7 @@ interface HtmlResourceBlock {
 
 ### Resource Renderer
 
-The HTML Resource Block is rendered in the `<ResourceRenderer />` component. It automatically detects the resource type and renders the appropriate component.
+The UI SnippetResource is rendered in the `<ResourceRenderer />` component. It automatically detects the resource type and renders the appropriate component.
 
 It accepts the following props:
 - **`resource`**: The resource object from an MCP response. Should include `uri`, `mimeType`, and content (`text`, `blob`, or `content`)
@@ -123,7 +123,7 @@ yarn add @mcp-ui/server @mcp-ui/client
 1. **Server-side**: Build your resource blocks
 
    ```ts
-   import { createHtmlResource } from '@mcp-ui/server';
+   import { createUiSnippetResource } from '@mcp-ui/server';
    import {
     createRemoteComponent,
     createRemoteDocument,
@@ -131,14 +131,14 @@ yarn add @mcp-ui/server @mcp-ui/client
    } from '@remote-dom/core';
 
    // Inline HTML
-   const htmlResource = createHtmlResource({
+   const htmlResource = createUiSnippetResource({
      uri: 'ui://greeting/1',
      content: { type: 'rawHtml', htmlString: '<p>Hello, MCP UI!</p>' },
      delivery: 'text',
    });
 
    // External URL
-   const externalUrlResource = createHtmlResource({
+   const externalUrlResource = createUiSnippetResource({
      uri: 'ui://greeting/1',
      content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
      delivery: 'text',
@@ -199,6 +199,7 @@ Host and user security is one of `mcp-ui`'s primary concerns. In all content typ
 - [X] Support Web Components
 - [X] Support Remote-DOM
 - [ ] Add component libraries (in progress)
+- [ ] Support additional frontend frameworks
 - [ ] Add declarative UI content type
 - [ ] Support generative UI?
       

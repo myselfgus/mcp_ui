@@ -1,15 +1,15 @@
 # Protocol Details
 
-This section dives deeper into the `HtmlResourceBlock` and its intended usage.
+This section dives deeper into the `UiSnippetResource` and its intended usage.
 
-## `HtmlResourceBlock` Recap
+## `UiSnippetResource` Recap
 
 ```typescript
-export interface HtmlResourceBlock {
+export interface UiSnippetResource {
   type: 'resource';
   resource: {
     uri: string;
-    mimeType: 'text/html' | 'text/uri-list';
+    mimeType: 'text/html' | 'text/uri-list' | 'application/vnd.mcp-ui.remote-dom';
     text?: string;
     blob?: string;
   };

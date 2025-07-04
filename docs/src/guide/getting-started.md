@@ -55,11 +55,11 @@ Once built, you can typically import from the packages as you would with any oth
 
 ```typescript
 // main.ts (your server-side application)
-import { createHtmlResource } from '@mcp-ui/server';
+import { createUiSnippetResource } from '@mcp-ui/server';
 
 const myHtmlPayload = `<h1>Hello from Server!</h1><p>Timestamp: ${new Date().toISOString()}</p>`;
 
-const resourceBlock = createHtmlResource({
+const resourceBlock = createUiSnippetResource({
   uri: 'ui://server-generated/item1',
   content: { type: 'rawHtml', htmlString: myHtmlPayload },
   delivery: 'text',
@@ -78,7 +78,7 @@ import { ResourceRenderer, UiActionResult } from '@mcp-ui/client';
 
 // Dummy MCP response structure
 interface McpToolResponse {
-  content: HtmlResource[];
+  content: any[];
 }
 
 function App() {
@@ -182,8 +182,8 @@ npm i @mcp-ui/client
 ## Key Components
 
 ### Server Side (`@mcp-ui/server`)
-- **`createHtmlResource`**: Creates HTML resource objects for MCP responses
-- Handles HTML content, external URLs, and encoding options
+- **`createUiSnippetResource`**: Creates UI Snippet resource objects for MCP tool responses
+- Handles HTML content, external URLs, Remote DOM JS, and encoding options
 
 ### Client Side (`@mcp-ui/client`)
 - **`<ResourceRenderer />`**: Main component for rendering all types of MCP-UI resources

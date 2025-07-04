@@ -8,23 +8,23 @@ This SDK provides tools for building Model Context Protocol (MCP) enabled applic
 
 MCP-UI is a TypeScript SDK containing:
 
-- **`@mcp-ui/client`**: UI components (like `<ResourceRenderer />`) for easy rendering of interactive HTML resources.
-- **`@mcp-ui/server`**: Helper functions (like `createHtmlResource`) for server-side logic to easily construct `HtmlResource` objects.
+- **`@mcp-ui/client`**: UI components (like `<ResourceRenderer />`) for easy rendering of interactive UI snippets.
+- **`@mcp-ui/server`**: Helper functions (like `createUiSnippetResource`) for server-side logic to easily construct `UiSnippetResource` objects.
 
-## Core Concept: The Interactive HTML Resource Protocol
+## Core Concept: The Interactive UI Snippet Resource Protocol
 
-The central piece of this SDK is the `HtmlResource`. This object defines a contract for how interactive HTML content should be structured and delivered from a server/tool to a client.
+The central piece of this SDK is the `UiSnippetResource`. This object defines a contract for how interactive UI snippet should be structured and delivered from a server/tool to a client.
 
-### `HtmlResource` Structure
+### `UiSnippetResource` Structure
 
 ```typescript
-export interface HtmlResource {
-  type: 'resource'; // Fixed type identifier
+interface UiSnippetResource {
+  type: 'resource';
   resource: {
-    uri: string; // Unique identifier. Governs rendering behavior.
-    mimeType: 'text/html' | 'text/uri-list'; // text/html for HTML content, text/uri-list for URL content
-    text?: string; // Raw HTML string or an iframe URL string.
-    blob?: string; // Base64 encoded HTML string or iframe URL string.
+    uri: string;       // ui://component/id
+    mimeType: 'text/html' | 'text/uri-list' | 'application/vnd.mcp-ui.remote-dom'; // text/html for HTML content, text/uri-list for URL content, application/vnd.mcp-ui.remote-dom for remote-dom content (Javascript)
+    text?: string;      // Inline HTML or external URL
+    blob?: string;      // Base64-encoded HTML or URL
   };
 }
 ```
@@ -48,9 +48,9 @@ export interface HtmlResource {
 
 **Server (MCP Tool):**
 ```typescript
-import { createHtmlResource } from '@mcp-ui/server';
+import { createUiSnippetResource } from '@mcp-ui/server';
 
-const resource = createHtmlResource({
+const resource = createUiSnippetResource({
   uri: 'ui://my-tool/dashboard',
   content: { type: 'rawHtml', htmlString: '<h1>Dashboard</h1>' },
   delivery: 'text'
