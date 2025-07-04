@@ -22,7 +22,7 @@
 
 **`mcp-ui`** brings interactive web components to the [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP). Deliver rich, dynamic UI resources directly from your MCP server to be rendered by the client. Take AI interaction to the next level!
 
-> *This project is an experimental community playground for MCP UI ideas. Expect rapid iteration and enhancements!*
+> *This project is an experimental community playground for MCP-UI ideas. Expect rapid iteration and enhancements!*
 
 <video src="https://github.com/user-attachments/assets/51f7c712-8133-4d7c-86d3-fdca550b9767"></video>
 
@@ -140,7 +140,7 @@ yarn add @mcp-ui/server @mcp-ui/client
    }
    ```
 
-3. **Enjoy** interactive MCP UIs — no extra configuration required.
+3. **Enjoy** interactive MCP UI snippets — no extra configuration required.
 
 ## 🌍 Examples
 
@@ -179,7 +179,7 @@ Contributions, ideas, and bug reports are welcome! See the [contribution guideli
 
 ## 📄 License
 
-Apache License 2.0 © [The MCP UI Authors](LICENSE)
+Apache License 2.0 © [The MCP-UI Authors](LICENSE)
 
 ## Disclaimer
 

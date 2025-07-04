@@ -3,62 +3,91 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
   lang: 'en-US',
   title: 'MCP-UI',
-  description: 'MCP-UI Client & Server SDK Documentation',
+  description: 'Interactive UI Components for Model Context Protocol - Build rich, dynamic user interfaces for your MCP applications',
   base: '/',
+  cleanUrls: true,
+  
+  head: [
+    ['meta', { name: 'theme-color', content: '#3c82f6' }],
+    ['meta', { name: 'og:type', content: 'website' }],
+    ['meta', { name: 'og:locale', content: 'en' }],
+    ['meta', { name: 'og:title', content: 'MCP-UI | Interactive UI Components for MCP' }],
+    ['meta', { name: 'og:site_name', content: 'MCP-UI' }],
+    ['meta', { name: 'og:image', content: '/og-image.png' }],
+    ['meta', { name: 'og:url', content: 'https://mcp-ui.dev/' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:image', content: '/og-image.png' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.png' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/favicon.png' }],
+  ],
 
   vite: {
-    // Vite specific config for VitePress
     plugins: [],
+    optimizeDeps: {
+      include: ['vue', '@vue/shared']
+    }
   },
 
   themeConfig: {
+    logo: { 
+      light: '/logo-black.png', 
+      dark: '/logo.png', 
+      alt: 'MCP-UI Logo' 
+    },
+    
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/guide/introduction' },
-      // Add links to API docs if generated, e.g., using TypeDoc
-      // { text: 'API', items: [
-      //   { text: 'Client API', link: '/api/client/' },
-      //   { text: 'Server API', link: '/api/server/' },
-      //   { text: 'Shared API', link: '/api/shared/' },
-      // ]}
+      { 
+        text: 'Examples', 
+        items: [
+          { text: 'Live Demo', link: 'https://scira-mcp-chat-git-main-idosals-projects.vercel.app/' },
+          { text: 'UI Inspector', link: 'https://github.com/idosal/ui-inspector' },
+          { text: 'Server Examples', link: '/guide/server/usage-examples' },
+          { text: 'Client Examples', link: '/guide/client/usage-examples' },
+        ]
+      },
+      { 
+        text: 'Packages',
+        items: [
+          { text: '@mcp-ui/client', link: 'https://www.npmjs.com/package/@mcp-ui/client' },
+          { text: '@mcp-ui/server', link: 'https://www.npmjs.com/package/@mcp-ui/server' },
+        ]
+      }
     ],
 
     sidebar: {
       '/guide/': [
         {
-          text: 'Overview',
+          text: 'Getting Started',
           items: [
             { text: 'Introduction', link: '/guide/introduction' },
-            { text: 'Getting Started', link: '/guide/getting-started' },
-            { text: 'Protocol Details', link: '/guide/protocol-details' },
+            { text: 'Installation', link: '/guide/getting-started' },
+            { text: 'Core Concepts', link: '/guide/protocol-details' },
           ],
         },
         {
-          text: 'Server SDK (@mcp-ui/server)',
+          text: 'Server SDK',
+          collapsed: false,
           items: [
             { text: 'Overview', link: '/guide/server/overview' },
             { text: 'Usage & Examples', link: '/guide/server/usage-examples' },
           ],
         },
         {
-          text: 'Client SDK (@mcp-ui/client)',
+          text: 'Client SDK',
+          collapsed: false,
           items: [
             { text: 'Overview', link: '/guide/client/overview' },
-            { text: 'ResourceRenderer Component', link: '/guide/client/resource-renderer' },
-            {
-              text: 'HtmlResource Component',
-              link: '/guide/client/html-resource',
-            },
-            {
-              text: 'RemoteDomResource Component',
-              link: '/guide/client/remote-dom-resource',
-            },
+            { text: 'ResourceRenderer', link: '/guide/client/resource-renderer' },
+            { text: 'HtmlResource', link: '/guide/client/html-resource' },
+            { text: 'RemoteDomResource', link: '/guide/client/remote-dom-resource' },
             { text: 'Usage & Examples', link: '/guide/client/usage-examples' },
-            // { text: 'API', link: '/guide/client/api' } // Placeholder
           ],
         },
         {
-          text: 'Shared SDK (@mcp-ui/shared)',
+          text: 'Shared SDK',
+          collapsed: false,
           items: [
             { text: 'Overview', link: '/guide/shared/overview' },
           ],
@@ -66,19 +95,89 @@ export default defineConfig({
       ],
     },
 
+    editLink: {
+      pattern: 'https://github.com/idosal/mcp-ui/edit/main/docs/src/:path',
+      text: 'Edit this page on GitHub'
+    },
+
+    search: {
+      provider: 'local',
+      options: {
+        locales: {
+          root: {
+            translations: {
+              button: {
+                buttonText: 'Search',
+                buttonAriaLabel: 'Search'
+              },
+              modal: {
+                displayDetails: 'Display detailed list',
+                resetButtonTitle: 'Reset search',
+                backButtonTitle: 'Close search',
+                noResultsText: 'No results for',
+                footer: {
+                  selectText: 'to select',
+                  navigateText: 'to navigate',
+                  closeText: 'to close'
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/idosal/mcp-ui' }, // TODO: Update this link
+      { icon: 'github', link: 'https://github.com/idosal/mcp-ui' },
+      { icon: 'npm', link: 'https://www.npmjs.com/package/@mcp-ui/client' },
+      { icon: 'discord', link: 'https://discord.gg/mcp-ui' }, // Update with actual Discord link
     ],
 
     footer: {
-      message: 'Released under the Apache 2.0 License.',
-      copyright: 'Copyright © 2025-present Ido Salomon',
+      message: 'Released under the <a href="https://github.com/idosal/mcp-ui/blob/main/LICENSE">Apache 2.0 License</a>.',
+      copyright: 'Copyright © 2025-present <a href="https://github.com/idosal">Ido Salomon</a>',
     },
+
+    lastUpdated: {
+      text: 'Last updated',
+      formatOptions: {
+        dateStyle: 'short',
+        timeStyle: 'medium'
+      }
+    },
+
+    outline: {
+      level: [2, 3],
+      label: 'On this page'
+    },
+
+    docFooter: {
+      prev: 'Previous page',
+      next: 'Next page'
+    },
+
+    darkModeSwitchLabel: 'Appearance',
+    lightModeSwitchTitle: 'Switch to light theme',
+    darkModeSwitchTitle: 'Switch to dark theme',
+    sidebarMenuLabel: 'Menu',
+    returnToTopLabel: 'Return to top',
+    langMenuLabel: 'Change language',
+    
+    externalLinkIcon: true,
   },
+
   markdown: {
-    // options for markdown-it-anchor
-    // anchor: { permalink: anchor.permalink.headerLink() },
-    // options for markdown-it-toc
-    // toc: { includeLevel: [1, 2] },
+    theme: {
+      light: 'github-light',
+      dark: 'github-dark'
+    },
+    lineNumbers: true,
+    config: (md) => {
+      // Add any markdown-it plugins here
+    }
   },
+
+  sitemap: {
+    hostname: 'https://mcp-ui.dev'
+  }
 });

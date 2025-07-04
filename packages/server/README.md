@@ -138,7 +138,7 @@ yarn add @mcp-ui/server @mcp-ui/client
    }
    ```
 
-3. **Enjoy** interactive MCP UIs — no extra configuration required.
+3. **Enjoy** interactive MCP UI snippets — no extra configuration required.
 
 ## 🌍 Examples
 
@@ -174,7 +174,7 @@ Contributions, ideas, and bug reports are welcome! See the [contribution guideli
 
 ## 📄 License
 
-Apache License 2.0 © [The MCP UI Authors](LICENSE)
+Apache License 2.0 © [The MCP-UI Authors](LICENSE)
 
 ## Disclaimer
 

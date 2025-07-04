@@ -27,6 +27,6 @@ pnpm build --filter @mcp-ui/client
 See the following pages for more details:
 
 - [ResourceRenderer Component](./resource-renderer.md) - **Main entry point**
-- [HtmlResource Component](./html-resource.md) - Deprecated, use ResourceRenderer instead
+- [HtmlResource Component](./html-resource.md)
 - [RemoteDomResource Component](./remote-dom-resource.md)
 - [Client SDK Usage & Examples](./usage-examples.md)

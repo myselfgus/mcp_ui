@@ -178,54 +178,6 @@ https://example.com/backup
       screen.getByText('No valid URLs found in uri-list content.'),
     ).toBeInTheDocument();
   });
-
-  it('supports backwards compatibility with ui-app:// URI scheme', () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const props: RenderHtmlResourceProps = {
-      resource: {
-        uri: 'ui-app://legacy-external-app',
-        mimeType: 'text/html', // Historically incorrect mimeType, but should be treated as URL content
-        text: 'https://legacy.example.com/app',
-      },
-      onUiAction: mockOnUiAction,
-    };
-    render(<HtmlResource {...props} />);
-    const iframe = screen.getByTitle(
-      'MCP HTML Resource (URL)',
-    ) as HTMLIFrameElement;
-    expect(iframe.src).toBe('https://legacy.example.com/app');
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      `Detected legacy ui-app:// URI: "ui-app://legacy-external-app". Update server to use ui:// with mimeType: 'text/uri-list' for future compatibility.`,
-    );
-    consoleWarnSpy.mockRestore();
-  });
-
-  it('handles legacy ui-app:// with blob content', () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const url = 'https://legacy.example.com/blob-app';
-    const encodedUrl = Buffer.from(url).toString('base64');
-    const props: RenderHtmlResourceProps = {
-      resource: {
-        uri: 'ui-app://legacy-blob-app',
-        mimeType: 'text/html', // Historically incorrect mimeType
-        blob: encodedUrl,
-      },
-      onUiAction: mockOnUiAction,
-    };
-    render(<HtmlResource {...props} />);
-    const iframe = screen.getByTitle(
-      'MCP HTML Resource (URL)',
-    ) as HTMLIFrameElement;
-    expect(iframe.src).toBe(url);
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      `Detected legacy ui-app:// URI: "ui-app://legacy-blob-app". Update server to use ui:// with mimeType: 'text/uri-list' for future compatibility.`,
-    );
-    consoleWarnSpy.mockRestore();
-  });
 });
 
 describe('HtmlResource iframe communication', () => {

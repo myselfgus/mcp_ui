@@ -1,6 +1,6 @@
-# Contributing to MCP UI
+# Contributing to MCP-UI
 
-First of all, thank you for your interest in contributing to MCP UI! We appreciate the time and effort you're willing to invest in improving the project. This document provides guidelines and information to make the contribution process as smooth as possible.
+First of all, thank you for your interest in contributing to MCP-UI! We appreciate the time and effort you're willing to invest in improving the project. This document provides guidelines and information to make the contribution process as smooth as possible.
 
 ## Table of Contents
 
@@ -32,7 +32,7 @@ First of all, thank you for your interest in contributing to MCP UI! We apprecia
 
 ### Prerequisites
 
-Before you start working on MCP UI, make sure you have the following installed:
+Before you start working on MCP-UI, make sure you have the following installed:
 
 - [Node.js](https://nodejs.org/) (version 18 or higher recommended)
 - [pnpm](https://pnpm.io/) (version 8.15.7 or higher)
@@ -81,11 +81,11 @@ To run tests:
 pnpm test
 ```
 
-MCP UI uses Vitest as the testing framework. When adding new features, please include appropriate tests.
+MCP-UI uses Vitest as the testing framework. When adding new features, please include appropriate tests.
 
 ### Code Formatting
 
-MCP UI uses Prettier for code formatting and lint-staged to ensure code is properly formatted before committing. Pre-commit hooks are set up with Husky to run these checks automatically.
+MCP-UI uses Prettier for code formatting and lint-staged to ensure code is properly formatted before committing. Pre-commit hooks are set up with Husky to run these checks automatically.
 
 To manually format your code:
 
@@ -116,7 +116,7 @@ pnpm prettier --write .
 
 ### Reporting Bugs
 
-If you encounter a bug or issue while using MCP UI, please open a new issue on the [GitHub Issues](https://github.com/idosal/mcp-ui/issues) page. Provide a clear and concise description of the problem, steps to reproduce it, and any relevant error messages or logs.
+If you encounter a bug or issue while using MCP-UI, please open a new issue on the [GitHub Issues](https://github.com/idosal/mcp-ui/issues) page. Provide a clear and concise description of the problem, steps to reproduce it, and any relevant error messages or logs.
 
 ### Suggesting Enhancements
 
@@ -135,7 +135,7 @@ We welcome ideas for improvements and new features. To suggest an enhancement, o
 
 ### Code Style
 
-MCP UI uses [ESLint](https://eslint.org/) as its code style guide. Please ensure that your code follows these guidelines.
+MCP-UI uses [ESLint](https://eslint.org/) as its code style guide. Please ensure that your code follows these guidelines.
 
 ### Commit Messages
 

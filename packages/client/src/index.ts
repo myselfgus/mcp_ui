@@ -1,9 +1,5 @@
 export { ResourceRenderer } from './components/ResourceRenderer';
 
-// @deprecated - will be removed in the next major version (3.0.0)
-export { HtmlResource } from './components/HtmlResource';
-export { RemoteDomResource } from './components/RemoteDomResource';
-
 // The types needed to create a custom component library
 export type { RemoteElementConfiguration } from './types';
 

@@ -23,7 +23,7 @@ const requestHandler = createRequestHandler(
 // Define our MCP agent with tools
 export class MyMCP extends McpAgent {
   server = new McpServer({
-    name: 'MCP UI Example',
+    name: 'MCP-UI Example',
     version: '1.0.0',
   });
 

@@ -10,16 +10,9 @@ type ProcessResourceResult = {
 export function processResource(
   resource: Partial<Resource>,
 ): ProcessResourceResult {
-  // Backwards compatibility: if URI starts with ui-app://, treat as URL content
-  const isLegacyExternalApp =
-    typeof resource.uri === 'string' && resource.uri.startsWith('ui-app://');
-  const effectiveMimeType = isLegacyExternalApp
-    ? 'text/uri-list'
-    : resource.mimeType;
-
   if (
-    effectiveMimeType !== 'text/html' &&
-    effectiveMimeType !== 'text/uri-list'
+    resource.mimeType !== 'text/html' &&
+    resource.mimeType !== 'text/uri-list'
   ) {
     return {
       error:
@@ -27,7 +20,7 @@ export function processResource(
     };
   }
 
-  if (effectiveMimeType === 'text/uri-list') {
+  if (resource.mimeType === 'text/uri-list') {
     // Handle URL content (external apps)
     // Note: While text/uri-list format supports multiple URLs, MCP-UI requires a single URL.
     // If multiple URLs are provided, only the first will be used and others will be logged as warnings.
@@ -79,17 +72,11 @@ export function processResource(
       );
     }
 
-    // Log backwards compatibility usage
-    if (isLegacyExternalApp) {
-      console.warn(
-        `Detected legacy ui-app:// URI: "${resource.uri}". Update server to use ui:// with mimeType: 'text/uri-list' for future compatibility.`,
-      );
-    }
     return {
       iframeSrc: lines[0],
       iframeRenderMode: 'src',
     };
-  } else if (effectiveMimeType === 'text/html') {
+  } else if (resource.mimeType === 'text/html') {
     // Handle HTML content
     if (typeof resource.text === 'string') {
       return {

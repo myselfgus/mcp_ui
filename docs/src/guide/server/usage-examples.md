@@ -4,10 +4,10 @@ This page provides practical examples for using the `@mcp-ui/server` package.
 
 ## Basic Setup
 
-First, ensure you have `@mcp-ui/server` (and its peer `@mcp-ui/shared`) available in your Node.js project. If you're working outside this monorepo, you would typically install them:
+First, ensure you have `@mcp-ui/server` available in your project. If you're working outside this monorepo, you would typically install them:
 
 ```bash
-pnpm add @mcp-ui/server @mcp-ui/shared
+pnpm add @mcp-ui/server
 ```
 
 ## Basic Usage
@@ -17,7 +17,6 @@ The core function is `createHtmlResource`.
 ```typescript
 import {
   createHtmlResource,
-  PlaceholderEnum, // Example import from shared, re-exported by server or directly via @mcp-ui/shared
 } from '@mcp-ui/server';
 
 // Using a shared enum value (just for demonstration)

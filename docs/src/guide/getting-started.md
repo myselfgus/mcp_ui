@@ -186,7 +186,7 @@ pnpm add @mcp-ui/client react @modelcontextprotocol/sdk
 - Handles HTML content, external URLs, and encoding options
 
 ### Client Side (`@mcp-ui/client`)
-- **`<ResourceRenderer />`**: Main component for rendering all types of MCP UI resources
+- **`<ResourceRenderer />`**: Main component for rendering all types of MCP-UI resources
 - **`<HtmlResource />`**: Internal component for HTML resources
 - **`<RemoteDomResource />`**: Internal component for Remote DOM resources
 

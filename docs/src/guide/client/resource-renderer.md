@@ -1,6 +1,6 @@
 # ResourceRenderer Component
 
-The `<ResourceRenderer />` component is the **main entry point** for rendering MCP UI resources in your React application. It automatically detects the resource type and renders the appropriate component internally.
+The `<ResourceRenderer />` component is the **main entry point** for rendering MCP-UI resources in your React application. It automatically detects the resource type and renders the appropriate component internally.
 
 ## Why use `ResourceRenderer`?
 
@@ -194,22 +194,6 @@ When unsupported content types are encountered, `ResourceRenderer` will display 
 - **Content Restrictions**: Use `supportedContentTypes` to limit allowed resource types
 - **Origin Validation**: Always validate `postMessage` origins in production
 - **Content Sanitization**: Consider sanitizing HTML content for untrusted sources
-
-## Migration from HtmlResource
-
-If you're upgrading from the deprecated `HtmlResource` component:
-
-```tsx
-// Before (deprecated)
-import { HtmlResource } from '@mcp-ui/client';
-<HtmlResource resource={resource} onUiAction={handleAction} />
-
-// After (recommended)
-import { ResourceRenderer } from '@mcp-ui/client';
-<ResourceRenderer resource={resource} onUiAction={handleAction} />
-```
-
-The API is fully compatible - just change the import and component name.
 
 ## Examples
 
