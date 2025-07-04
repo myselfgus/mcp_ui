@@ -38,13 +38,13 @@ export default defineConfig({
           items: [
             { text: 'Overview', link: '/guide/server/overview' },
             { text: 'Usage & Examples', link: '/guide/server/usage-examples' },
-            // { text: 'API', link: '/guide/server/api' } // Placeholder
           ],
         },
         {
           text: 'Client SDK (@mcp-ui/client)',
           items: [
             { text: 'Overview', link: '/guide/client/overview' },
+            { text: 'ResourceRenderer Component', link: '/guide/client/resource-renderer' },
             {
               text: 'HtmlResource Component',
               link: '/guide/client/html-resource',
@@ -55,6 +55,12 @@ export default defineConfig({
             },
             { text: 'Usage & Examples', link: '/guide/client/usage-examples' },
             // { text: 'API', link: '/guide/client/api' } // Placeholder
+          ],
+        },
+        {
+          text: 'Shared SDK (@mcp-ui/shared)',
+          items: [
+            { text: 'Overview', link: '/guide/shared/overview' },
           ],
         },
       ],

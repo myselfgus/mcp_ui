@@ -1,6 +1,6 @@
 # HtmlResource Component
 
-The `<HtmlResource />` component is currently the main component of the`@mcp-ui/client` package. It's the only export you need to render interactive HTML resources in your React app.
+The `<HtmlResource />` component is an internal component used by `<ResourceRenderer />` to render HTML and URL-based resources.
 
 ## Props
 
@@ -11,6 +11,7 @@ export interface HtmlResourceProps {
   resource: Partial<Resource>;
   onUiAction?: (result: UiActionResult) => Promise<any>;
   style?: React.CSSProperties;
+  iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'ref' | 'style'>;
 }
 ```
 
@@ -26,9 +27,8 @@ The component accepts the following props:
   { type: 'link', payload: { url: string } } |
   ```
   If you don't provide a callback for a specific type, the default handler will be used.
-- **`supportedContentTypes`**: (Optional) An array of content types to allow. Can include `'rawHtml'` and/or `'externalUrl'`. If omitted, all supported types are rendered. This is useful for restricting content types due to capability or security considerations.
 - **`style`**: (Optional) Custom styles for the iframe.
-- ** `iframeProps` **: (Optional) Custom props for the iframe.
+- **`iframeProps`**: (Optional) Custom props for the iframe.
 
 ## How It Works
 
@@ -55,56 +55,10 @@ By default, the iframe stretches to 100% width and is at least 200px tall. You c
 
 ## Example Usage
 
-See [Client SDK Usage & Examples](./usage-examples.md).
-
-## Recommended Usage Pattern
-
-Client-side hosts should check for the `ui://` URI scheme first to identify MCP-UI resources, rather than checking mimeType:
-
-```tsx
-function App({ mcpResource }) {
-  if (
-    mcpResource.type === 'resource' &&
-    mcpResource.resource.uri?.startsWith('ui://')
-  ) {
-    return (
-      <HtmlResource
-        resource={mcpResource.resource}
-        onUiAction={(tool, params) => {
-          console.log('Action:', tool, params);
-          return { status: 'ok' };
-        }}
-      />
-    );
-  }
-  return <p>Unsupported resource</p>;
-}
-```
-
-This pattern allows the `HtmlResource` component to handle mimeType-based rendering internally, making your code more future-proof as new content types (like `application/javascript`) are added.
-
-## Backwards Compatibility
-
-The `HtmlResource` component maintains backwards compatibility with the legacy `ui-app://` URI scheme:
-
-- **Legacy Support**: Resources with `ui-app://` URIs are automatically treated as URL content (equivalent to `mimeType: 'text/uri-list'`) even when they have the historically incorrect `mimeType: 'text/html'`
-- **Automatic Detection**: The component detects legacy URIs and processes them correctly without requiring code changes
-- **MimeType Override**: Ignores the incorrect `text/html` mimeType and treats content as URLs
-- **Migration Encouragement**: A warning is logged when legacy URIs are detected, encouraging server updates
-- **Seamless Transition**: Existing clients continue working with older servers during migration periods
-
-### Legacy URI Handling
-
-```tsx
-// Both patterns work identically:
-// Legacy (automatically detected and corrected):
-<HtmlResource resource={{ uri: 'ui-app://widget/123', mimeType: 'text/html', text: 'https://example.com/widget' }} />
-// Modern (recommended):
-<HtmlResource resource={{ uri: 'ui://widget/123', mimeType: 'text/uri-list', text: 'https://example.com/widget' }} />
-```
+See [Client SDK Usage & Examples](./usage-examples.md) for examples using the recommended `<ResourceRenderer />` component.
 
 ## Security Notes
 
-- **`sandbox` attribute**: Restricts what the iframe can do. `allow-scripts` is needed for interactivity. `allow-same-origin` is external apps. Caution - the external app method isn't a secure way to render untrusted code. We're working on new methods to alleviate security concerns.
+- **`sandbox` attribute**: Restricts what the iframe can do. `allow-scripts` is required for JS execution. In the external URL content type, `allow-same-origin` is needed for external apps. Other than these inclusions, all other capabilities are restricted (e.g., no parent access, top-level navigations, modals, forms, etc.)
 - **`postMessage` origin**: When sending messages from the iframe, always specify the target origin for safety. The component listens globally, so your iframe content should be explicit.
 - **Content Sanitization**: HTML is rendered as-is. If you don't fully trust the source, sanitize the HTML before passing it in, or rely on the iframe's sandboxing.

@@ -8,7 +8,7 @@ This SDK provides tools for building Model Context Protocol (MCP) enabled applic
 
 MCP UI is a TypeScript SDK containing:
 
-- **`@mcp-ui/client`**: UI components (like `<HtmlResource />`) for easy rendering of interactive HTML resources.
+- **`@mcp-ui/client`**: UI components (like `<ResourceRenderer />`) for easy rendering of interactive HTML resources.
 - **`@mcp-ui/server`**: Helper functions (like `createHtmlResource`) for server-side logic to easily construct `HtmlResource` objects.
 
 ## Core Concept: The Interactive HTML Resource Protocol
@@ -38,13 +38,65 @@ export interface HtmlResource {
     - `mimeType: 'text/html'` → HTML content rendered via `<iframe srcdoc>`
     - `mimeType: 'text/uri-list'` → URL content rendered via `<iframe src>`
 - **`mimeType`**: `'text/html'` for HTML content, `'text/uri-list'` for URL content
-- **`text` or `blob` Content Delivery**:
-  - `text`: The HTML string or URL is provided directly.
-  - `blob`: The HTML string or URL is Base64 encoded. Useful for complex HTML, ensuring integrity, or avoiding issues with JSON encoding of special characters.
+- **`text` or `blob`**: The actual content (HTML string or URL string), either as plain text or Base64 encoded
 
-This protocol allows for flexible delivery and rendering of HTML content, from simple static blocks to fully interactive applications embedded within the client.
+## How It Works
 
-Dive into the "Getting Started" guide or explore specific SDK packages for more details.
+1. **Server Side**: Use `@mcp-ui/server` to create `HtmlResource` objects
+2. **Client Side**: Use `@mcp-ui/client` to render these resources in your React app
+
+### Example Flow
+
+**Server (MCP Tool):**
+```typescript
+import { createHtmlResource } from '@mcp-ui/server';
+
+const resource = createHtmlResource({
+  uri: 'ui://my-tool/dashboard',
+  content: { type: 'rawHtml', htmlString: '<h1>Dashboard</h1>' },
+  delivery: 'text'
+});
+
+// Return in MCP response
+return { content: [resource] };
+```
+
+**Client (React App):**
+```tsx
+import { ResourceRenderer } from '@mcp-ui/client';
+
+function App({ mcpResponse }) {
+  return (
+    <div>
+      {mcpResponse.content.map((item) => (
+        <ResourceRenderer
+          key={item.resource.uri}
+          resource={item.resource}
+          onUiAction={(result) => {
+            console.log('Action:', result);
+            return { status: 'handled' };
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+```
+
+## Key Benefits
+
+- **Standardized**: Consistent interface for UI resources across MCP applications
+- **Secure**: Sandboxed iframe execution prevents malicious code from affecting the host
+- **Interactive**: Two-way communication between resources and host application
+- **Flexible**: Supports both direct HTML content and external applications
+- **Future-proof**: Extensible design supports new resource types as they're added
+
+## Next Steps
+
+- [Getting Started](./getting-started.md) - Set up your development environment
+- [Server SDK](./server/overview.md) - Learn to create resources
+- [Client SDK](./client/overview.md) - Learn to render resources
+- [Protocol Details](./protocol-details.md) - Understand the underlying protocol
 
 ## Philosophy
 

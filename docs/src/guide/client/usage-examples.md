@@ -1,6 +1,6 @@
 # @mcp-ui/client Usage & Examples
 
-Here's how to use the `<HtmlResource />` component from `@mcp-ui/client`.
+Here's how to use the `<ResourceRenderer />` component from `@mcp-ui/client`.
 
 ## Installation
 
@@ -14,7 +14,7 @@ pnpm add @mcp-ui/client react @modelcontextprotocol/sdk
 
 ```tsx
 import React, { useState } from 'react';
-import { HtmlResource, UiActionResult } from '@mcp-ui/client';
+import { ResourceRenderer, UiActionResult } from '@mcp-ui/client';
 
 // Simulate fetching an MCP resource block
 const fetchMcpResource = async (id: string): Promise<HtmlResource> => {
@@ -91,7 +91,6 @@ const App: React.FC = () => {
     }
     return {
       status: 'Action handled by host application',
-      receivedParams: params,
     };
   };
 
@@ -114,7 +113,7 @@ const App: React.FC = () => {
       {resourceBlock && resourceBlock.resource && (
         <div style={{ marginTop: 20, border: '2px solid blue', padding: 10 }}>
           <h2>Rendering Resource: {resourceBlock.resource.uri}</h2>
-          <HtmlResource
+          <ResourceRenderer
             resource={resourceBlock.resource}
             onUiAction={handleGenericMcpAction}
           />
@@ -136,4 +135,4 @@ export default App;
 
 ---
 
-That's it! Just use `<HtmlResource />` with the right props and you're ready to render interactive HTML from MCP resources in your React app. If you need more details, check out the [HtmlResource Component](./html-resource.md) page.
+That's it! Just use `<ResourceRenderer />` with the right props and you're ready to render interactive HTML from MCP resources in your React app. The `ResourceRenderer` automatically detects the resource type and renders the appropriate component internally. If you need more details, check out the [ResourceRenderer Component](./resource-renderer.md) page.

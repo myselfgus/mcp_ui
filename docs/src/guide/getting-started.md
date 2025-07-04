@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide will walk you through setting up your development environment and using the MCP-UI SDK packages.
+This guide will help you get started with the MCP-UI SDK, which provides tools for building Model Context Protocol (MCP) enabled applications with interactive UI components.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ This guide will walk you through setting up your development environment and usi
 1.  **Clone the Monorepo**:
 
     ```bash
-    git clone https://github.com/idosal/mcp-ui.git # TODO: Update this link
+    git clone https://github.com/idosal/mcp-ui.git
     cd mcp-ui
     ```
 
@@ -49,7 +49,7 @@ pnpm run coverage
 
 ## Using the Packages
 
-Once built, you can typically import from the packages as you would with any other npm module, assuming your project is set up to resolve them (e.g., if you publish them or use a tool like `yalc` for local development outside this monorepo).
+Once built, you can typically import from the packages as you would with any other npm module, assuming your project is set up to resolve them.
 
 ### In a Node.js Project (Server-Side Example)
 
@@ -74,7 +74,7 @@ const resourceBlock = createHtmlResource({
 ```tsx
 // App.tsx (your React application)
 import React, { useState, useEffect } from 'react';
-import { HtmlResource } from '@mcp-ui/client';
+import { ResourceRenderer, UiActionResult } from '@mcp-ui/client';
 
 // Dummy MCP response structure
 interface McpToolResponse {
@@ -123,7 +123,7 @@ function App() {
       {mcpData?.content.map((item, index) => {
         if (
           item.type === 'resource' &&
-          item.resource.mimeType === 'text/html'
+          item.resource.uri?.startsWith('ui://')
         ) {
           return (
             <div
@@ -135,7 +135,7 @@ function App() {
               }}
             >
               <h3>Resource: {item.resource.uri}</h3>
-              <HtmlResource
+              <ResourceRenderer
                 resource={item.resource}
                 onUiAction={handleResourceAction}
               />
@@ -173,9 +173,36 @@ See the following pages for more details:
 
 For MCP servers, ensure you have `@mcp-ui/server` available in your Node.js project. If you're working outside this monorepo, you would typically install them.
 
-
 For MCP clients, ensure `@mcp-ui/client` and its peer dependencies (`react` and potentially `@modelcontextprotocol/sdk`) are installed in your React project.
 
 ```bash
 pnpm add @mcp-ui/client react @modelcontextprotocol/sdk
 ```
+
+## Key Components
+
+### Server Side (`@mcp-ui/server`)
+- **`createHtmlResource`**: Creates HTML resource objects for MCP responses
+- Handles HTML content, external URLs, and encoding options
+
+### Client Side (`@mcp-ui/client`)
+- **`<ResourceRenderer />`**: Main component for rendering all types of MCP UI resources
+- **`<HtmlResource />`**: Internal component for HTML resources
+- **`<RemoteDomResource />`**: Internal component for Remote DOM resources
+
+## Resource Types
+
+MCP-UI supports several resource types:
+
+1. **HTML Resources** (`text/html`): Direct HTML content
+2. **External URLs** (`text/uri-list`): External applications and websites  
+3. **Remote DOM Resources** (`application/vnd.mcp-ui.remote-dom+javascript`): Javascript-defined UI that use host-native components
+
+All resource types are handled automatically by `<ResourceRenderer />`.
+
+## Next Steps
+
+- [Server SDK Usage & Examples](./server/usage-examples.md) - Learn how to create resources
+- [Client SDK Usage & Examples](./client/usage-examples.md) - Learn how to render resources
+- [Protocol Details](./protocol-details.md) - Understand the underlying protocol
+- [ResourceRenderer Component](./client/resource-renderer.md) - Comprehensive component guide

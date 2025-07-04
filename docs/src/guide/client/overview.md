@@ -2,17 +2,16 @@
 
 The `@mcp-ui/client` package helps you render UI resources sent from an MCP-enabled server. The primary component for this is `<ResourceRenderer />`, which automatically detects the resource type and renders the appropriate component for it.
 
-## What’s Included?
+## What's Included?
 
-- **`<ResourceRenderer />`**: The main component you'll use. It inspects the resource's `mimeType` and renders either `<HtmlResource />` or `<RemoteDomResource />`.
-- **`<HtmlResource />`**: Renders traditional HTML content, either from a string or an external URL, inside a sandboxed `<iframe>`.
-- **`<RemoteDomResource />`**: Renders a UI described by `remote-dom`, allowing for host-native components that match your application's look and feel.
-- **Component Libraries**: A mapping of remote element names to your own React components, used by `<RemoteDomResource />`.
+- **`<ResourceRenderer />`**: The main component you'll use. It inspects the resource's `mimeType` and renders either `<HtmlResource />` or `<RemoteDomResource />` internally.
+- **`<HtmlResource />`**: Internal component for HTML/URL resources
+- **`<RemoteDomResource />`**: Internal component for remote DOM resources
 
 ## Purpose
-
+- **Standardized UI**: mcp-ui's client guarantees full compatibility with the latest MCP UI standards.
 - **Simplified Rendering**: Abstract away the complexities of handling different resource types.
-- **Security**: Encourages rendering user-provided HTML and scripts within sandboxed iframes and web workers.
+- **Security**: Renders user-provided HTML and scripts within sandboxed iframes.
 - **Interactivity**: Provides a unified mechanism (`onUiAction` prop) for UI resources to communicate back to the host application.
 
 ## Building
@@ -27,6 +26,7 @@ pnpm build --filter @mcp-ui/client
 
 See the following pages for more details:
 
-- [HtmlResource Component](./html-resource.md)
+- [ResourceRenderer Component](./resource-renderer.md) - **Main entry point**
+- [HtmlResource Component](./html-resource.md) - Deprecated, use ResourceRenderer instead
 - [RemoteDomResource Component](./remote-dom-resource.md)
 - [Client SDK Usage & Examples](./usage-examples.md)
