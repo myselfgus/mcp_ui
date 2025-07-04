@@ -28,6 +28,7 @@ interface ResourceRendererProps {
   style?: React.CSSProperties;
   iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'ref' | 'style'>;
   library?: ComponentLibrary;
+  remoteElements?: RemoteElementConfiguration[];
   supportedContentTypes?: ResourceContentType[];
 }
 ```
@@ -43,10 +44,11 @@ interface ResourceRendererProps {
   { type: 'notification', payload: { message: string } } |
   { type: 'link', payload: { url: string } }
   ```
+- **`supportedContentTypes`**: Optional array to restrict which content types are allowed (`['rawHtml', 'externalUrl', 'remoteDom']`)
 - **`style`**: Optional custom styles for iframe-based resources
 - **`iframeProps`**: Optional props passed to iframe elements (for HTML/URL resources)
 - **`library`**: Optional component library for Remote DOM resources (defaults to `basicComponentLibrary`)
-- **`supportedContentTypes`**: Optional array to restrict which content types are allowed (`['rawHtml', 'externalUrl', 'remoteDom']`)
+- **`remoteElements`**: Optional remote element definitions for Remote DOM resources. REQUIRED for Remote DOM snippets.
 
 ## Basic Usage
 

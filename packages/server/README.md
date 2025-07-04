@@ -1,16 +1,22 @@
 ## 📦 Model Context Protocol UI SDK
 
 <p align="center">
+  <img width="250" alt="image" src="https://github.com/user-attachments/assets/65b9698f-990f-4846-9b2d-88de91d53d4d" />
+</p>
+
+<p align="center">
   <a href="https://www.npmjs.com/package/@mcp-ui/server"><img src="https://img.shields.io/npm/v/@mcp-ui/server?label=server&color=green" alt="Server Version"></a>
   <a href="https://www.npmjs.com/package/@mcp-ui/client"><img src="https://img.shields.io/npm/v/@mcp-ui/client?label=client&color=blue" alt="Client Version"></a>
 </p>
 
 <p align="center">
-  <a href="#-what-is-mcp-ui">What's mcp-ui?</a> •
+  <a href="#-what's-`mcp-ui`?">What's mcp-ui?</a> •
+  <a href="#-core-concepts">Core Concepts</a> •
   <a href="#-installation">Installation</a> •
   <a href="#-quickstart">Quickstart</a> •
   <a href="#-core-concepts">Core Concepts</a> •
   <a href="#-examples">Examples</a> •
+  <a href="#-security">Security</a> •
   <a href="#-roadmap">Roadmap</a> •
   <a href="#-contributing">Contributing</a> •
   <a href="#-license">License</a>
@@ -22,26 +28,38 @@
 
 > *This project is an experimental community playground for MCP UI ideas. Expect rapid iteration and enhancements!*
 
-<video src="https://github.com/user-attachments/assets/51f7c712-8133-4d7c-86d3-fdca550b9767"></video>
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/7180c822-2dd9-4f38-9d3e-b67679509483"></video>
+</p>
 
 ## 💡 What's `mcp-ui`?
 
 `mcp-ui` is a TypeScript SDK comprising two packages:
 
-* **`@mcp-ui/server`**: Utilities to generate UI resource objects (`HtmlResourceBlock`) on your MCP server.
-* **`@mcp-ui/client`**: UI components (e.g., `<ResourceRenderer />`) to render those blocks in the browser and handle their events.
+* **`@mcp-ui/server`**: Utilities to generate UI snippets (`HtmlResourceBlock`) on your MCP server.
+* **`@mcp-ui/client`**: UI components (e.g., `<ResourceRenderer />`) to render those snippets and handle their events.
 
-Together, they let you define reusable UI resource blocks on the server side, seamlessly display them in the client, and react to their actions in the MCP host environment.
-
-**North star** -
-* Enable servers to deliver rich, interactive UIs with ergonomic APIs
-* Allow any host to support UI with its own look-and-feel
-* Eliminate security concerns (limit/remove local code execution)
-
+Together, they let you define reusable UI snippets on the server side, seamlessly and securely render them in the client, and react to their actions in the MCP host environment.
 
 ## ✨ Core Concepts
 
 The primary component for rendering MCP resources is `<ResourceRenderer />`. It automatically detects the resource type and renders the appropriate component.
+
+It accepts the following props:
+- **`resource`**: The resource object from an MCP response. Should include `uri`, `mimeType`, and content (`text`, `blob`, or `content`)
+- **`onUiAction`**: Optional callback for handling UI actions from the resource:
+  ```typescript
+  { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
+  { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
+  { type: 'prompt', payload: { prompt: string } } |
+  { type: 'notification', payload: { message: string } } |
+  { type: 'link', payload: { url: string } }
+  ```
+- **`supportedContentTypes`**: Optional array to restrict which content types are allowed (`['rawHtml', 'externalUrl', 'remoteDom']`)
+- **`style`**: Optional custom styles for iframe-based resources
+- **`iframeProps`**: Optional props passed to iframe elements (for HTML/URL resources)
+- **`library`**: Optional component library for Remote DOM resources (defaults to `basicComponentLibrary`)
+- **`remoteElements`**: Optional remote element definitions for Remote DOM resources. REQUIRED for Remote DOM snippets.
 
 ### Supported Resource Types
 
@@ -52,26 +70,16 @@ Rendered using the `<HtmlResource />` component, which displays content inside a
 *   **`mimeType`**:
     *   `text/html`: Renders inline HTML content.
     *   `text/uri-list`: Renders an external URL. MCP-UI uses the first valid URL.
-*   **Props**:
-    *   **`resource`**: The `resource` object from an MCP message.
-    *   **`onUiAction`**: A callback function to handle events.
-    *   **`supportedContentTypes`**: (Optional) Array to filter content types (`'rawHtml'`, `'externalUrl'`).
-    *   **`style`**: (Optional) Custom styles for the iframe.
-    *   **`iframeProps`**: (Optional) Custom iframe props.
 
-#### Remote DOM (`application/vnd.mcp-ui.remote-dom+javascript`)
+#### Remote DOM (`application/vnd.mcp-ui.remote-dom`)
 
 Rendered using the `<RemoteDomResource />` component, which uses Shopify's [`remote-dom`](https://github.com/Shopify/remote-dom). The server responds with a script that describes the UI and events. On the host, the script is securely rendered in a sandboxed iframe, and the UI changes are communicated to the host in JSON, where they're rendered using the host's component library. This is more flexible than iframes and allows for UIs that match the host's look-and-feel.
 
 * **`mimeType`**: `application/vnd.mcp-ui.remote-dom; flavor={react | webcomponents}`
-* **Props**:
-    * **`resource`**: The `resource` object from an MCP message.
-    * **`library`**: A component library that maps remote element names (e.g., "button") to actual React or web components. `mcp-ui` provides a `basicComponentLibrary` for common HTML elements, and you can provide your own for custom components.
-    * **`onUiAction`**: A callback function to handle events.
 
 ### UI Action
 
-UI blocks must be able to interact with the agent. In `mcp-ui`, this is done by hooking into events sent from the UI block and reacting to them in the host. For example, an HTML may trigger a tool call when a button is clicked by sending an event which will be caught handled by the client.
+UI snippets must be able to interact with the agent. In `mcp-ui`, this is done by hooking into events sent from the UI snippet and reacting to them in the host. For example, an HTML may trigger a tool call when a button is clicked by sending an event which will be caught handled by the client.
 
 ## 🏗️ Installation
 
@@ -155,6 +163,9 @@ Try out the hosted app -
 The app is deployed from `examples/server`.
 
 Drop those URLs into any MCP-compatible host to see `mcp-ui` in action.
+
+## 🔒 Security
+Host and user security is one of `mcp-ui`'s primary concerns. In all content types, the remote code is executed in a sandboxed iframe.
 
 
 ## 🛣️ Roadmap

@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
-import { RemoteElementConfiguration, ResourceContentType } from '../types';
-import { ComponentLibrary } from '../remote-dom/types/componentLibrary';
+import { ResourceContentType } from '../types';
 import { HtmlResource, RenderHtmlResourceProps } from './HtmlResource';
 import { RemoteDomResource, RemoteDomResourceProps } from './RemoteDomResource';
 import { basicComponentLibrary } from '../remote-dom/component-libraries/basic';
@@ -11,9 +10,7 @@ type ResourceRendererProps = Omit<
   'resource'
 > & {
   resource: Partial<Resource>;
-  library?: ComponentLibrary;
   supportedContentTypes?: ResourceContentType[];
-  remoteElements?: RemoteElementConfiguration[];
 };
 
 function getContentType(
@@ -29,7 +26,7 @@ function getContentType(
   if (resource.mimeType === 'text/uri-list') {
     return 'externalUrl';
   }
-  if (resource.mimeType?.startsWith('application/vnd.mcp-ui.remote-dom+javascript')) {
+  if (resource.mimeType?.startsWith('application/vnd.mcp-ui.remote-dom')) {
     return 'remoteDom';
   }
 }
