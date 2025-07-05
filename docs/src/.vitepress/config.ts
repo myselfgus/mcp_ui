@@ -80,8 +80,8 @@ export default defineConfig({
           items: [
             { text: 'Overview', link: '/guide/client/overview' },
             { text: 'UIResourceRenderer', link: '/guide/client/resource-renderer' },
-            { text: 'HTMLResource', link: '/guide/client/html-resource' },
-            { text: 'RemoteDomResource', link: '/guide/client/remote-dom-resource' },
+            { text: 'HTMLResourceRenderer', link: '/guide/client/html-resource' },
+            { text: 'RemoteDOMResourceRenderer', link: '/guide/client/remote-dom-resource' },
             { text: 'Usage & Examples', link: '/guide/client/usage-examples' },
           ],
         },

@@ -187,8 +187,8 @@ npm i @mcp-ui/client
 
 ### Client Side (`@mcp-ui/client`)
 - **`<UIResourceRenderer />`**: Main component for rendering all types of MCP-UI resources
-- **`<HTMLResource />`**: Internal component for HTML resources
-- **`<RemoteDomResource />`**: Internal component for Remote DOM resources
+- **`<HTMLResourceRenderer />`**: Internal component for HTML resources
+- **`<RemoteDOMResourceRenderer />`**: Internal component for Remote DOM resources
 
 ## Resource Types
 

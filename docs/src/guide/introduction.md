@@ -41,7 +41,7 @@ interface UIResource {
 
 ## How It Works
 
-1. **Server Side**: Use `@mcp-ui/server` to create `HTMLResource` objects
+1. **Server Side**: Use `@mcp-ui/server` to create `HTMLResourceRenderer` objects
 2. **Client Side**: Use `@mcp-ui/client` to render these resources in your React app
 
 ### Example Flow

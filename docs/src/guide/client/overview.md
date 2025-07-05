@@ -4,9 +4,9 @@ The `@mcp-ui/client` package helps you render UI resources sent from an MCP-enab
 
 ## What's Included?
 
-- **`<UIResourceRenderer />`**: The main component you'll use. It inspects the resource's `mimeType` and renders either `<HTMLResource />` or `<RemoteDomResource />` internally.
-- **`<HTMLResource />`**: Internal component for HTML/URL resources
-- **`<RemoteDomResource />`**: Internal component for remote DOM resources
+- **`<UIResourceRenderer />`**: The main component you'll use. It inspects the resource's `mimeType` and renders either `<HTMLResourceRenderer />` or `<RemoteDOMResourceRenderer />` internally.
+- **`<HTMLResourceRenderer />`**: Internal component for HTML/URL resources
+- **`<RemoteDOMResourceRenderer />`**: Internal component for remote DOM resources
 
 ## Purpose
 - **Standardized UI**: mcp-ui's client guarantees full compatibility with the latest MCP UI standards.
@@ -27,6 +27,6 @@ pnpm build --filter @mcp-ui/client
 See the following pages for more details:
 
 - [UIResourceRenderer Component](./resource-renderer.md) - **Main entry point**
-- [HTMLResource Component](./html-resource.md)
-- [RemoteDomResource Component](./remote-dom-resource.md)
+- [HTMLResourceRenderer Component](./html-resource.md)
+- [RemoteDOMResourceRenderer Component](./remote-dom-resource.md)
 - [Client SDK Usage & Examples](./usage-examples.md)

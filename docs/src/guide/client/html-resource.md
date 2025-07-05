@@ -1,13 +1,13 @@
-# HTMLResource Component
+# HTMLResourceRenderer Component
 
-The `<HTMLResource />` component is an internal component used by `<UIResourceRenderer />` to render HTML and URL-based resources.
+The `<HTMLResourceRenderer />` component is an internal component used by `<UIResourceRenderer />` to render HTML and URL-based resources.
 
 ## Props
 
 ```typescript
 import type { Resource } from '@modelcontextprotocol/sdk/types';
 
-export interface HTMLResourceProps {
+export interface HTMLResourceRendererProps {
   resource: Partial<Resource>;
   onUIAction?: (result: UIActionResult) => Promise<any>;
   style?: React.CSSProperties;

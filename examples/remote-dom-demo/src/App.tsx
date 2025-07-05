@@ -18,7 +18,7 @@ const remoteElements = [
   remoteImageDefinition,
 ];
 
-const defaultRemoteDomScript = `let isDarkMode = false;
+const defaultRemoteDOMScript = `let isDarkMode = false;
 
 // Create the main container stack with centered alignment
 const stack = document.createElement('ui-stack');
@@ -74,8 +74,8 @@ root.appendChild(stack);
 `;
 
 function App() {
-  const [scriptContent, setScriptContent] = useState(defaultRemoteDomScript);
-  const [inputValue, setInputValue] = useState(defaultRemoteDomScript);
+  const [scriptContent, setScriptContent] = useState(defaultRemoteDOMScript);
+  const [inputValue, setInputValue] = useState(defaultRemoteDOMScript);
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {

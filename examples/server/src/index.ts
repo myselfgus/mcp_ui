@@ -3,7 +3,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { createRequestHandler } from 'react-router';
 import {
-  createHTMLResource,
+  createHTMLResourceRenderer,
 } from '@mcp-ui/server';
 
 declare module 'react-router' {
@@ -158,7 +158,7 @@ export class MyMCP extends McpAgent {
         // Generate a unique URI for this specific invocation of the file picker UI.
         // This URI identifies the resource block itself, not the content of the iframe.
         const uniqueUIAppUri = `ui://task-manager/${Date.now()}`;
-        const resourceBlock = createHTMLResource({
+        const resourceBlock = createHTMLResourceRenderer({
           uri: uniqueUIAppUri,
           content: { type: 'externalUrl', iframeUrl: pickerPageUrl },
           delivery: 'text', // The URL itself is delivered as text
@@ -184,7 +184,7 @@ export class MyMCP extends McpAgent {
         // Generate a unique URI for this specific invocation of the file picker UI.
         // This URI identifies the resource block itself, not the content of the iframe.
         const uniqueUIAppUri = `ui://user-profile/${Date.now()}`;
-        const resourceBlock = createHTMLResource({
+        const resourceBlock = createHTMLResourceRenderer({
           uri: uniqueUIAppUri,
           content: { type: 'externalUrl', iframeUrl: pickerPageUrl },
           delivery: 'text', // The URL itself is delivered as text
@@ -197,7 +197,7 @@ export class MyMCP extends McpAgent {
     );
 
     this.server.tool('show_remote_dom_react', 'Shows a react remote-dom component', async () => {
-      const resourceBlock = createHTMLResource({
+      const resourceBlock = createHTMLResourceRenderer({
         uri: `ui://remote-dom-react/${Date.now()}` as `ui://${string}`,
         delivery: 'text',
         content: {
@@ -267,7 +267,7 @@ export class MyMCP extends McpAgent {
     });
 
     this.server.tool('show_remote_dom_web_components', 'Shows a web components remote-dom component', async () => {
-      const resourceBlock = createHTMLResource({
+      const resourceBlock = createHTMLResourceRenderer({
         uri: `ui://remote-dom-wc/${Date.now()}` as `ui://${string}`,
         delivery: 'text',
         content: {

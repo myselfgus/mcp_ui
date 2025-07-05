@@ -1,12 +1,12 @@
 import React from 'react';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
 import { ResourceContentType } from '../types';
-import { HTMLResourceRenderer, RenderHTMLResourceProps } from './HTMLResourceRenderer';
+import { HTMLResourceRenderer, HTMLResourceRendererProps } from './HTMLResourceRenderer';
 import { RemoteDOMResourceProps, RemoteDOMResourceRenderer } from './RemoteDOMResourceRenderer';
 import { basicComponentLibrary } from '../remote-dom/component-libraries/basic';
 
 type UIResourceRendererProps = Omit<
-  RenderHTMLResourceProps & RemoteDOMResourceProps,
+  HTMLResourceRendererProps & RemoteDOMResourceProps,
   'resource'
 > & {
   resource: Partial<Resource>;

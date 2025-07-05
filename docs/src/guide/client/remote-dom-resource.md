@@ -1,6 +1,6 @@
-# RemoteDomResource Component
+# RemoteDOMResourceRenderer Component
 
-The `<RemoteDomResource />` component is used to render UI resources with the `application/vnd.mcp-ui.remote-dom` mime type. It leverages Shopify's [`remote-dom`](https://github.com/Shopify/remote-dom) library to securely render host-native components from a server-provided UI description.
+The `<RemoteDOMResourceRenderer />` component is used to render UI resources with the `application/vnd.mcp-ui.remote-dom` mime type. It leverages Shopify's [`remote-dom`](https://github.com/Shopify/remote-dom) library to securely render host-native components from a server-provided UI description.
 
 This approach offers greater flexibility and security compared to `<iframe>`-based HTML resources, enabling UIs that seamlessly integrate with the host application's look and feel.
 
@@ -9,7 +9,7 @@ This approach offers greater flexibility and security compared to `<iframe>`-bas
 1.  The MCP server sends a resource containing a script that builds a "remote" DOM structure.
 2.  The `@mcp-ui/client` securely executes this script in a sandboxed environment (a Web Worker inside an iframe).
 3.  As the remote DOM is manipulated, a series a JSON messages describing the changes are sent to the host window.
-4.  `<RemoteDomResource />` receives these messages and translates them into React component tree updates.
+4.  `<RemoteDOMResourceRenderer />` receives these messages and translates them into React component tree updates.
 
 This ensures that no arbitrary code from the server runs in the main application thread, maintaining security while allowing dynamic and interactive UIs.
 
@@ -35,14 +35,14 @@ const customLibrary = new Map([
   ['info-card', MyCard],
 ]);
 
-<RemoteDomResource resource={resource} library={customLibrary} />
+<RemoteDOMResourceRenderer resource={resource} library={customLibrary} />
 ```
 
 If the remote DOM contains `<fancy-button>`, it will be rendered using your `MyButton` component.
 
 ## Usage
 
-The `<UIResourceRenderer />` component automatically handles rendering `<RemoteDomResource />` when it detects the correct mime type, so you typically won't use this component directly.
+The `<UIResourceRenderer />` component automatically handles rendering `<RemoteDOMResourceRenderer />` when it detects the correct mime type, so you typically won't use this component directly.
 
 ```tsx
 import React from 'react';
@@ -53,7 +53,7 @@ function App({ mcpResource }) {
     mcpResource.type === 'resource' &&
     mcpResource.resource.uri?.startsWith('ui://')
   ) {
-    // UIResourceRenderer will instantiate RemoteDomResource internally
+    // UIResourceRenderer will instantiate RemoteDOMResourceRenderer internally
     // if the resource mimeType is 'application/vnd.mcp-ui.remote-dom'.
     return (
       <UIResourceRenderer

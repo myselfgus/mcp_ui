@@ -3,7 +3,7 @@ import type { Resource } from '@modelcontextprotocol/sdk/types.js';
 import { UIActionResult } from '../types';
 import { processResource } from '../utils/processResource';
 
-export type RenderHTMLResourceProps = {
+export type HTMLResourceRendererProps = {
   resource: Partial<Resource>;
   onUIAction?: (result: UIActionResult) => Promise<unknown>;
   style?: React.CSSProperties;
@@ -15,7 +15,7 @@ export type RenderHTMLResourceProps = {
 
 export const HTMLResourceRenderer = React.forwardRef<
   HTMLIFrameElement | null,
-  RenderHTMLResourceProps
+  HTMLResourceRendererProps
 >(
   (
     { resource, onUIAction, style, iframeProps },
@@ -42,7 +42,7 @@ export const HTMLResourceRenderer = React.forwardRef<
           }
           onUIAction?.(uiActionResult)?.catch((err) => {
             console.error(
-              'Error handling UI action result in RenderHTMLResource:',
+              'Error handling UI action result in HTMLResourceRenderer:',
               err,
             );
           });
@@ -100,4 +100,4 @@ export const HTMLResourceRenderer = React.forwardRef<
   },
 );
 
-HTMLResourceRenderer.displayName = 'HTMLResource';
+HTMLResourceRenderer.displayName = 'HTMLResourceRenderer';

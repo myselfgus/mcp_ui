@@ -89,7 +89,7 @@ It accepts the following props:
 
 #### HTML (`text/html` and `text/uri-list`)
 
-Rendered using the `<HTMLResource />` component, which displays content inside an `<iframe>`. This is suitable for self-contained HTML or embedding external apps.
+Rendered using the `<HTMLResourceRenderer />` component, which displays content inside an `<iframe>`. This is suitable for self-contained HTML or embedding external apps.
 
 *   **`mimeType`**:
     *   `text/html`: Renders inline HTML content.
@@ -97,7 +97,7 @@ Rendered using the `<HTMLResource />` component, which displays content inside a
 
 #### Remote DOM (`application/vnd.mcp-ui.remote-dom`)
 
-Rendered using the `<RemoteDomResource />` component, which uses Shopify's [`remote-dom`](https://github.com/Shopify/remote-dom). The server responds with a script that describes the UI and events. On the host, the script is securely rendered in a sandboxed iframe, and the UI changes are communicated to the host in JSON, where they're rendered using the host's component library. This is more flexible than iframes and allows for UIs that match the host's look-and-feel.
+Rendered using the `<RemoteDOMResourceRenderer />` component, which uses Shopify's [`remote-dom`](https://github.com/Shopify/remote-dom). The server responds with a script that describes the UI and events. On the host, the script is securely rendered in a sandboxed iframe, and the UI changes are communicated to the host in JSON, where they're rendered using the host's component library. This is more flexible than iframes and allows for UIs that match the host's look-and-feel.
 
 * **`mimeType`**: `application/vnd.mcp-ui.remote-dom; flavor={react | webcomponents}`
 

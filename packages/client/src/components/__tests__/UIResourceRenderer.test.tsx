@@ -24,7 +24,7 @@ describe('<UIResourceRenderer />', () => {
     vi.clearAllMocks();
   });
 
-  it('should render HTMLResource for "text/html" mimeType', () => {
+  it('should render HTMLResourceRenderer for "text/html" mimeType', () => {
     const resource = { ...baseResource, mimeType: 'text/html' };
     render(<UIResourceRenderer resource={resource} />);
     expect(screen.getByTestId('html-resource')).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('<UIResourceRenderer />', () => {
     );
   });
 
-  it('should render HTMLResource for "text/uri-list" mimeType', () => {
+  it('should render HTMLResourceRenderer for "text/uri-list" mimeType', () => {
     const resource = { ...baseResource, mimeType: 'text/uri-list' };
     render(<UIResourceRenderer resource={resource} />);
     expect(screen.getByTestId('html-resource')).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe('<UIResourceRenderer />', () => {
     );
   });
 
-  it('should render RemoteDomResource for "remote-dom" mimeType', () => {
+  it('should render RemoteDOMResourceRenderer for "remote-dom" mimeType', () => {
     const resource = {
       ...baseResource,
       mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',

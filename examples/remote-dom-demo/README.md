@@ -38,7 +38,7 @@ If you are building a host application that needs to render remote UI, you can u
     *   `radix.tsx`: A library that maps remote elements to styled React components from Radix UI.
     *   `webcomponents.ts`: A library that defines and registers standard custom elements.
 2.  **Create your library:** Create a new file in `src/libraries` for your own component library. You will need to provide mappings from the remote element definitions (e.g., `remoteButtonDefinition`) to your actual components.
-3.  **Integrate your library:** In `src/App.tsx`, import your new library and add a new `<RemoteDomResource>` instance inside the grid. Pass your component library to the `library` prop.
+3.  **Integrate your library:** In `src/App.tsx`, import your new library and add a new `<RemoteDOMResourceRenderer>` instance inside the grid. Pass your component library to the `library` prop.
 4.  **Test:** Run the demo and use the script editor to test how your component library handles various UI scenarios.
 
 ## Running the Demo Locally

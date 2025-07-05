@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { HTMLResourceRenderer, RenderHTMLResourceProps } from '../HTMLResourceRenderer';
+import { HTMLResourceRenderer, HTMLResourceRendererProps } from '../HTMLResourceRenderer';
 import { vi } from 'vitest';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
 import { UIActionResult } from '../../types.js';
@@ -8,7 +8,7 @@ import { UIActionResult } from '../../types.js';
 describe('HTMLResource component', () => {
   const mockOnUIAction = vi.fn();
 
-  const defaultProps: RenderHTMLResourceProps = {
+  const defaultProps: HTMLResourceRendererProps = {
     resource: { mimeType: 'text/html', text: '<p>Hello Test</p>' },
     onUIAction: mockOnUIAction,
   };
@@ -28,7 +28,7 @@ describe('HTMLResource component', () => {
   });
 
   it('renders iframe with src for ui:// URI with text ', () => {
-    const props: RenderHTMLResourceProps = {
+    const props: HTMLResourceRendererProps = {
       resource: {
         uri: 'ui://my-app',
         mimeType: 'text/uri-list',
@@ -47,7 +47,7 @@ describe('HTMLResource component', () => {
   it('shows loading message initially (concept, actual timing is fast)', () => {
     // This test is more conceptual for async resources not covered by defaultProps
     // For a truly async resource, you'd mock its loading state
-    const loadingProps: RenderHTMLResourceProps = {
+    const loadingProps: HTMLResourceRendererProps = {
       resource: { mimeType: 'text/html', uri: 'ui://loading-resource' }, // No text/blob means it would try to fetch
       onUIAction: mockOnUIAction,
     };
@@ -65,7 +65,7 @@ describe('HTMLResource component', () => {
   });
 
   it('displays an error message if resource mimeType is not text/html or text/uri-list', () => {
-    const props: RenderHTMLResourceProps = {
+    const props: HTMLResourceRendererProps = {
       resource: { mimeType: 'application/json', text: '{}' },
       onUIAction: mockOnUIAction,
     };
@@ -80,7 +80,7 @@ describe('HTMLResource component', () => {
   it('decodes HTML from blob for ui:// resource', () => {
     const html = '<p>Blob Content</p>';
     const encodedHtml = Buffer.from(html).toString('base64');
-    const props: RenderHTMLResourceProps = {
+    const props: HTMLResourceRendererProps = {
       resource: {
         uri: 'ui://blob-test',
         mimeType: 'text/html',
@@ -98,7 +98,7 @@ describe('HTMLResource component', () => {
   it('decodes URL from blob for ui:// resource with text/uri-list mimetype', () => {
     const url = 'https://example.com/blob-app';
     const encodedUrl = Buffer.from(url).toString('base64');
-    const props: RenderHTMLResourceProps = {
+    const props: HTMLResourceRendererProps = {
       resource: {
         uri: 'ui://blob-app-test',
         mimeType: 'text/uri-list',
@@ -119,7 +119,7 @@ describe('HTMLResource component', () => {
       .mockImplementation(() => {});
     const uriList =
       'https://example.com/first\nhttps://example.com/second\nhttps://example.com/third';
-    const props: RenderHTMLResourceProps = {
+    const props: HTMLResourceRendererProps = {
       resource: {
         uri: 'ui://multi-url-test',
         mimeType: 'text/uri-list',
@@ -146,7 +146,7 @@ https://example.com/main
 # Another comment
 https://example.com/backup
 `;
-    const props: RenderHTMLResourceProps = {
+    const props: HTMLResourceRendererProps = {
       resource: {
         uri: 'ui://uri-list-with-comments',
         mimeType: 'text/uri-list',
@@ -165,7 +165,7 @@ https://example.com/backup
     const uriList = `# Only comments
 # No actual URLs
 `;
-    const props: RenderHTMLResourceProps = {
+    const props: HTMLResourceRendererProps = {
       resource: {
         uri: 'ui://empty-uri-list',
         mimeType: 'text/uri-list',
@@ -194,7 +194,7 @@ describe('HTMLResource iframe communication', () => {
   const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
   const renderComponentForUIActionTests = (
-    props: Partial<RenderHTMLResourceProps> = {},
+    props: Partial<HTMLResourceRendererProps> = {},
   ) => {
     return render(
       <HTMLResourceRenderer
@@ -303,7 +303,7 @@ describe('HTMLResource iframe communication', () => {
     });
     await waitFor(() => {
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Error handling UI action result in RenderHTMLResource:',
+        'Error handling UI action result in HTMLResourceRenderer:',
         expect.objectContaining({ message: errorMessage }),
       );
     });

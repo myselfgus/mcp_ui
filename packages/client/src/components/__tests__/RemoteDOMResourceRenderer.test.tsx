@@ -20,7 +20,7 @@ vi.mock('../iframe-bundle', () => ({
 
 
 
-describe('<RemoteDomResource />', () => {
+describe('<RemoteDOMResourceRenderer />', () => {
   const baseResource = {
     uri: 'ui://test-remote-dom',
     content: 'const a = 1;',
