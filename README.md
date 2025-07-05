@@ -123,6 +123,8 @@ yarn add @mcp-ui/server @mcp-ui/client
 
 ## 🎬 Quickstart
 
+You can use [GitMCP](https://gitmcp.io/badge/idosal/mcp-ui) to give your IDE access to `mcp-ui`'s latest documentation! 
+
 1. **Server-side**: Build your resource blocks
 
    ```ts
