@@ -1,11 +1,11 @@
 import React, { useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
-import { UiActionResult } from '../types';
+import { UIActionResult } from '../types';
 import { processResource } from '../utils/processResource';
 
-export type RenderHtmlResourceProps = {
+export type RenderHTMLResourceProps = {
   resource: Partial<Resource>;
-  onUiAction?: (result: UiActionResult) => Promise<unknown>;
+  onUIAction?: (result: UIActionResult) => Promise<unknown>;
   style?: React.CSSProperties;
   iframeProps?: Omit<
     React.HTMLAttributes<HTMLIFrameElement>,
@@ -13,12 +13,12 @@ export type RenderHtmlResourceProps = {
   >;
 };
 
-export const HtmlResource = React.forwardRef<
+export const HTMLResource = React.forwardRef<
   HTMLIFrameElement | null,
-  RenderHtmlResourceProps
+  RenderHTMLResourceProps
 >(
   (
-    { resource, onUiAction, style, iframeProps },
+    { resource, onUIAction, style, iframeProps },
     ref,
   ) => {
     const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -36,13 +36,13 @@ export const HtmlResource = React.forwardRef<
           iframeRef.current &&
           event.source === iframeRef.current.contentWindow
         ) {
-          const uiActionResult = event.data as UiActionResult;
+          const uiActionResult = event.data as UIActionResult;
           if (!uiActionResult) {
             return;
           }
-          onUiAction?.(uiActionResult)?.catch((err) => {
+          onUIAction?.(uiActionResult)?.catch((err) => {
             console.error(
-              'Error handling UI action result in RenderHtmlResource:',
+              'Error handling UI action result in RenderHTMLResource:',
               err,
             );
           });
@@ -50,7 +50,7 @@ export const HtmlResource = React.forwardRef<
       }
       window.addEventListener('message', handleMessage);
       return () => window.removeEventListener('message', handleMessage);
-    }, [onUiAction]);
+    }, [onUIAction]);
 
     if (error) return <p className="text-red-500">{error}</p>;
 
@@ -100,4 +100,4 @@ export const HtmlResource = React.forwardRef<
   },
 );
 
-HtmlResource.displayName = 'HtmlResource';
+HTMLResource.displayName = 'HTMLResource';

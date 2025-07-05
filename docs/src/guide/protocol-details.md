@@ -1,11 +1,11 @@
 # Protocol Details
 
-This section dives deeper into the `UiResource` and its intended usage.
+This section dives deeper into the `UIResource` and its intended usage.
 
-## `UiResource` Recap
+## `UIResource` Recap
 
 ```typescript
-export interface UiResource {
+export interface UIResource {
   type: 'resource';
   resource: {
     uri: string;
@@ -70,7 +70,7 @@ if (
   mcpResource.type === 'resource' &&
   mcpResource.resource.uri?.startsWith('ui://')
 ) {
-  return <ResourceRenderer resource={mcpResource.resource} onUiAction={handleAction} />;
+  return <UIResourceRenderer resource={mcpResource.resource} onUIAction={handleAction} />;
 }
 
 // ❌ Not recommended: Check mimeType first
@@ -78,14 +78,14 @@ if (
   mcpResource.type === 'resource' &&
   (mcpResource.resource.mimeType === 'text/html' || mcpResource.resource.mimeType === 'text/uri-list')
 ) {
-  return <ResourceRenderer resource={mcpResource.resource} onUiAction={handleAction} />;
+  return <UIResourceRenderer resource={mcpResource.resource} onUIAction={handleAction} />;
 }
 ```
 
 **Benefits of URI-first checking:**
 - Future-proof: Works with new content types like `application/javascript`
 - Semantic clarity: `ui://` clearly indicates this is a UI resource
-- Simpler logic: Let the `ResourceRenderer` component handle mimeType-based rendering internally
+- Simpler logic: Let the `UIResourceRenderer` component handle mimeType-based rendering internally
 
 ## Communication (Client <-> Iframe)
 
@@ -114,7 +114,7 @@ For `ui://` resources, you can use `window.parent.postMessage` to send data or a
 window.addEventListener('message', (event) => {
   // Add origin check for security: if (event.origin !== "expectedOrigin") return;
   if (event.data && event.data.tool) {
-    // Call the onUiAction prop of ResourceRenderer
+    // Call the onUIAction prop of UIResourceRenderer
   }
 });
 ```

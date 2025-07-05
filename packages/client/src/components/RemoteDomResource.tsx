@@ -8,7 +8,7 @@ import {
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
 import { IFRAME_SRC_DOC } from '../remote-dom/iframe-bundle';
 import { ThreadIframe } from '@quilted/threads';
-import type { SandboxAPI, RemoteElementConfiguration, UiActionResult } from '../types';
+import type { SandboxAPI, RemoteElementConfiguration, UIActionResult } from '../types';
 import type { ComponentLibrary } from '../remote-dom/types/componentLibrary';
 import { basicComponentLibrary } from '../remote-dom/component-libraries/basic';
 import { RemoteDomRenderer } from './RemoteDomRenderer';
@@ -17,14 +17,14 @@ export type RemoteDomResourceProps = {
   resource: Partial<Resource>;
   library?: ComponentLibrary;
   remoteElements?: RemoteElementConfiguration[];
-  onUiAction?: (result: UiActionResult) => Promise<unknown>;
+  onUIAction?: (result: UIActionResult) => Promise<unknown>;
 };
 
 export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
   resource,
   library,
   remoteElements = [],
-  onUiAction,
+  onUIAction,
 }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const threadRef = useRef<ThreadIframe<SandboxAPI> | null>(null);
@@ -80,11 +80,11 @@ export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
         iframeRef.current &&
         event.source === iframeRef.current.contentWindow
       ) {
-        const uiActionResult = event.data as UiActionResult;
+        const uiActionResult = event.data as UIActionResult;
         if (!uiActionResult) {
           return;
         }
-        onUiAction?.(uiActionResult)?.catch((err) => {
+        onUIAction?.(uiActionResult)?.catch((err) => {
           console.error(
             'Error handling UI action result in RemoteDomResource:',
             err,
@@ -94,7 +94,7 @@ export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
     }
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [onUiAction]);
+  }, [onUIAction]);
 
   useEffect(() => {
     // This effect runs when the iframe is remounted due to a key change.

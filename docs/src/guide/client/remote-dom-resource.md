@@ -17,7 +17,7 @@ This ensures that no arbitrary code from the server runs in the main application
 
 -   **`resource`**: The `resource` object from an MCP message. The `mimeType` must be `application/vnd.mcp-ui.remote-dom+javascript; flavor={react | webcomponents}`.
 -   **`library`**: A component library that maps remote element tag names (e.g., "button") to your host's React components.
--   **`onUiAction`**: A callback function to handle events (e.g., button clicks) initiated from the remote UI.
+-   **`onUIAction`**: A callback function to handle events (e.g., button clicks) initiated from the remote UI.
 
 ## Component Libraries
 
@@ -42,23 +42,23 @@ If the remote DOM contains `<fancy-button>`, it will be rendered using your `MyB
 
 ## Usage
 
-The `<ResourceRenderer />` component automatically handles rendering `<RemoteDomResource />` when it detects the correct mime type, so you typically won't use this component directly.
+The `<UIResourceRenderer />` component automatically handles rendering `<RemoteDomResource />` when it detects the correct mime type, so you typically won't use this component directly.
 
 ```tsx
 import React from 'react';
-import { ResourceRenderer } from '@mcp-ui/client';
+import { UIResourceRenderer } from '@mcp-ui/client';
 
 function App({ mcpResource }) {
   if (
     mcpResource.type === 'resource' &&
     mcpResource.resource.uri?.startsWith('ui://')
   ) {
-    // ResourceRenderer will instantiate RemoteDomResource internally
+    // UIResourceRenderer will instantiate RemoteDomResource internally
     // if the resource mimeType is 'application/vnd.mcp-ui.remote-dom'.
     return (
-      <ResourceRenderer
+      <UIResourceRenderer
         resource={mcpResource.resource}
-        onUiAction={(action) => console.log('UI Action:', action)}
+        onUIAction={(action) => console.log('UI Action:', action)}
       />
     );
   }

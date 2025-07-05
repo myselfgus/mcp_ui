@@ -1,8 +1,8 @@
-# ResourceRenderer Component
+# UIResourceRenderer Component
 
-The `<ResourceRenderer />` component is the **main entry point** for rendering MCP-UI resources in your React application. It automatically detects the resource type and renders the appropriate component internally.
+The `<UIResourceRenderer />` component is the **main entry point** for rendering MCP-UI resources in your React application. It automatically detects the resource type and renders the appropriate component internally.
 
-## Why use `ResourceRenderer`?
+## Why use `UIResourceRenderer`?
 
 - **Automatic Type Detection**: Inspects the resource's `mimeType` and `contentType` to determine the appropriate rendering method
 - **Future-Proof**: Handles new resource types as they're added to the MCP-UI specification
@@ -11,7 +11,7 @@ The `<ResourceRenderer />` component is the **main entry point** for rendering M
 
 ## Supported Resource Types
 
-`ResourceRenderer` automatically handles:
+`UIResourceRenderer` automatically handles:
 
 - **HTML Resources** (`text/html`): Direct HTML content rendered in sandboxed iframes
 - **External URLs** (`text/uri-list`): External applications and websites
@@ -22,9 +22,9 @@ The `<ResourceRenderer />` component is the **main entry point** for rendering M
 ```typescript
 import type { Resource } from '@modelcontextprotocol/sdk/types';
 
-interface ResourceRendererProps {
+interface UIResourceRendererProps {
   resource: Partial<Resource>;
-  onUiAction?: (result: UiActionResult) => Promise<unknown>;
+  onUIAction?: (result: UIActionResult) => Promise<unknown>;
   style?: React.CSSProperties;
   iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'ref' | 'style'>;
   library?: ComponentLibrary;
@@ -36,7 +36,7 @@ interface ResourceRendererProps {
 ### Props Details
 
 - **`resource`**: The resource object from an MCP response. Should include `uri`, `mimeType`, and content (`text`, `blob`, or `content`)
-- **`onUiAction`**: Optional callback for handling UI actions from the resource:
+- **`onUIAction`**: Optional callback for handling UI actions from the resource:
   ```typescript
   { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
   { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
@@ -54,10 +54,10 @@ interface ResourceRendererProps {
 
 ```tsx
 import React from 'react';
-import { ResourceRenderer, UiActionResult } from '@mcp-ui/client';
+import { UIResourceRenderer, UIActionResult } from '@mcp-ui/client';
 
 function App({ mcpResource }) {
-  const handleUiAction = async (result: UiActionResult) => {
+  const handleUIAction = async (result: UIActionResult) => {
     switch (result.type) {
       case 'tool':
         console.log('Tool call:', result.payload.toolName, result.payload.params);
@@ -88,9 +88,9 @@ function App({ mcpResource }) {
     mcpResource.resource.uri?.startsWith('ui://')
   ) {
     return (
-      <ResourceRenderer
+      <UIResourceRenderer
         resource={mcpResource.resource}
-        onUiAction={handleUiAction}
+        onUIAction={handleUIAction}
       />
     );
   }
@@ -105,10 +105,10 @@ function App({ mcpResource }) {
 
 ```tsx
 // Only allow HTML resources (block external URLs and Remote DOM)
-<ResourceRenderer
+<UIResourceRenderer
   resource={mcpResource.resource}
   supportedContentTypes={['rawHtml']}
-  onUiAction={handleUiAction}
+  onUIAction={handleUIAction}
 />
 ```
 
@@ -126,17 +126,17 @@ const customLibrary: ComponentLibrary = {
   ],
 };
 
-<ResourceRenderer
+<UIResourceRenderer
   resource={mcpResource.resource}
   library={customLibrary}
-  onUiAction={handleUiAction}
+  onUIAction={handleUIAction}
 />
 ```
 
 ### Custom Styling
 
 ```tsx
-<ResourceRenderer
+<UIResourceRenderer
   resource={mcpResource.resource}
   style={{ 
     border: '2px solid #007acc',
@@ -147,13 +147,13 @@ const customLibrary: ComponentLibrary = {
     title: 'Custom MCP Resource',
     className: 'mcp-resource-frame'
   }}
-  onUiAction={handleUiAction}
+  onUIAction={handleUIAction}
 />
 ```
 
 ## Resource Type Detection
 
-`ResourceRenderer` determines the resource type using this logic:
+`UIResourceRenderer` determines the resource type using this logic:
 
 1. **Explicit `contentType`**: If `resource.contentType` is set, use it directly
 2. **MIME Type Detection**:
@@ -173,9 +173,9 @@ function App({ mcpResource }) {
     return (
       <div>
         <h3>MCP Resource: {mcpResource.resource.uri}</h3>
-        <ResourceRenderer
+        <UIResourceRenderer
           resource={mcpResource.resource}
-          onUiAction={handleUiAction}
+          onUIAction={handleUIAction}
           supportedContentTypes={['rawHtml', 'externalUrl']} // Restrict types
         />
       </div>
@@ -186,7 +186,7 @@ function App({ mcpResource }) {
 }
 ```
 
-When unsupported content types are encountered, `ResourceRenderer` will display appropriate error messages:
+When unsupported content types are encountered, `UIResourceRenderer` will display appropriate error messages:
 - `"Unsupported content type: {type}."`
 - `"Unsupported resource type."`
 

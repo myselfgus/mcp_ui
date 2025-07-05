@@ -35,8 +35,8 @@
 
 `mcp-ui` is a TypeScript SDK comprising two packages:
 
-* **`@mcp-ui/server`**: Utilities to generate UI resources (`UiResource`) on your MCP server.
-* **`@mcp-ui/client`**: UI components (e.g., `<ResourceRenderer />`) to render the UI resources and handle their events.
+* **`@mcp-ui/server`**: Utilities to generate UI resources (`UIResource`) on your MCP server.
+* **`@mcp-ui/client`**: UI components (e.g., `<UIResourceRenderer />`) to render the UI resources and handle their events.
 
 Together, they let you define reusable UI snippets on the server side, seamlessly and securely render them in the client, and react to their actions in the MCP host environment.
 
@@ -45,10 +45,10 @@ Together, they let you define reusable UI snippets on the server side, seamlessl
 In essence, by using `mcp-ui` SDKs, servers and hosts can agree on contracts that enable them to create and render interactive UI snippets (as a path to a standardized UI approach in MCP).
 
 ### UI Resource
-The primary payload returned from the server to the client is the `UiResource`:
+The primary payload returned from the server to the client is the `UIResource`:
 
 ```ts
-interface UiResource {
+interface UIResource {
   type: 'resource';
   resource: {
     uri: string;       // ui://component/id
@@ -67,11 +67,11 @@ interface UiResource {
 
 ### Resource Renderer
 
-The UI Resource is rendered in the `<ResourceRenderer />` component. It automatically detects the resource type and renders the appropriate component.
+The UI Resource is rendered in the `<UIResourceRenderer />` component. It automatically detects the resource type and renders the appropriate component.
 
 It accepts the following props:
 - **`resource`**: The resource object from an MCP response. Should include `uri`, `mimeType`, and content (`text`, `blob`, or `content`)
-- **`onUiAction`**: Optional callback for handling UI actions from the resource:
+- **`onUIAction`**: Optional callback for handling UI actions from the resource:
   ```typescript
   { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
   { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
@@ -89,7 +89,7 @@ It accepts the following props:
 
 #### HTML (`text/html` and `text/uri-list`)
 
-Rendered using the `<HtmlResource />` component, which displays content inside an `<iframe>`. This is suitable for self-contained HTML or embedding external apps.
+Rendered using the `<HTMLResource />` component, which displays content inside an `<iframe>`. This is suitable for self-contained HTML or embedding external apps.
 
 *   **`mimeType`**:
     *   `text/html`: Renders inline HTML content.
@@ -123,7 +123,7 @@ yarn add @mcp-ui/server @mcp-ui/client
 1. **Server-side**: Build your resource blocks
 
    ```ts
-   import { createUiResource } from '@mcp-ui/server';
+   import { createUIResource } from '@mcp-ui/server';
    import {
     createRemoteComponent,
     createRemoteDocument,
@@ -131,14 +131,14 @@ yarn add @mcp-ui/server @mcp-ui/client
    } from '@remote-dom/core';
 
    // Inline HTML
-   const htmlResource = createUiResource({
+   const htmlResource = createUIResource({
      uri: 'ui://greeting/1',
      content: { type: 'rawHtml', htmlString: '<p>Hello, MCP UI!</p>' },
      delivery: 'text',
    });
 
    // External URL
-   const externalUrlResource = createUiResource({
+   const externalUrlResource = createUIResource({
      uri: 'ui://greeting/1',
      content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
      delivery: 'text',
@@ -149,7 +149,7 @@ yarn add @mcp-ui/server @mcp-ui/client
 
    ```tsx
    import React from 'react';
-   import { ResourceRenderer } from '@mcp-ui/client';
+   import { UIResourceRenderer } from '@mcp-ui/client';
 
    function App({ mcpResource }) {
      if (
@@ -157,9 +157,9 @@ yarn add @mcp-ui/server @mcp-ui/client
        mcpResource.resource.uri?.startsWith('ui://')
      ) {
        return (
-         <ResourceRenderer
+         <UIResourceRenderer
            resource={mcpResource.resource}
-           onUiAction={(result) => {
+           onUIAction={(result) => {
              console.log('Action:', result);
              return { status: 'ok' };
            }}

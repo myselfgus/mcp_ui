@@ -1,15 +1,15 @@
 # @mcp-ui/server Overview
 
-The `@mcp-ui/server` package provides server-side utilities to help construct `UiResource` objects, which can then be sent to a client as part of an MCP response.
+The `@mcp-ui/server` package provides server-side utilities to help construct `UIResource` objects, which can then be sent to a client as part of an MCP response.
 
 ## Key Exports
 
-- **`createUiResource(options: CreateUiResourceOptions): UiResource`**:
+- **`createUIResource(options: CreateUIResourceOptions): UIResource`**:
   The primary function for creating UI snippets. It takes an options object to define the URI, content (direct HTML or external URL), and delivery method (text or blob).
 
 ## Purpose
 
-- **Ease of Use**: Simplifies the creation of valid `UiResource` objects.
+- **Ease of Use**: Simplifies the creation of valid `UIResource` objects.
 - **Validation**: Includes basic validation (e.g., URI prefixes matching content type).
 - **Encoding**: Handles Base64 encoding when `delivery: 'blob'` is specified.
 

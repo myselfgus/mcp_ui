@@ -1,6 +1,6 @@
 # @mcp-ui/client Usage & Examples
 
-Here's how to use the `<ResourceRenderer />` component from `@mcp-ui/client`.
+Here's how to use the `<UIResourceRenderer />` component from `@mcp-ui/client`.
 
 ## Installation
 
@@ -14,10 +14,10 @@ npm i @mcp-ui/client
 
 ```tsx
 import React, { useState } from 'react';
-import { ResourceRenderer, UiActionResult } from '@mcp-ui/client';
+import { UIResourceRenderer, UIActionResult } from '@mcp-ui/client';
 
 // Simulate fetching an MCP UI resource
-const fetchMcpResource = async (id: string): Promise<UiResource> => {
+const fetchMcpResource = async (id: string): Promise<UIResource> => {
   if (id === 'direct') {
     return {
       type: 'resource',
@@ -52,7 +52,7 @@ const fetchMcpResource = async (id: string): Promise<UiResource> => {
 };
 
 const App: React.FC = () => {
-  const [resourceBlock, setResourceBlock] = useState<UiResource | null>(
+  const [resourceBlock, setResourceBlock] = useState<UIResource | null>(
     null,
   );
   const [loading, setLoading] = useState(false);
@@ -72,7 +72,7 @@ const App: React.FC = () => {
     setLoading(false);
   };
 
-  const handleGenericMcpAction = async (result: UiActionResult) => {
+  const handleGenericMcpAction = async (result: UIActionResult) => {
     if (result.type === 'tool') {
       console.log(`Action received in host app - Tool: ${result.payload.toolName}, Params:`, result.payload.params);
       setLastAction({ tool: result.payload.toolName, params: result.payload.params });
@@ -113,9 +113,9 @@ const App: React.FC = () => {
       {resourceBlock && resourceBlock.resource && (
         <div style={{ marginTop: 20, border: '2px solid blue', padding: 10 }}>
           <h2>Rendering Resource: {resourceBlock.resource.uri}</h2>
-          <ResourceRenderer
+          <UIResourceRenderer
             resource={resourceBlock.resource}
-            onUiAction={handleGenericMcpAction}
+            onUIAction={handleGenericMcpAction}
           />
         </div>
       )}
@@ -135,4 +135,4 @@ export default App;
 
 ---
 
-That's it! Just use `<ResourceRenderer />` with the right props and you're ready to render interactive HTML from MCP resources in your React app. The `ResourceRenderer` automatically detects the resource type and renders the appropriate component internally. If you need more details, check out the [ResourceRenderer Component](./resource-renderer.md) page.
+That's it! Just use `<UIResourceRenderer />` with the right props and you're ready to render interactive HTML from MCP resources in your React app. The `UIResourceRenderer` automatically detects the resource type and renders the appropriate component internally. If you need more details, check out the [UIResourceRenderer Component](./resource-renderer.md) page.

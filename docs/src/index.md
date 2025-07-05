@@ -22,7 +22,7 @@ hero:
 
 features:
   - title: ⚛️ Client SDK
-    details: React components and hooks for seamless frontend integration. Render interactive UI resources with the ResourceRenderer component and handle UI actions effortlessly.
+    details: React components and hooks for seamless frontend integration. Render interactive UI resources with the UIResourceRenderer component and handle UI actions effortlessly.
   - title: 🛠️ Server SDK
     details: Powerful utilities to construct interactive UI for MCP servers. Create HTML, React, Web Components, and external app UI with ergonomic API.
   - title: 🔒 Secure
@@ -48,9 +48,9 @@ features:
 **Server Side** - Create interactive resources to return in your MCP tool results:
 
 ```typescript
-import { createUiResource } from '@mcp-ui/server';
+import { createUIResource } from '@mcp-ui/server';
 
-const interactiveForm = createUiResource({
+const interactiveForm = createUIResource({
   uri: 'ui://user-form/1',
   content: { 
     type: 'externalUrl', 
@@ -63,13 +63,13 @@ const interactiveForm = createUiResource({
 **Client Side** - Render with one component:
 
 ```tsx
-import { ResourceRenderer } from '@mcp-ui/client';
+import { UIResourceRenderer } from '@mcp-ui/client';
 
 function MyApp({ mcpResource }) {
   return (
-    <ResourceRenderer
+    <UIResourceRenderer
       resource={mcpResource.resource}
-      onUiAction={(action) => {
+      onUIAction={(action) => {
         console.log('User action:', action);
         return { status: 'ok' };
       }}

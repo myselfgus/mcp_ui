@@ -3,7 +3,7 @@
 
 ### Features
 
-* switch to ResourceRenderer ([#21](https://github.com/idosal/mcp-ui/issues/21)) ([6fe3166](https://github.com/idosal/mcp-ui/commit/6fe316682675e27db914d60696754677e3783448))
+* switch to UiResourceRenderer ([#21](https://github.com/idosal/mcp-ui/issues/21)) ([6fe3166](https://github.com/idosal/mcp-ui/commit/6fe316682675e27db914d60696754677e3783448))
 
 
 ### BREAKING CHANGES
@@ -16,7 +16,7 @@
 ### Bug Fixes
 
 * export RemoteDomResource ([2b86f2d](https://github.com/idosal/mcp-ui/commit/2b86f2dd4506de49c69908e23d84a2a323170446))
-* export ResourceRenderer and HtmlResource ([2b841a5](https://github.com/idosal/mcp-ui/commit/2b841a556c1111ed70ccb3d3987afd21fe7df897))
+* export UiResourceRenderer and HtmlResource ([2b841a5](https://github.com/idosal/mcp-ui/commit/2b841a556c1111ed70ccb3d3987afd21fe7df897))
 
 # [2.5.0](https://github.com/idosal/mcp-ui/compare/v2.4.0...v2.5.0) (2025-06-27)
 

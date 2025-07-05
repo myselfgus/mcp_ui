@@ -79,8 +79,8 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: 'Overview', link: '/guide/client/overview' },
-            { text: 'ResourceRenderer', link: '/guide/client/resource-renderer' },
-            { text: 'HtmlResource', link: '/guide/client/html-resource' },
+            { text: 'UIResourceRenderer', link: '/guide/client/resource-renderer' },
+            { text: 'HTMLResource', link: '/guide/client/html-resource' },
             { text: 'RemoteDomResource', link: '/guide/client/remote-dom-resource' },
             { text: 'Usage & Examples', link: '/guide/client/usage-examples' },
           ],

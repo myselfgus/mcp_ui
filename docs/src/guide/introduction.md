@@ -8,17 +8,17 @@ This SDK provides tools for building Model Context Protocol (MCP) enabled applic
 
 MCP-UI is a TypeScript SDK containing:
 
-- **`@mcp-ui/client`**: UI components (like `<ResourceRenderer />`) for easy rendering of interactive UI.
-- **`@mcp-ui/server`**: Helper functions (like `createUiResource`) for server-side logic to easily construct `UiResource` objects.
+- **`@mcp-ui/client`**: UI components (like `<UIResourceRenderer />`) for easy rendering of interactive UI.
+- **`@mcp-ui/server`**: Helper functions (like `createUIResource`) for server-side logic to easily construct `UIResource` objects.
 
 ## Core Concept: The Interactive UI Resource Protocol
 
-The central piece of this SDK is the `UiResource`. This object defines a contract for how interactive UI should be structured and delivered from a server/tool to a client.
+The central piece of this SDK is the `UIResource`. This object defines a contract for how interactive UI should be structured and delivered from a server/tool to a client.
 
-### `UiResource` Structure
+### `UIResource` Structure
 
 ```typescript
-interface UiResource {
+interface UIResource {
   type: 'resource';
   resource: {
     uri: string;       // ui://component/id
@@ -41,16 +41,16 @@ interface UiResource {
 
 ## How It Works
 
-1. **Server Side**: Use `@mcp-ui/server` to create `HtmlResource` objects
+1. **Server Side**: Use `@mcp-ui/server` to create `HTMLResource` objects
 2. **Client Side**: Use `@mcp-ui/client` to render these resources in your React app
 
 ### Example Flow
 
 **Server (MCP Tool):**
 ```typescript
-import { createUiResource } from '@mcp-ui/server';
+import { createUIResource } from '@mcp-ui/server';
 
-const resource = createUiResource({
+const resource = createUIResource({
   uri: 'ui://my-tool/dashboard',
   content: { type: 'rawHtml', htmlString: '<h1>Dashboard</h1>' },
   delivery: 'text'
@@ -62,16 +62,16 @@ return { content: [resource] };
 
 **Client (React App):**
 ```tsx
-import { ResourceRenderer } from '@mcp-ui/client';
+import { UIResourceRenderer } from '@mcp-ui/client';
 
 function App({ mcpResponse }) {
   return (
     <div>
       {mcpResponse.content.map((item) => (
-        <ResourceRenderer
+        <UIResourceRenderer
           key={item.resource.uri}
           resource={item.resource}
-          onUiAction={(result) => {
+          onUIAction={(result) => {
             console.log('Action:', result);
             return { status: 'handled' };
           }}

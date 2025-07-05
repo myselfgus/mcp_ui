@@ -1,6 +1,6 @@
 import { RemoteReceiver } from '@remote-dom/core/receivers';
 
-export type UiActionType =
+export type UIActionType =
   | 'tool'
   | 'prompt'
   | 'link'
@@ -14,7 +14,7 @@ export const ALL_RESOURCE_CONTENT_TYPES = [
 ] as const;
 export type ResourceContentType = (typeof ALL_RESOURCE_CONTENT_TYPES)[number];
 
-export type UiActionResultToolCall = {
+export type UIActionResultToolCall = {
   type: 'tool';
   payload: {
     toolName: string;
@@ -22,21 +22,21 @@ export type UiActionResultToolCall = {
   };
 };
 
-export type UiActionResultPrompt = {
+export type UIActionResultPrompt = {
   type: 'prompt';
   payload: {
     prompt: string;
   };
 };
 
-export type UiActionResultLink = {
+export type UIActionResultLink = {
   type: 'link';
   payload: {
     url: string;
   };
 };
 
-export type UiActionResultIntent = {
+export type UIActionResultIntent = {
   type: 'intent';
   payload: {
     intent: string;
@@ -44,19 +44,19 @@ export type UiActionResultIntent = {
   };
 };
 
-export type UiActionResultNotification = {
+export type UIActionResultNotification = {
   type: 'notification';
   payload: {
     message: string;
   };
 };
 
-export type UiActionResult =
-  | UiActionResultToolCall
-  | UiActionResultPrompt
-  | UiActionResultLink
-  | UiActionResultIntent
-  | UiActionResultNotification;
+export type UIActionResult =
+  | UIActionResultToolCall
+  | UIActionResultPrompt
+  | UIActionResultLink
+  | UIActionResultIntent
+  | UIActionResultNotification;
 
 /**
  * This is the API that the remote environment (iframe) exports to the host.

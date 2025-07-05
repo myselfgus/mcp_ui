@@ -55,11 +55,11 @@ Once built, you can typically import from the packages as you would with any oth
 
 ```typescript
 // main.ts (your server-side application)
-import { createUiResource } from '@mcp-ui/server';
+import { createUIResource } from '@mcp-ui/server';
 
 const myHtmlPayload = `<h1>Hello from Server!</h1><p>Timestamp: ${new Date().toISOString()}</p>`;
 
-const resourceBlock = createUiResource({
+const resourceBlock = createUIResource({
   uri: 'ui://server-generated/item1',
   content: { type: 'rawHtml', htmlString: myHtmlPayload },
   delivery: 'text',
@@ -74,7 +74,7 @@ const resourceBlock = createUiResource({
 ```tsx
 // App.tsx (your React application)
 import React, { useState, useEffect } from 'react';
-import { ResourceRenderer, UiActionResult } from '@mcp-ui/client';
+import { UIResourceRenderer, UIActionResult } from '@mcp-ui/client';
 
 // Dummy MCP response structure
 interface McpToolResponse {
@@ -101,7 +101,7 @@ function App() {
     setMcpData(fakeMcpResponse);
   }, []);
 
-  const handleResourceAction = async (result: UiActionResult) => {
+  const handleResourceAction = async (result: UIActionResult) => {
     if (result.type === 'tool') {
       console.log(`Action from resource (tool: ${result.payload.toolName}):`, result.payload.params);
     } else if (result.type === 'prompt') {
@@ -135,9 +135,9 @@ function App() {
               }}
             >
               <h3>Resource: {item.resource.uri}</h3>
-              <ResourceRenderer
+              <UIResourceRenderer
                 resource={item.resource}
-                onUiAction={handleResourceAction}
+                onUIAction={handleResourceAction}
               />
             </div>
           );
@@ -182,12 +182,12 @@ npm i @mcp-ui/client
 ## Key Components
 
 ### Server Side (`@mcp-ui/server`)
-- **`createUiResource`**: Creates UI resource objects for MCP tool responses
+- **`createUIResource`**: Creates UI resource objects for MCP tool responses
 - Handles HTML content, external URLs, Remote DOM JS, and encoding options
 
 ### Client Side (`@mcp-ui/client`)
-- **`<ResourceRenderer />`**: Main component for rendering all types of MCP-UI resources
-- **`<HtmlResource />`**: Internal component for HTML resources
+- **`<UIResourceRenderer />`**: Main component for rendering all types of MCP-UI resources
+- **`<HTMLResource />`**: Internal component for HTML resources
 - **`<RemoteDomResource />`**: Internal component for Remote DOM resources
 
 ## Resource Types
@@ -198,11 +198,11 @@ MCP-UI supports several resource types:
 2. **External URLs** (`text/uri-list`): External applications and websites  
 3. **Remote DOM Resources** (`application/vnd.mcp-ui.remote-dom+javascript`): Javascript-defined UI that use host-native components
 
-All resource types are handled automatically by `<ResourceRenderer />`.
+All resource types are handled automatically by `<UIResourceRenderer />`.
 
 ## Next Steps
 
 - [Server SDK Usage & Examples](./server/usage-examples.md) - Learn how to create resources
 - [Client SDK Usage & Examples](./client/usage-examples.md) - Learn how to render resources
 - [Protocol Details](./protocol-details.md) - Understand the underlying protocol
-- [ResourceRenderer Component](./client/resource-renderer.md) - Comprehensive component guide
+- [UIResourceRenderer Component](./client/resource-renderer.md) - Comprehensive component guide

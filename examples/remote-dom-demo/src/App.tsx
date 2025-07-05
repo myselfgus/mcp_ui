@@ -1,5 +1,5 @@
 import {
-  ResourceRenderer,
+  UIResourceRenderer,
   basicComponentLibrary,
   remoteTextDefinition,
   remoteButtonDefinition,
@@ -143,7 +143,7 @@ function App() {
         >
           <h2 style={{ textAlign: 'center' }}>Basic React Components</h2>
 
-          <ResourceRenderer
+          <UIResourceRenderer
             key={`basic-${scriptContent}`}
             resource={mockResourceReact}
             library={basicComponentLibrary}
@@ -160,7 +160,7 @@ function App() {
         >
           <h2 style={{ textAlign: 'center' }}>Radix React Components</h2>
 
-          <ResourceRenderer
+          <UIResourceRenderer
             key={`radix-${scriptContent}`}
             resource={mockResourceReact}
             library={radixComponentLibrary}
@@ -177,7 +177,7 @@ function App() {
         >
           <h2 style={{ textAlign: 'center' }}>Web Components</h2>
 
-          <ResourceRenderer
+          <UIResourceRenderer
             key={`webcomponents-${scriptContent}`}
             resource={mockResourceWebComponents}
             library={basicComponentLibrary}

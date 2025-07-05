@@ -1,4 +1,4 @@
-export { ResourceRenderer } from './components/ResourceRenderer';
+export { UIResourceRenderer } from './components/UIResourceRenderer';
 
 // The types needed to create a custom component library
 export type { RemoteElementConfiguration } from './types';
@@ -21,13 +21,13 @@ export {
 } from './remote-dom/remote-elements';
 
 export type {
-  UiActionResult,
-  UiActionType,
+  UIActionResult,
+  UIActionType,
   ResourceContentType,
   ALL_RESOURCE_CONTENT_TYPES,
-  UiActionResultIntent,
-  UiActionResultLink,
-  UiActionResultNotification,
-  UiActionResultPrompt,
-  UiActionResultToolCall,
+  UIActionResultIntent,
+  UIActionResultLink,
+  UIActionResultNotification,
+  UIActionResultPrompt,
+  UIActionResultToolCall,
 } from './types';

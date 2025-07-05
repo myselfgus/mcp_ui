@@ -27,8 +27,8 @@
 
 `mcp-ui` is a TypeScript SDK comprising two packages:
 
-* **`@mcp-ui/server`**: Utilities to generate UI resource objects (`HtmlResourceBlock`) on your MCP server.
-* **`@mcp-ui/client`**: UI components (e.g., `<ResourceRenderer />`) to render those blocks in the browser and handle their events.
+* **`@mcp-ui/server`**: Utilities to generate UI resource objects (`HTMLResourceBlock`) on your MCP server.
+* **`@mcp-ui/client`**: UI components (e.g., `<UIResourceRenderer />`) to render those blocks in the browser and handle their events.
 
 Together, they let you define reusable UI resource blocks on the server side, seamlessly display them in the client, and react to their actions in the MCP host environment.
 
@@ -40,20 +40,20 @@ Together, they let you define reusable UI resource blocks on the server side, se
 
 ## ✨ Core Concepts
 
-The primary component for rendering MCP resources is `<ResourceRenderer />`. It automatically detects the resource type and renders the appropriate component.
+The primary component for rendering MCP resources is `<UIResourceRenderer />`. It automatically detects the resource type and renders the appropriate component.
 
 ### Supported Resource Types
 
 #### HTML (`text/html` and `text/uri-list`)
 
-Rendered using the `<HtmlResource />` component, which displays content inside an `<iframe>`. This is suitable for self-contained HTML or embedding external sites.
+Rendered using the `<HTMLResource />` component, which displays content inside an `<iframe>`. This is suitable for self-contained HTML or embedding external sites.
 
 *   **`mimeType`**:
     *   `text/html`: Renders inline HTML content.
     *   `text/uri-list`: Renders an external URL. MCP-UI uses the first valid URL.
 *   **Props**:
     *   **`resource`**: The `resource` object from an MCP message.
-    *   **`onUiAction`**: A callback function to handle events.
+    *   **`onUIAction`**: A callback function to handle events.
     *   **`supportedContentTypes`**: (Optional) Array to filter content types (`'rawHtml'`, `'externalUrl'`).
     *   **`style`**: (Optional) Custom styles for the iframe.
     *   **`iframeProps`**: (Optional) Custom iframe props.
@@ -66,7 +66,7 @@ Rendered using the `<RemoteDomResource />` component, which uses Shopify's [`rem
 * **Props**:
     * **`resource`**: The `resource` object from an MCP message.
     * **`library`**: A component library that maps remote element names (e.g., "button") to actual React or web components. `mcp-ui` provides a `basicComponentLibrary` for common HTML elements, and you can provide your own for custom components.
-    * **`onUiAction`**: A callback function to handle events.
+    * **`onUIAction`**: A callback function to handle events.
 
 ### UI Action
 
@@ -90,7 +90,7 @@ yarn add @mcp-ui/server @mcp-ui/client
 1. **Server-side**: Build your resource blocks
 
    ```ts
-   import { createHtmlResource } from '@mcp-ui/server';
+   import { createHTMLResource } from '@mcp-ui/server';
    import {
     createRemoteComponent,
     createRemoteDocument,
@@ -98,14 +98,14 @@ yarn add @mcp-ui/server @mcp-ui/client
    } from '@remote-dom/core';
 
    // Inline HTML
-   const htmlResource = createHtmlResource({
+   const htmlResource = createHTMLResource({
      uri: 'ui://greeting/1',
      content: { type: 'rawHtml', htmlString: '<p>Hello, MCP UI!</p>' },
      delivery: 'text',
    });
 
    // External URL
-   const externalUrlResource = createHtmlResource({
+   const externalUrlResource = createHTMLResource({
      uri: 'ui://greeting/1',
      content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
      delivery: 'text',
@@ -116,7 +116,7 @@ yarn add @mcp-ui/server @mcp-ui/client
 
    ```tsx
    import React from 'react';
-   import { ResourceRenderer } from '@mcp-ui/client';
+   import { UIResourceRenderer } from '@mcp-ui/client';
 
    function App({ mcpResource }) {
      if (
@@ -124,9 +124,9 @@ yarn add @mcp-ui/server @mcp-ui/client
        mcpResource.resource.uri?.startsWith('ui://')
      ) {
        return (
-         <ResourceRenderer
+         <UIResourceRenderer
            resource={mcpResource.resource}
-           onUiAction={(result) => {
+           onUIAction={(result) => {
              console.log('Action:', result);
              return { status: 'ok' };
            }}

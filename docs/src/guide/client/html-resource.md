@@ -1,15 +1,15 @@
-# HtmlResource Component
+# HTMLResource Component
 
-The `<HtmlResource />` component is an internal component used by `<ResourceRenderer />` to render HTML and URL-based resources.
+The `<HTMLResource />` component is an internal component used by `<UIResourceRenderer />` to render HTML and URL-based resources.
 
 ## Props
 
 ```typescript
 import type { Resource } from '@modelcontextprotocol/sdk/types';
 
-export interface HtmlResourceProps {
+export interface HTMLResourceProps {
   resource: Partial<Resource>;
-  onUiAction?: (result: UiActionResult) => Promise<any>;
+  onUIAction?: (result: UIActionResult) => Promise<any>;
   style?: React.CSSProperties;
   iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'ref' | 'style'>;
 }
@@ -17,8 +17,8 @@ export interface HtmlResourceProps {
 
 The component accepts the following props:
 
-- **`resource`**: The resource object from an `UiResource`. It should include `uri`, `mimeType`, and either `text` or `blob`.
-- **`onUiAction`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like:
+- **`resource`**: The resource object from an `UIResource`. It should include `uri`, `mimeType`, and either `text` or `blob`.
+- **`onUIAction`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like:
   ```typescript
   { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
   { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
@@ -47,7 +47,7 @@ The component accepts the following props:
       - If using `blob`, it decodes it from Base64.
       - Renders an `<iframe>` with its `srcdoc` set to the HTML.
       - Sandbox: `allow-scripts`.
-3.  **Listens for Messages**: Adds a global `message` event listener. If an iframe posts a message with `event.data.tool`, your `onUiAction` callback is called.
+3.  **Listens for Messages**: Adds a global `message` event listener. If an iframe posts a message with `event.data.tool`, your `onUIAction` callback is called.
 
 ## Styling
 
@@ -55,7 +55,7 @@ By default, the iframe stretches to 100% width and is at least 200px tall. You c
 
 ## Example Usage
 
-See [Client SDK Usage & Examples](./usage-examples.md) for examples using the recommended `<ResourceRenderer />` component.
+See [Client SDK Usage & Examples](./usage-examples.md) for examples using the recommended `<UIResourceRenderer />` component.
 
 ## Security Notes
 
