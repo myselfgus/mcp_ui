@@ -80,10 +80,12 @@ It accepts the following props:
   { type: 'link', payload: { url: string } }
   ```
 - **`supportedContentTypes`**: Optional array to restrict which content types are allowed (`['rawHtml', 'externalUrl', 'remoteDom']`)
-- **`style`**: Optional custom styles for iframe-based resources
-- **`iframeProps`**: Optional props passed to iframe elements (for HTML/URL resources)
-- **`library`**: Optional component library for Remote DOM resources (defaults to `basicComponentLibrary`)
-- **`remoteElements`**: Optional remote element definitions for Remote DOM resources. REQUIRED for Remote DOM snippets.
+- **`htmlProps`**: Optional props for the `<HTMLResourceRenderer>`
+  - **`style`**: Optional custom styles for iframe-based resources
+  - **`iframeProps`**: Optional props passed to iframe elements (for HTML/URL resources)
+- **`remoteDomProps`**: Optional props for the `<RemoteDOMResourceRenderer>`
+  - **`library`**: Optional component library for Remote DOM resources (defaults to `basicComponentLibrary`)
+  - **`remoteElements`**: Optional remote element definitions for Remote DOM resources. REQUIRED for Remote DOM snippets.
 
 ### Supported Resource Types
 
