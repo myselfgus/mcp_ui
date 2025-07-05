@@ -1,4 +1,3 @@
-// Import types first
 import {
   Base64BlobContent,
   CreateUIResourceOptions,
