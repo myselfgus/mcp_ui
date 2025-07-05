@@ -35,8 +35,8 @@
 
 `mcp-ui` is a TypeScript SDK comprising two packages:
 
-* **`@mcp-ui/server`**: Utilities to generate UI snippets (`UiSnippetResource`) on your MCP server.
-* **`@mcp-ui/client`**: UI components (e.g., `<ResourceRenderer />`) to render those snippets and handle their events.
+* **`@mcp-ui/server`**: Utilities to generate UI resources (`UiResource`) on your MCP server.
+* **`@mcp-ui/client`**: UI components (e.g., `<ResourceRenderer />`) to render the UI resources and handle their events.
 
 Together, they let you define reusable UI snippets on the server side, seamlessly and securely render them in the client, and react to their actions in the MCP host environment.
 
@@ -44,11 +44,11 @@ Together, they let you define reusable UI snippets on the server side, seamlessl
 
 In essence, by using `mcp-ui` SDKs, servers and hosts can agree on contracts that enable them to create and render interactive UI snippets (as a path to a standardized UI approach in MCP).
 
-### UI Snippet Resource
-The primary payload returned from the server to the client is the `UiSnippetResource`:
+### UI Resource
+The primary payload returned from the server to the client is the `UiResource`:
 
 ```ts
-interface UiSnippetResource {
+interface UiResource {
   type: 'resource';
   resource: {
     uri: string;       // ui://component/id
@@ -67,7 +67,7 @@ interface UiSnippetResource {
 
 ### Resource Renderer
 
-The UI SnippetResource is rendered in the `<ResourceRenderer />` component. It automatically detects the resource type and renders the appropriate component.
+The UI Resource is rendered in the `<ResourceRenderer />` component. It automatically detects the resource type and renders the appropriate component.
 
 It accepts the following props:
 - **`resource`**: The resource object from an MCP response. Should include `uri`, `mimeType`, and content (`text`, `blob`, or `content`)
@@ -123,7 +123,7 @@ yarn add @mcp-ui/server @mcp-ui/client
 1. **Server-side**: Build your resource blocks
 
    ```ts
-   import { createUiSnippetResource } from '@mcp-ui/server';
+   import { createUiResource } from '@mcp-ui/server';
    import {
     createRemoteComponent,
     createRemoteDocument,
@@ -131,14 +131,14 @@ yarn add @mcp-ui/server @mcp-ui/client
    } from '@remote-dom/core';
 
    // Inline HTML
-   const htmlResource = createUiSnippetResource({
+   const htmlResource = createUiResource({
      uri: 'ui://greeting/1',
      content: { type: 'rawHtml', htmlString: '<p>Hello, MCP UI!</p>' },
      delivery: 'text',
    });
 
    // External URL
-   const externalUrlResource = createUiSnippetResource({
+   const externalUrlResource = createUiResource({
      uri: 'ui://greeting/1',
      content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
      delivery: 'text',
@@ -170,7 +170,7 @@ yarn add @mcp-ui/server @mcp-ui/client
    }
    ```
 
-3. **Enjoy** interactive MCP UI snippets — no extra configuration required.
+3. **Enjoy** interactive MCP UI — no extra configuration required.
 
 ## 🌍 Examples
 

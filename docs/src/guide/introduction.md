@@ -8,17 +8,17 @@ This SDK provides tools for building Model Context Protocol (MCP) enabled applic
 
 MCP-UI is a TypeScript SDK containing:
 
-- **`@mcp-ui/client`**: UI components (like `<ResourceRenderer />`) for easy rendering of interactive UI snippets.
-- **`@mcp-ui/server`**: Helper functions (like `createUiSnippetResource`) for server-side logic to easily construct `UiSnippetResource` objects.
+- **`@mcp-ui/client`**: UI components (like `<ResourceRenderer />`) for easy rendering of interactive UI.
+- **`@mcp-ui/server`**: Helper functions (like `createUiResource`) for server-side logic to easily construct `UiResource` objects.
 
-## Core Concept: The Interactive UI Snippet Resource Protocol
+## Core Concept: The Interactive UI Resource Protocol
 
-The central piece of this SDK is the `UiSnippetResource`. This object defines a contract for how interactive UI snippet should be structured and delivered from a server/tool to a client.
+The central piece of this SDK is the `UiResource`. This object defines a contract for how interactive UI should be structured and delivered from a server/tool to a client.
 
-### `UiSnippetResource` Structure
+### `UiResource` Structure
 
 ```typescript
-interface UiSnippetResource {
+interface UiResource {
   type: 'resource';
   resource: {
     uri: string;       // ui://component/id
@@ -48,9 +48,9 @@ interface UiSnippetResource {
 
 **Server (MCP Tool):**
 ```typescript
-import { createUiSnippetResource } from '@mcp-ui/server';
+import { createUiResource } from '@mcp-ui/server';
 
-const resource = createUiSnippetResource({
+const resource = createUiResource({
   uri: 'ui://my-tool/dashboard',
   content: { type: 'rawHtml', htmlString: '<h1>Dashboard</h1>' },
   delivery: 'text'
@@ -99,6 +99,5 @@ function App({ mcpResponse }) {
 
 ## Philosophy
 
-Returning snippets of UI as responses from MCP servers is a powerful way to create interactive experiences. However, it can be difficult to get right.
-This is an ongoing discussion in the MCP community and the [UI Community Working Group](https://github.com/modelcontextprotocol-community/working-groups/issues/35).
-This project is an experimental playground for MCP-UI ideas, as explore ways to make it easier.
+Allowing MCP servers to respond with UI snippets is a powerful way to create interactive experiences in hosts. Nailing down the best way to do it is challenging, and is an ongoing discussion in the MCP community and the [UI Community Working Group](https://github.com/modelcontextprotocol-community/working-groups/issues/35).
+This project is an experimental playground for MCP-UI ideas, that aims to test out philosophies in the wild.

@@ -55,11 +55,11 @@ Once built, you can typically import from the packages as you would with any oth
 
 ```typescript
 // main.ts (your server-side application)
-import { createUiSnippetResource } from '@mcp-ui/server';
+import { createUiResource } from '@mcp-ui/server';
 
 const myHtmlPayload = `<h1>Hello from Server!</h1><p>Timestamp: ${new Date().toISOString()}</p>`;
 
-const resourceBlock = createUiSnippetResource({
+const resourceBlock = createUiResource({
   uri: 'ui://server-generated/item1',
   content: { type: 'rawHtml', htmlString: myHtmlPayload },
   delivery: 'text',
@@ -182,7 +182,7 @@ npm i @mcp-ui/client
 ## Key Components
 
 ### Server Side (`@mcp-ui/server`)
-- **`createUiSnippetResource`**: Creates UI Snippet resource objects for MCP tool responses
+- **`createUiResource`**: Creates UI resource objects for MCP tool responses
 - Handles HTML content, external URLs, Remote DOM JS, and encoding options
 
 ### Client Side (`@mcp-ui/client`)

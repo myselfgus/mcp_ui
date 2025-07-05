@@ -16,8 +16,8 @@ npm i @mcp-ui/client
 import React, { useState } from 'react';
 import { ResourceRenderer, UiActionResult } from '@mcp-ui/client';
 
-// Simulate fetching an MCP UI snippet
-const fetchMcpResource = async (id: string): Promise<UiSnippetResource> => {
+// Simulate fetching an MCP UI resource
+const fetchMcpResource = async (id: string): Promise<UiResource> => {
   if (id === 'direct') {
     return {
       type: 'resource',
@@ -52,7 +52,7 @@ const fetchMcpResource = async (id: string): Promise<UiSnippetResource> => {
 };
 
 const App: React.FC = () => {
-  const [resourceBlock, setResourceBlock] = useState<UiSnippetResource | null>(
+  const [resourceBlock, setResourceBlock] = useState<UiResource | null>(
     null,
   );
   const [loading, setLoading] = useState(false);

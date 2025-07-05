@@ -1,12 +1,7 @@
-/**
- * Defines the structure of an interactive UI Snippet
- * that the server will send to the client.
- */
-
 // Import types first
 import {
   Base64BlobContent,
-  CreateUiSnippetResourceOptions,
+  CreateUiResourceOptions,
   HtmlTextContent,
   MimeType,
   UiActionResult,
@@ -17,7 +12,7 @@ import {
   UiActionResultToolCall,
 } from './types.js';
 
-export type UiSnippetResource = {
+export type UiResource = {
   type: 'resource';
   resource: HtmlTextContent | Base64BlobContent;
 };
@@ -57,14 +52,14 @@ function robustUtf8ToBase64(str: string): string {
 }
 
 /**
- * Creates a UiSnippetResource.
+ * Creates a UiResource.
  * This is the object that should be included in the 'content' array of a toolResult.
  * @param options Configuration for the interactive resource.
- * @returns a UiSnippetResource.
+ * @returns a UiResource.
  */
-export function createUiSnippetResource(
-  options: CreateUiSnippetResourceOptions,
-): UiSnippetResource {
+export function createUiResource(
+  options: CreateUiResourceOptions,
+): UiResource {
   let actualContentString: string;
   let mimeType: MimeType;
 
@@ -116,7 +111,7 @@ export function createUiSnippetResource(
     );
   }
 
-  let resource: UiSnippetResource['resource'];
+  let resource: UiResource['resource'];
 
   switch (options.delivery) {
     case 'text':
@@ -147,7 +142,7 @@ export function createUiSnippetResource(
 }
 
 export type {
-  CreateUiSnippetResourceOptions,
+  CreateUiResourceOptions,
   ResourceContentPayload,
   UiActionResult,
 } from './types.js';

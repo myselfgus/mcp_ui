@@ -1,11 +1,11 @@
 # Protocol Details
 
-This section dives deeper into the `UiSnippetResource` and its intended usage.
+This section dives deeper into the `UiResource` and its intended usage.
 
-## `UiSnippetResource` Recap
+## `UiResource` Recap
 
 ```typescript
-export interface UiSnippetResource {
+export interface UiResource {
   type: 'resource';
   resource: {
     uri: string;
