@@ -86,7 +86,7 @@ export const RemoteDOMResourceRenderer: React.FC<RemoteDOMResourceProps> = ({
         }
         onUIAction?.(uiActionResult)?.catch((err) => {
           console.error(
-            'Error handling UI action result in RemoteDomResource:',
+            'Error handling UI action result in RemoteDOMResourceRenderer:',
             err,
           );
         });
