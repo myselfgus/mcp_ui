@@ -146,8 +146,10 @@ function App() {
           <UIResourceRenderer
             key={`basic-${scriptContent}`}
             resource={mockResourceReact}
-            library={basicComponentLibrary}
-            remoteElements={remoteElements}
+            remoteDomProps={{
+              library: basicComponentLibrary,
+              remoteElements: remoteElements,
+            }}
           />
         </div>
 
@@ -163,8 +165,10 @@ function App() {
           <UIResourceRenderer
             key={`radix-${scriptContent}`}
             resource={mockResourceReact}
-            library={radixComponentLibrary}
-            remoteElements={remoteElements}
+            remoteDomProps={{
+              library: radixComponentLibrary,
+              remoteElements: remoteElements,
+            }}
           />
         </div>
 
@@ -180,8 +184,10 @@ function App() {
           <UIResourceRenderer
             key={`webcomponents-${scriptContent}`}
             resource={mockResourceWebComponents}
-            library={basicComponentLibrary}
-            remoteElements={remoteElements}
+            remoteDomProps={{
+              library: basicComponentLibrary,
+              remoteElements: remoteElements,
+            }}
           />
         </div>
       </div>
