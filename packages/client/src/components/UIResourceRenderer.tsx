@@ -67,7 +67,7 @@ export const UIResourceRenderer: React.FC<UIResourceRendererProps> = (props) => 
           resource={resource}
           onUIAction={onUIAction}
           library={remoteDomProps?.library || basicComponentLibrary}
-          remoteElements={remoteDomProps?.remoteElements}
+          {...remoteDomProps}
         />
       );
     default:
