@@ -18,13 +18,13 @@ import { UIResourceRenderer, UIActionResult } from '@mcp-ui/client';
 
 // Simulate fetching an MCP UI resource
 const fetchMcpResource = async (id: string): Promise<UIResource> => {
-  if (id === 'direct') {
+  if (id === 'raw') {
     return {
       type: 'resource',
       resource: {
-        uri: 'ui://example/direct-html',
+        uri: 'ui://example/raw-html',
         mimeType: 'text/html',
-        text: "<h1>Direct HTML via Text</h1><p>Content loaded directly.</p><button onclick=\"window.parent.postMessage({ type: 'tool', payload: { toolName: 'uiInteraction', params: { action: 'directClick', value: Date.now() } } }, '*')\">Click Me (Direct)</button>",
+        text: "<h1>raw HTML via Text</h1><p>Content loaded rawly.</p><button onclick=\"window.parent.postMessage({ type: 'tool', payload: { toolName: 'uiInteraction', params: { action: 'rawClick', value: Date.now() } } }, '*')\">Click Me (raw)</button>",
       },
     };
   } else if (id === 'blob') {
@@ -52,7 +52,7 @@ const fetchMcpResource = async (id: string): Promise<UIResource> => {
 };
 
 const App: React.FC = () => {
-  const [resourceBlock, setResourceBlock] = useState<UIResource | null>(
+  const [uiResource, setUIResource] = useState<UIResource | null>(
     null,
   );
   const [loading, setLoading] = useState(false);
@@ -62,10 +62,10 @@ const App: React.FC = () => {
   const loadResource = async (id: string) => {
     setLoading(true);
     setError(null);
-    setResourceBlock(null);
+    setUIResource(null);
     try {
       const block = await fetchMcpResource(id);
-      setResourceBlock(block);
+      setUIResource(block);
     } catch (e: any) {
       setError(e.message);
     }
@@ -97,11 +97,11 @@ const App: React.FC = () => {
   return (
     <div>
       <h1>MCP-UI Client Demo</h1>
-      <button onClick={() => loadResource('direct')}>
-        Load Direct HTML (Text)
+      <button onClick={() => loadResource('raw')}>
+        Load raw HTML (Text)
       </button>
       <button onClick={() => loadResource('blob')}>
-        Load Direct HTML (Blob)
+        Load raw HTML (Blob)
       </button>
       <button onClick={() => loadResource('external')}>
         Load External App (URL)
@@ -110,11 +110,11 @@ const App: React.FC = () => {
       {loading && <p>Loading resource...</p>}
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
-      {resourceBlock && resourceBlock.resource && (
+      {uiResource && uiResource.resource && (
         <div style={{ marginTop: 20, border: '2px solid blue', padding: 10 }}>
-          <h2>Rendering Resource: {resourceBlock.resource.uri}</h2>
+          <h2>Rendering Resource: {uiResource.resource.uri}</h2>
           <UIResourceRenderer
-            resource={resourceBlock.resource}
+            resource={uiResource.resource}
             onUIAction={handleGenericMcpAction}
           />
         </div>
