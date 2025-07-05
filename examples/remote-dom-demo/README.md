@@ -9,9 +9,9 @@ https://github.com/user-attachments/assets/cace78be-7ac5-47bc-bb41-d722e3e28304
 
 The demo is split into two main concepts:
 
-1.  **UI Script (The "Server" or "Remote" side):** This is a piece of JavaScript that declaratively defines the UI structure and behavior using a set of standard elements (e.g., `<ui-text>`, `<ui-button>`). In a real-world scenario, this script would be generated and served by an MCP server inside an EmbeddedResource (through the `mcp-ui` server SDK). In this demo, you can directly edit this script in the text area at the bottom of the page.
+1.  **UI Script (The "Server"/"Remote" side):** This is a piece of JavaScript that declaratively defines the UI structure and behavior using a set of standard elements (e.g., `<ui-text>`, `<ui-button>`). In a real-world scenario, this script would be generated and served by an MCP server inside an EmbeddedResource (through the `mcp-ui` server SDK). In this demo, you can directly edit this script in the text area at the bottom of the page.
 
-2.  **Component Library (The "Host" or "Client" side):** This is a set of UI components (e.g., React components, Web Components) that know how to render the elements defined in the UI script. The host application receives the UI script and uses its component library to render the actual UI to the user. This demo showcases three different component libraries running in parallel.
+2.  **Component Library (The "Host"/"Client" side):** This is a set of UI components (e.g., React components, Web Components) that know how to render the elements defined in the UI script. The host application receives the UI script and uses its component library to render the actual UI to the user. This demo showcases three different component libraries running in parallel.
 
 ## How to Use the Demo
 

@@ -2,16 +2,16 @@ import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { UIResourceRenderer } from '../UIResourceRenderer';
 import '@testing-library/jest-dom';
-import { HTMLResource } from '../HTMLResource';
-import { RemoteDomResource } from '../RemoteDomResource';
+import { HTMLResourceRenderer } from '../HTMLResourceRenderer';
+import { RemoteDOMResourceRenderer } from '../RemoteDOMResourceRenderer';
 import { basicComponentLibrary } from '../../remote-dom/component-libraries/basic';
 
-vi.mock('../HTMLResource', () => ({
-  HTMLResource: vi.fn(() => <div data-testid="html-resource" />),
+vi.mock('../HTMLResourceRenderer', () => ({
+  HTMLResourceRenderer: vi.fn(() => <div data-testid="html-resource" />),
 }));
 
-vi.mock('../RemoteDomResource', () => ({
-  RemoteDomResource: vi.fn(() => <div data-testid="remote-dom-resource" />),
+vi.mock('../RemoteDomResourceRenderer', () => ({
+  RemoteDomResourceRenderer: vi.fn(() => <div data-testid="remote-dom-resource" />),
 }));
 
 describe('<UIResourceRenderer />', () => {
@@ -28,8 +28,8 @@ describe('<UIResourceRenderer />', () => {
     const resource = { ...baseResource, mimeType: 'text/html' };
     render(<UIResourceRenderer resource={resource} />);
     expect(screen.getByTestId('html-resource')).toBeInTheDocument();
-    expect(RemoteDomResource).not.toHaveBeenCalled();
-    expect(HTMLResource).toHaveBeenCalledWith(
+    expect(RemoteDOMResourceRenderer).not.toHaveBeenCalled();
+    expect(HTMLResourceRenderer).toHaveBeenCalledWith(
       { resource },
       {},
     );
@@ -39,8 +39,8 @@ describe('<UIResourceRenderer />', () => {
     const resource = { ...baseResource, mimeType: 'text/uri-list' };
     render(<UIResourceRenderer resource={resource} />);
     expect(screen.getByTestId('html-resource')).toBeInTheDocument();
-    expect(RemoteDomResource).not.toHaveBeenCalled();
-    expect(HTMLResource).toHaveBeenCalledWith(
+    expect(RemoteDOMResourceRenderer).not.toHaveBeenCalled();
+    expect(HTMLResourceRenderer).toHaveBeenCalledWith(
       { resource },
       {},
     );
@@ -53,16 +53,16 @@ describe('<UIResourceRenderer />', () => {
     };
     render(<UIResourceRenderer resource={resource} />);
     expect(screen.getByTestId('remote-dom-resource')).toBeInTheDocument();
-    expect(HTMLResource).not.toHaveBeenCalled();
-    expect(RemoteDomResource).toHaveBeenCalledWith({ resource, library: basicComponentLibrary }, {});
+    expect(HTMLResourceRenderer).not.toHaveBeenCalled();
+    expect(RemoteDOMResourceRenderer).toHaveBeenCalledWith({ resource, library: basicComponentLibrary }, {});
   });
 
   it('should render an unsupported message for an unknown mimeType', () => {
     const resource = { ...baseResource, mimeType: 'application/unknown' };
     render(<UIResourceRenderer resource={resource} />);
     expect(screen.getByText('Unsupported resource type.')).toBeInTheDocument();
-    expect(HTMLResource).not.toHaveBeenCalled();
-    expect(RemoteDomResource).not.toHaveBeenCalled();
+    expect(HTMLResourceRenderer).not.toHaveBeenCalled();
+    expect(RemoteDOMResourceRenderer).not.toHaveBeenCalled();
   });
 
   it('should render an error if content type is not supported', () => {
@@ -76,8 +76,8 @@ describe('<UIResourceRenderer />', () => {
     expect(
       screen.getByText('Unsupported content type: rawHtml.'),
     ).toBeInTheDocument();
-    expect(HTMLResource).not.toHaveBeenCalled();
-    expect(RemoteDomResource).not.toHaveBeenCalled();
+    expect(HTMLResourceRenderer).not.toHaveBeenCalled();
+    expect(RemoteDOMResourceRenderer).not.toHaveBeenCalled();
   });
 
   it('should render the resource if content type is supported', () => {
@@ -89,7 +89,7 @@ describe('<UIResourceRenderer />', () => {
       />,
     );
     expect(screen.getByTestId('html-resource')).toBeInTheDocument();
-    expect(RemoteDomResource).not.toHaveBeenCalled();
-    expect(HTMLResource).toHaveBeenCalledWith({ resource }, {});
+    expect(RemoteDOMResourceRenderer).not.toHaveBeenCalled();
+    expect(HTMLResourceRenderer).toHaveBeenCalledWith({ resource }, {});
   });
 }); 

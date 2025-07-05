@@ -1,12 +1,12 @@
 import React from 'react';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
 import { ResourceContentType } from '../types';
-import { HTMLResource, RenderHTMLResourceProps } from './HTMLResource';
-import { RemoteDomResource, RemoteDomResourceProps } from './RemoteDomResource';
+import { HTMLResourceRenderer, RenderHTMLResourceProps } from './HTMLResourceRenderer';
+import { RemoteDOMResourceProps, RemoteDOMResourceRenderer } from './RemoteDomResourceRenderer';
 import { basicComponentLibrary } from '../remote-dom/component-libraries/basic';
 
 type UIResourceRendererProps = Omit<
-  RenderHTMLResourceProps & RemoteDomResourceProps,
+  RenderHTMLResourceProps & RemoteDOMResourceProps,
   'resource'
 > & {
   resource: Partial<Resource>;
@@ -57,7 +57,7 @@ export const UIResourceRenderer: React.FC<UIResourceRendererProps> = (props) => 
     case 'rawHtml':
     case 'externalUrl':
       return (
-        <HTMLResource
+        <HTMLResourceRenderer
           resource={resource}
           onUIAction={onUIAction}
           style={style}
@@ -66,7 +66,7 @@ export const UIResourceRenderer: React.FC<UIResourceRendererProps> = (props) => 
       );
     case 'remoteDom':
       return (
-        <RemoteDomResource
+        <RemoteDOMResourceRenderer
           resource={resource}
           onUIAction={onUIAction}
           library={library || basicComponentLibrary}
