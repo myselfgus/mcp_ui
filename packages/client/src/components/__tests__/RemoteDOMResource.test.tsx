@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
-import { RemoteDomResource } from '../RemoteDomResource';
+import { RemoteDOMResourceRenderer } from '../RemoteDOMResourceRenderer';
 import '@testing-library/jest-dom';
 import { basicComponentLibrary } from '../../remote-dom/component-libraries/basic';
 import { RemoteRootRenderer } from '@remote-dom/react/host';
@@ -36,7 +36,7 @@ describe('<RemoteDomResource />', () => {
       mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
     };
 
-    render(<RemoteDomResource resource={resource} library={basicComponentLibrary} />);
+    render(<RemoteDOMResourceRenderer resource={resource} library={basicComponentLibrary} />);
     
     expect(screen.getByTestId('remote-root-renderer')).toBeInTheDocument();
     expect(screen.queryByTestId('standard-dom-renderer-container')).not.toBeInTheDocument();
@@ -48,7 +48,7 @@ describe('<RemoteDomResource />', () => {
       mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents',
     };
 
-    render(<RemoteDomResource resource={resource} />);
+    render(<RemoteDOMResourceRenderer resource={resource} />);
     
     expect(screen.getByTestId('standard-dom-renderer-container')).toBeInTheDocument();
     expect(screen.queryByTestId('remote-root-renderer')).not.toBeInTheDocument();
@@ -57,7 +57,7 @@ describe('<RemoteDomResource />', () => {
   it('should default to standard DOM renderer when mimeType is not provided', () => {
     const resource = { ...baseResource };
 
-    render(<RemoteDomResource resource={resource} />);
+    render(<RemoteDOMResourceRenderer resource={resource} />);
     
     expect(screen.getByTestId('standard-dom-renderer-container')).toBeInTheDocument();
     expect(screen.queryByTestId('remote-root-renderer')).not.toBeInTheDocument();
@@ -69,7 +69,7 @@ describe('<RemoteDomResource />', () => {
         mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=unknown',
     };
 
-    render(<RemoteDomResource resource={resource} />);
+    render(<RemoteDOMResourceRenderer resource={resource} />);
     
     expect(screen.getByTestId('standard-dom-renderer-container')).toBeInTheDocument();
     expect(screen.queryByTestId('remote-root-renderer')).not.toBeInTheDocument();
@@ -80,7 +80,7 @@ describe('<RemoteDomResource />', () => {
       ...baseResource,
       mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
     };
-    render(<RemoteDomResource resource={resource} library={basicComponentLibrary} />);
+    render(<RemoteDOMResourceRenderer resource={resource} library={basicComponentLibrary} />);
 
     const remoteRootRendererMock = RemoteRootRenderer as Mock;
     expect(remoteRootRendererMock).toHaveBeenCalled();

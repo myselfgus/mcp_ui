@@ -10,8 +10,8 @@ vi.mock('../HTMLResourceRenderer', () => ({
   HTMLResourceRenderer: vi.fn(() => <div data-testid="html-resource" />),
 }));
 
-vi.mock('../RemoteDomResourceRenderer', () => ({
-  RemoteDomResourceRenderer: vi.fn(() => <div data-testid="remote-dom-resource" />),
+vi.mock('../RemoteDOMResourceRenderer', () => ({
+  RemoteDOMResourceRenderer: vi.fn(() => <div data-testid="remote-dom-resource" />),
 }));
 
 describe('<UIResourceRenderer />', () => {
