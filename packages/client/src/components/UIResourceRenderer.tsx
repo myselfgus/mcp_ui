@@ -1,16 +1,16 @@
 import React from 'react';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
-import { ResourceContentType } from '../types';
+import { ResourceContentType, UIActionResult } from '../types';
 import { HTMLResourceRenderer, HTMLResourceRendererProps } from './HTMLResourceRenderer';
 import { RemoteDOMResourceProps, RemoteDOMResourceRenderer } from './RemoteDOMResourceRenderer';
 import { basicComponentLibrary } from '../remote-dom/component-libraries/basic';
 
-type UIResourceRendererProps = Omit<
-  HTMLResourceRendererProps & RemoteDOMResourceProps,
-  'resource'
-> & {
+type UIResourceRendererProps = {
   resource: Partial<Resource>;
+  onUIAction?: (result: UIActionResult) => Promise<unknown>;
   supportedContentTypes?: ResourceContentType[];
+  htmlProps?: Omit<HTMLResourceRendererProps, 'resource' | 'onUIAction'>;
+  remoteDomProps?: Omit<RemoteDOMResourceProps, 'resource' | 'onUIAction'>;
 };
 
 function getContentType(
@@ -35,11 +35,9 @@ export const UIResourceRenderer: React.FC<UIResourceRendererProps> = (props) => 
   const {
     resource,
     onUIAction,
-    style,
-    iframeProps,
     supportedContentTypes,
-    library,
-    remoteElements,
+    htmlProps,
+    remoteDomProps,
   } = props;
   const contentType = getContentType(resource);
 
@@ -60,8 +58,7 @@ export const UIResourceRenderer: React.FC<UIResourceRendererProps> = (props) => 
         <HTMLResourceRenderer
           resource={resource}
           onUIAction={onUIAction}
-          style={style}
-          iframeProps={iframeProps}
+          {...htmlProps}
         />
       );
     case 'remoteDom':
@@ -69,8 +66,8 @@ export const UIResourceRenderer: React.FC<UIResourceRendererProps> = (props) => 
         <RemoteDOMResourceRenderer
           resource={resource}
           onUIAction={onUIAction}
-          library={library || basicComponentLibrary}
-          remoteElements={remoteElements}
+          library={remoteDomProps?.library || basicComponentLibrary}
+          remoteElements={remoteDomProps?.remoteElements}
         />
       );
     default:
