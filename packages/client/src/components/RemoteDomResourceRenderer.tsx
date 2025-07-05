@@ -20,7 +20,7 @@ export type RemoteDomResourceProps = {
   onUIAction?: (result: UIActionResult) => Promise<unknown>;
 };
 
-export const RemoteDomResource: React.FC<RemoteDomResourceProps> = ({
+export const RemoteDomResourceRenderer: React.FC<RemoteDomResourceProps> = ({
   resource,
   library,
   remoteElements = [],
