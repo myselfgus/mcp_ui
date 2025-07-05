@@ -4,8 +4,8 @@ Welcome to the MCP-UI documentation!
 
 This SDK provides tools for building Model Context Protocol (MCP) enabled applications with interactive UI components. It aims to standardize how models and tools can request the display of rich HTML interfaces within a client application.
 
-You can use [GitMCP](https://gitmcp.io/badge/idosal/mcp-ui) to give your IDE access to `mcp-ui`'s latest documentation! 
-<a href="https://gitmcp.io/badge/idosal/mcp-ui"><img src="https://img.shields.io/endpoint?url=https://gitmcp.io/badge/idosal/mcp-ui" alt="MCP Documentation"></a>
+You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to `mcp-ui`'s latest documentation! 
+<a href="https://gitmcp.io/idosal/mcp-ui"><img src="https://img.shields.io/endpoint?url=https://gitmcp.io/badge/idosal/mcp-ui" alt="MCP Documentation"></a>
 
 ## What is MCP-UI?
 
