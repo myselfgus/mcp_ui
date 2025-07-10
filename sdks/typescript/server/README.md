@@ -184,7 +184,6 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
            resource={mcpResource.resource}
            onUIAction={(result) => {
              console.log('Action:', result);
-             return { status: 'ok' };
            }}
          />
        );
