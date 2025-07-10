@@ -1,0 +1,49 @@
+name: Release Ruby Gem
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'sdks/ruby/**'
+      - '!.github/workflows/release-ruby-sdk.yml'
+
+jobs:
+  release:
+    name: Release Gem
+    runs-on: ubuntu-latest
+    environment: release
+    
+    permissions:
+      contents: write # to push commits and tags
+      id-token: write # for trusted publishing
+      issues: write # to comment on issues
+      pull-requests: write # to comment on pull requests
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # needed by semantic-release
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: 'sdks/ruby'
+
+      - name: Release
+        working-directory: sdks/ruby
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The token for rubygems will be picked up by trusted publishing 

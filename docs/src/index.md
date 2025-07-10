@@ -4,7 +4,7 @@ layout: home
 hero:
   name: MCP-UI
   text: Interactive UI Components for MCP
-  tagline: Build rich, dynamic user interfaces for your MCP applications with TypeScript SDKs that bring UI to AI interactions.
+  tagline: Build rich, dynamic user interfaces for your MCP applications with SDKs that bring UI to AI interactions.
   image:
     light: /logo-lg-black.png
     dark: /logo-lg.png
@@ -71,7 +71,6 @@ function MyApp({ mcpResource }) {
       resource={mcpResource.resource}
       onUIAction={(action) => {
         console.log('User action:', action);
-        return { status: 'ok' };
       }}
     />
   );

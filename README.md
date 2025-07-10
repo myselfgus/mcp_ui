@@ -7,6 +7,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/@mcp-ui/server"><img src="https://img.shields.io/npm/v/@mcp-ui/server?label=server&color=green" alt="Server Version"></a>
   <a href="https://www.npmjs.com/package/@mcp-ui/client"><img src="https://img.shields.io/npm/v/@mcp-ui/client?label=client&color=blue" alt="Client Version"></a>
+  <a href="https://rubygems.org/gems/mcp_ui_server"><img src="https://img.shields.io/gem/v/mcp_ui_server?label=ruby-server&color=red" alt="Ruby Server SDK Version"></a>
   <a href="https://gitmcp.io/idosal/mcp-ui"><img src="https://img.shields.io/endpoint?url=https://gitmcp.io/badge/idosal/mcp-ui" alt="MCP Documentation"></a>
 </p>
 
@@ -34,10 +35,11 @@
 
 ## 💡 What's `mcp-ui`?
 
-`mcp-ui` is a TypeScript SDK comprising two packages:
+`mcp-ui` is a collection of SDKs comprising:
 
-* **`@mcp-ui/server`**: Utilities to generate UI resources (`UIResource`) on your MCP server.
-* **`@mcp-ui/client`**: UI components (e.g., `<UIResourceRenderer />`) to render the UI resources and handle their events.
+* **`@mcp-ui/server` (TypeScript)**: Utilities to generate UI resources (`UIResource`) on your MCP server.
+* **`@mcp-ui/client` (TypeScript)**: UI components (e.g., `<UIResourceRenderer />`) to render the UI resources and handle their events.
+* **`mcp_ui_server` (Ruby)**: Utilities to generate UI resources on your MCP server in a Ruby environment.
 
 Together, they let you define reusable UI snippets on the server side, seamlessly and securely render them in the client, and react to their actions in the MCP host environment.
 
@@ -110,6 +112,8 @@ UI snippets must be able to interact with the agent. In `mcp-ui`, this is done b
 
 ## 🏗️ Installation
 
+### TypeScript
+
 ```bash
 # using npm
 npm install @mcp-ui/server @mcp-ui/client
@@ -121,9 +125,17 @@ pnpm add @mcp-ui/server @mcp-ui/client
 yarn add @mcp-ui/server @mcp-ui/client
 ```
 
+### Ruby
+
+```bash
+gem install mcp_ui_server
+```
+
 ## 🎬 Quickstart
 
 You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to `mcp-ui`'s latest documentation! 
+
+### TypeScript
 
 1. **Server-side**: Build your resource blocks
 
@@ -184,7 +196,6 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
            resource={mcpResource.resource}
            onUIAction={(result) => {
              console.log('Action:', result);
-             return { status: 'ok' };
            }}
          />
        );
@@ -193,6 +204,45 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
    }
    ```
 
+### Ruby
+
+**Server-side**: Build your resource blocks
+
+   ```ruby
+   require 'mcp_ui_server'
+
+   # Inline HTML
+   html_resource = McpUiServer.create_ui_resource(
+     uri: 'ui://greeting/1',
+     content: { type: 'rawHtml', htmlString: '<p>Hello, from Ruby!</p>' },
+     delivery: 'text'
+   )
+
+   # External URL
+   external_url_resource = McpUiServer.create_ui_resource(
+     uri: 'ui://greeting/2',
+     content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
+     delivery: 'text'
+   )
+
+   # remote-dom
+   remote_dom_resource = McpUiServer.create_ui_resource(
+     uri: 'ui://remote-component/action-button',
+     content: {
+       type: 'remoteDom',
+       script: "
+        const button = document.createElement('ui-button');
+        button.setAttribute('label', 'Click me from Ruby!');
+        button.addEventListener('press', () => {
+          window.parent.postMessage({ type: 'tool', payload: { toolName: 'uiInteraction', params: { action: 'button-click', from: 'ruby-remote-dom' } } }, '*');
+        });
+        root.appendChild(button);
+        ",
+       flavor: 'react',
+     },
+     delivery: 'text'
+   )
+   ```
 3. **Enjoy** interactive MCP UI — no extra configuration required.
 
 ## 🌍 Examples
@@ -222,7 +272,7 @@ Host and user security is one of `mcp-ui`'s primary concerns. In all content typ
 - [X] Support Web Components
 - [X] Support Remote-DOM
 - [ ] Add component libraries (in progress)
-- [ ] Add SDKs for additional programming languages (in progress)
+- [X] Add SDKs for additional programming languages (Ruby available)
 - [ ] Support additional frontend frameworks
 - [ ] Add declarative UI content type
 - [ ] Support generative UI?
