@@ -76,19 +76,19 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build all packages
-        run: pnpm --filter="./packages/*" build
+        run: pnpm --filter="./sdks/typescript/*" build
 
       - name: List contents of client dist
         run: |
-          echo "--- Listing packages/client/dist ---"
-          ls -R packages/client/dist || echo "packages/client/dist not found or empty"
-          echo "--- End of packages/client/dist ---"
+          echo "--- Listing sdks/typescript/client/dist ---"
+          ls -R sdks/typescript/client/dist || echo "sdks/typescript/client/dist not found or empty"
+          echo "--- End of sdks/typescript/client/dist ---"
 
       - name: List contents of server dist
         run: |
-          echo "--- Listing packages/server/dist ---"
-          ls -R packages/server/dist || echo "packages/server/dist not found or empty"
-          echo "--- End of packages/server/dist ---"
+          echo "--- Listing sdks/typescript/server/dist ---"
+          ls -R sdks/typescript/server/dist || echo "sdks/typescript/server/dist not found or empty"
+          echo "--- End of sdks/typescript/server/dist ---"
 
       - name: Semantic Release
         env:
