@@ -4,11 +4,41 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   release:
     types: [published]
 
 jobs:
-  build_and_test:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      js_files: ${{ steps.filter.outputs.js_files }}
+      ruby_files: ${{ steps.filter.outputs.ruby_files }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            js_files:
+              - 'sdks/typescript/**'
+              - 'examples/**'
+              - 'docs/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'workflows/**'
+              - 'tsconfig.base.json'
+              - 'vitest.config.ts'
+              - 'vitest.setup.ts'
+            ruby_files:
+              - 'sdks/ruby/**'
+
+  js_build_and_test:
+    needs: changes
+    if: needs.changes.outputs.js_files == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -32,8 +62,30 @@ jobs:
       - name: Build
         run: pnpm run build
 
+  ruby_sdk_test:
+    needs: changes
+    if: needs.changes.outputs.ruby_files == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: 'sdks/ruby'
+
+      - name: Lint
+        run: bundle exec rubocop
+        working-directory: 'sdks/ruby'
+
+      - name: Run tests
+        run: bundle exec rspec
+        working-directory: 'sdks/ruby'
+
   publish:
-    needs: build_and_test
+    needs: js_build_and_test
     if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     steps:
