@@ -7,59 +7,38 @@ on:
   pull_request:
     branches:
       - main
+  release:
+    types: [published]
 
 jobs:
-  build_lint_test:
+  filter_changed_paths:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22.x]
+    outputs:
+      ts_client_files: ${{ steps.filter.outputs.ts_client_files }}
+      ts_server_files: ${{ steps.filter.outputs.ts_server_files }}
+      ruby_sdk_files: ${{ steps.filter.outputs.ruby_sdk_files }}
+      example_files: ${{ steps.filter.outputs.example_files }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
         with:
-          version: 10
+          filters: |
+            ts_client_files:
+              - 'sdks/typescript/client/**'
+            ts_server_files:
+              - 'sdks/typescript/server/**'
+            ruby_sdk_files:
+              - 'sdks/ruby/**'
+            example_files:
+              - 'examples/**'
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Test
-        run: pnpm test
-
-      - name: Build libraries (excluding docs)
-        run: pnpm --filter=!@mcp-ui/docs build
-
-      - name: Build docs
-        if: matrix.node-version == '20.x' # Build docs only on one Node version to save time
-        run: pnpm --filter=@mcp-ui/docs build
-
-  publish:
-    needs: build_lint_test
+  js_build_and_test:
+    needs: filter_changed_paths
+    if: needs.filter_changed_paths.outputs.ts_client_files == 'true' || needs.filter_changed_paths.outputs.ts_server_files == 'true'
     runs-on: ubuntu-latest
-    # Run on pushes to the main branch. semantic-release will determine if a release is needed.
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !startsWith(github.head_commit.message, 'chore(release):') && !(contains(join(github.event.commits.*.files_changed, ','), 'examples/') || contains(join(github.event.commits.*.files_changed, ','), 'docs/'))
-    permissions:
-      contents: write # Needed to push new version tags, commit changelog/package.json updates
-      issues: write # Needed to create/comment on release-related issues (optional, but good practice)
-      id-token: write # Required for publishing to NPM with OIDC
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          # Fetch all history for all tags and branches so semantic-release can analyze commits
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -69,29 +48,119 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x # Use a Node version compatible with semantic-release
+          node-version: 22.x
           cache: 'pnpm'
 
       - name: Install dependencies
+        run: pnpm install --workspaces --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+  ruby_sdk_test:
+    needs: filter_changed_paths
+    if: needs.filter_changed_paths.outputs.ruby_sdk_files == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: 'sdks/ruby'
+
+      - name: Lint
+        run: bundle exec rubocop
+        working-directory: 'sdks/ruby'
+
+      - name: Run tests
+        run: bundle exec rspec
+        working-directory: 'sdks/ruby'
+
+  release_ts_client:
+    needs: [js_build_and_test]
+    if: github.ref == 'refs/heads/main' && needs.filter_changed_paths.outputs.ts_client_files == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with: { version: 10 }
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with: { node-version: 22.x, cache: 'pnpm' }
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Build all packages
-        run: pnpm --filter="./sdks/typescript/*" build
-
-      - name: List contents of client dist
-        run: |
-          echo "--- Listing sdks/typescript/client/dist ---"
-          ls -R sdks/typescript/client/dist || echo "sdks/typescript/client/dist not found or empty"
-          echo "--- End of sdks/typescript/client/dist ---"
-
-      - name: List contents of server dist
-        run: |
-          echo "--- Listing sdks/typescript/server/dist ---"
-          ls -R sdks/typescript/server/dist || echo "sdks/typescript/server/dist not found or empty"
-          echo "--- End of sdks/typescript/server/dist ---"
-
-      - name: Semantic Release
+      - name: Release
+        working-directory: sdks/typescript/client
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by Actions, used by @semantic-release/github and @semantic-release/git
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # Your NPM token, used by @semantic-release/npm
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
+
+  release_ts_server:
+    needs: [js_build_and_test]
+    if: github.ref == 'refs/heads/main' && needs.filter_changed_paths.outputs.ts_server_files == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with: { version: 10 }
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with: { node-version: 22.x, cache: 'pnpm' }
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Release
+        working-directory: sdks/typescript/server
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
+
+  release_ruby_sdk:
+    needs: [ruby_sdk_test]
+    if: github.ref == 'refs/heads/main' && needs.filter_changed_paths.outputs.ruby_sdk_files == 'true'
+    runs-on: ubuntu-latest
+    permissions: { contents: write, issues: write, id-token: write }
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with: { version: 10 }
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with: { node-version: 22.x, cache: 'pnpm' }
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: sdks/ruby
+      - name: Release
+        working-directory: sdks/ruby
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
