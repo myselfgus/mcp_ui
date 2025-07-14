@@ -23,4 +23,4 @@ Metrics/BlockLength:
     - '*.gemspec'
 
 RSpec/MultipleExpectations:
-  Enabled: false 
+  Enabled: false

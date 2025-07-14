@@ -13,7 +13,7 @@ jobs:
     name: Release Gem
     runs-on: ubuntu-latest
     environment: release
-    
+
     permissions:
       contents: write # to push commits and tags
       id-token: write # for trusted publishing
@@ -46,4 +46,4 @@ jobs:
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # The token for rubygems will be picked up by trusted publishing 
+          # The token for rubygems will be picked up by trusted publishing
