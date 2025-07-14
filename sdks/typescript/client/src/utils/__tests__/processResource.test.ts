@@ -99,7 +99,9 @@ describe('processHTMLResource', () => {
         mimeType: 'text/uri-list' as const,
       };
       const result = processHTMLResource(resource);
-      expect(result.error).toBe('URL resource expects a non-empty text or blob field containing the URL.');
+      expect(result.error).toBe(
+        'URL resource expects a non-empty text or blob field containing the URL.',
+      );
     });
 
     it('should return an error for empty text content', () => {
@@ -238,4 +240,4 @@ describe('processRemoteDOMResource', () => {
     const result = processRemoteDOMResource(resource);
     expect(result.error).toBe('Remote DOM resource requires non-empty text or blob content.');
   });
-}); 
+});
