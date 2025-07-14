@@ -110,7 +110,7 @@ describe('processHTMLResource', () => {
         text: ' ',
       };
       const result = processHTMLResource(resource);
-      expect(result.error).toBe('URL content is empty.');
+      expect(result.error).toBe('URL resource expects a non-empty text or blob field containing the URL.');
     });
 
     it('should extract the first valid URL from a blob', () => {
