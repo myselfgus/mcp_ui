@@ -119,6 +119,7 @@ This project is an experimental playground for MCP-UI ideas, that aims to test o
 ## Next Steps
 
 - [Getting Started](./getting-started.md) - Set up your development environment
-- [Server SDK](./server/overview.md) - Learn to create resources
-- [Client SDK](./client/overview.md) - Learn to render resources
+- [Client SDK](./client/overview.md) - Learn to render UI resources
+- [Typescript Server SDK](./server/typescript/overview.md) - Learn to create UI resources in Typescript
+- [Ruby Server SDK](./server/ruby/overview.md) - Learn to create UI resources in Ruby
 - [Protocol Details](./protocol-details.md) - Understand the underlying protocol
