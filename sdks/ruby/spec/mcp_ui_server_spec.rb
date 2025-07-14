@@ -36,6 +36,11 @@ RSpec.describe McpUiServer do
         expect(resource[:resource][:mimeType]).to eq('text/uri-list')
         expect(resource[:resource][:text]).to eq('https://example.com')
       end
+
+      it 'creates a resource with blob delivery' do
+        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: 'blob')
+        expect(resource[:resource][:blob]).to eq(Base64.strict_encode64('https://example.com'))
+      end
     end
 
     context 'with remoteDom content' do
@@ -52,6 +57,12 @@ RSpec.describe McpUiServer do
         content = { type: :remoteDom, script: script, flavor: 'webcomponents' }
         resource = described_class.create_ui_resource(uri: uri, content: content)
         expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom; flavor=webcomponents')
+      end
+
+      it 'creates a resource with blob delivery' do
+        content = { type: :remoteDom, script: script }
+        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: 'blob')
+        expect(resource[:resource][:blob]).to eq(Base64.strict_encode64(script))
       end
     end
 

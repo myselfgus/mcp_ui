@@ -11,7 +11,7 @@ on:
     types: [published]
 
 jobs:
-  changes:
+  filter_changed_paths:
     runs-on: ubuntu-latest
     outputs:
       js_files: ${{ steps.filter.outputs.js_files }}
@@ -37,8 +37,8 @@ jobs:
               - 'sdks/ruby/**'
 
   js_build_and_test:
-    needs: changes
-    if: needs.changes.outputs.js_files == 'true'
+    needs: filter_changed_paths
+    if: needs.filter_changed_paths.outputs.js_files == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -63,8 +63,8 @@ jobs:
         run: pnpm run build
 
   ruby_sdk_test:
-    needs: changes
-    if: needs.changes.outputs.ruby_files == 'true'
+    needs: filter_changed_paths
+    if: needs.filter_changed_paths.outputs.ruby_files == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
