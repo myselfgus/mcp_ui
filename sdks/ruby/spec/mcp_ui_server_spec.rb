@@ -46,8 +46,8 @@ RSpec.describe McpUiServer do
     context 'with remote_dom content' do
       let(:script) { 'console.log("hello")' }
 
-      it 'creates a resource with default react flavor' do
-        content = { type: :remote_dom, script: script }
+      it 'creates a resource with react flavor' do
+        content = { type: :remote_dom, script: script, flavor: :react }
         resource = described_class.create_ui_resource(uri: uri, content: content)
         expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom; flavor=react')
         expect(resource[:resource][:text]).to eq(script)
@@ -60,8 +60,15 @@ RSpec.describe McpUiServer do
       end
 
       it 'creates a resource with blob delivery' do
-        content = { type: :remote_dom, script: script }
+        content = { type: :remote_dom, script: script, flavor: :react }
         resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
+        expect(resource[:resource][:blob]).to eq(Base64.strict_encode64(script))
+      end
+
+      it 'creates a resource with blob delivery and a specified flavor' do
+        content = { type: :remote_dom, script: script, flavor: :webcomponents }
+        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
+        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom; flavor=webcomponents')
         expect(resource[:resource][:blob]).to eq(Base64.strict_encode64(script))
       end
     end
@@ -82,8 +89,8 @@ RSpec.describe McpUiServer do
         end.to raise_error(McpUiServer::Error, /Unknown content type: invalid/)
       end
 
-      it 'raises McpUiServer::Error for camelCase content type' do
-        content = { type: :rawHtml, htmlString: '<h1>Hello</h1>' }
+      it 'raises McpUiServer::Error for camelCase string content type' do
+        content = { type: 'rawHtml', htmlString: '<h1>Hello</h1>' }
         expect do
           described_class.create_ui_resource(uri: uri, content: content)
         end.to raise_error(McpUiServer::Error, /Unknown content type: rawHtml/)
@@ -110,8 +117,15 @@ RSpec.describe McpUiServer do
         end.to raise_error(McpUiServer::Error, /Missing required key :iframeUrl for external_url content/)
       end
 
+      it 'raises McpUiServer::Error if flavor is missing' do
+        content = { type: :remote_dom, script: 'console.log("foo")' }
+        expect do
+          described_class.create_ui_resource(uri: uri, content: content)
+        end.to raise_error(McpUiServer::Error, /Missing required key :flavor for remote_dom content/)
+      end
+
       it 'raises McpUiServer::Error if script is missing' do
-        content = { type: :remote_dom }
+        content = { type: :remote_dom, flavor: :react }
         expect do
           described_class.create_ui_resource(uri: uri, content: content)
         end.to raise_error(McpUiServer::Error, /Missing required key :script for remote_dom content/)
