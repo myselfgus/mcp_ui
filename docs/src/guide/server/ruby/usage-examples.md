@@ -13,7 +13,7 @@ require 'json'
 # Example 1: Direct HTML, delivered as text
 resource1 = McpUiServer.create_ui_resource(
   uri: 'ui://my-component/instance-1',
-  content: { type: :rawHtml, htmlString: '<p>Hello World</p>' },
+  content: { type: :raw_html, htmlString: '<p>Hello World</p>' },
   delivery: :text
 )
 puts "Resource 1: #{JSON.pretty_generate(resource1)}"

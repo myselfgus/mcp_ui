@@ -6,7 +6,7 @@ require_relative 'lib/mcp_ui_server'
 resource = McpUiServer.create_ui_resource(
   uri: 'ui://my-app/greeting',
   content: {
-    type: :rawHtml,
+    type: :raw_html,
     htmlString: '<h1>Hello, World!</h1>'
   },
   delivery: :blob

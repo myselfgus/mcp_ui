@@ -214,14 +214,14 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
    # Inline HTML
    html_resource = McpUiServer.create_ui_resource(
      uri: 'ui://greeting/1',
-     content: { type: :rawHtml, htmlString: '<p>Hello, from Ruby!</p>' },
+     content: { type: :raw_html, htmlString: '<p>Hello, from Ruby!</p>' },
      delivery: :text
    )
 
    # External URL
    external_url_resource = McpUiServer.create_ui_resource(
      uri: 'ui://greeting/2',
-     content: { type: :externalUrl, iframeUrl: 'https://example.com' },
+     content: { type: :external_url, iframeUrl: 'https://example.com' },
      delivery: :text
    )
 
@@ -229,7 +229,7 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
    remote_dom_resource = McpUiServer.create_ui_resource(
      uri: 'ui://remote-component/action-button',
      content: {
-       type: :remoteDom,
+       type: :remote_dom,
        script: "
         const button = document.createElement('ui-button');
         button.setAttribute('label', 'Click me from Ruby!');
