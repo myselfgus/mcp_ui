@@ -1,4 +1,11 @@
-import { createUIResource } from '../index';
+import {
+  createUIResource,
+  uiActionResultToolCall,
+  uiActionResultPrompt,
+  uiActionResultLink,
+  uiActionResultIntent,
+  uiActionResultNotification,
+} from '../index';
 
 describe('@mcp-ui/server', () => {
   describe('createUIResource', () => {
@@ -151,6 +158,93 @@ describe('@mcp-ui/server', () => {
       expect(() => createUIResource(options)).toThrow(
         "MCP SDK: URI must start with 'ui://' when content.type is 'remoteDom'.",
       );
+    });
+
+    it('should throw an error if htmlString is not a string for rawHtml', () => {
+      const options = {
+        uri: 'ui://test' as const,
+        content: { type: 'rawHtml' as const, htmlString: null },
+      };
+      // @ts-expect-error intentionally passing invalid type
+      expect(() => createUIResource(options)).toThrow(
+        "MCP SDK: content.htmlString must be provided as a string when content.type is 'rawHtml'.",
+      );
+    });
+
+    it('should throw an error if iframeUrl is not a string for externalUrl', () => {
+      const options = {
+        uri: 'ui://test' as const,
+        content: { type: 'externalUrl' as const, iframeUrl: 123 },
+      };
+      // @ts-expect-error intentionally passing invalid type
+      expect(() => createUIResource(options)).toThrow(
+        "MCP SDK: content.iframeUrl must be provided as a string when content.type is 'externalUrl'.",
+      );
+    });
+
+    it('should throw an error if script is not a string for remoteDom', () => {
+      const options = {
+        uri: 'ui://test' as const,
+        content: { type: 'remoteDom' as const, flavor: 'react', script: { a: 1 } },
+      };
+      // @ts-expect-error intentionally passing invalid type
+      expect(() => createUIResource(options)).toThrow(
+        "MCP SDK: content.script must be provided as a string when content.type is 'remoteDom'.",
+      );
+    });
+  });
+});
+
+describe('UI Action Result Creators', () => {
+  it('should create a tool call action result', () => {
+    const result = uiActionResultToolCall('testTool', { param1: 'value1' });
+    expect(result).toEqual({
+      type: 'tool',
+      payload: {
+        toolName: 'testTool',
+        params: { param1: 'value1' },
+      },
+    });
+  });
+
+  it('should create a prompt action result', () => {
+    const result = uiActionResultPrompt('Enter your name');
+    expect(result).toEqual({
+      type: 'prompt',
+      payload: {
+        prompt: 'Enter your name',
+      },
+    });
+  });
+
+  it('should create a link action result', () => {
+    const result = uiActionResultLink('https://example.com');
+    expect(result).toEqual({
+      type: 'link',
+      payload: {
+        url: 'https://example.com',
+      },
+    });
+  });
+
+  it('should create an intent action result', () => {
+    const result = uiActionResultIntent('doSomething', { data: 'abc' });
+    expect(result).toEqual({
+      type: 'intent',
+      payload: {
+        intent: 'doSomething',
+        params: { data: 'abc' },
+      },
+    });
+  });
+
+  it('should create a notification action result', () => {
+    const result = uiActionResultNotification('Success!');
+    expect(result).toEqual({
+      type: 'notification',
+      payload: {
+        message: 'Success!',
+      },
     });
   });
 });

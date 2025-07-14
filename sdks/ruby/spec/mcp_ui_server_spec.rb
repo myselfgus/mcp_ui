@@ -59,6 +59,12 @@ RSpec.describe McpUiServer do
         expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom; flavor=webcomponents')
       end
 
+      it 'creates a resource with a specified flavor as a string' do
+        content = { type: :remote_dom, script: script, flavor: 'react' }
+        resource = described_class.create_ui_resource(uri: uri, content: content)
+        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom; flavor=react')
+      end
+
       it 'creates a resource with blob delivery' do
         content = { type: :remote_dom, script: script, flavor: :react }
         resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
