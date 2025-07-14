@@ -18,12 +18,12 @@ module McpUiServer
   #   - :iframeUrl [String] The URL for an external page (required if type is :externalUrl).
   #   - :script [String] The remote-dom script (required if type is :remoteDom).
   #   - :flavor [String] The remote-dom flavor, e.g., 'react' or 'webcomponents' (optional, for :remoteDom).
-  # @param delivery [String] The delivery method. 'text' for plain string, 'blob' for base64 encoded.
+  # @param delivery [Symbol] The delivery method. :text for plain string, :blob for base64 encoded.
   #
   # @return [Hash] A UIResource hash ready to be included in an MCP response.
   #
   # @raise [ArgumentError] if content type or delivery type is unknown, or if required content keys are missing.
-  def self.create_ui_resource(uri:, content:, delivery: 'text')
+  def self.create_ui_resource(uri:, content:, delivery: :text)
     resource = { uri: uri }
 
     content_value = process_content(content, resource)
@@ -72,9 +72,9 @@ module McpUiServer
 
   def self.process_delivery(delivery, resource, content_value)
     case delivery
-    when 'text'
+    when :text
       resource[:text] = content_value
-    when 'blob'
+    when :blob
       resource[:blob] = Base64.strict_encode64(content_value)
     else
       raise ArgumentError, "Unknown delivery type: #{delivery}"

@@ -94,7 +94,7 @@ It accepts the following props:
 
 #### HTML (`text/html` and `text/uri-list`)
 
-Rendered using the `<HTMLResourceRenderer />` component, which displays content inside an `<iframe>`. This is suitable for self-contained HTML or embedding external apps.
+Rendered using the internal `<HTMLResourceRenderer />` component, which displays content inside an `<iframe>`. This is suitable for self-contained HTML or embedding external apps.
 
 *   **`mimeType`**:
     *   `text/html`: Renders inline HTML content.
@@ -214,22 +214,22 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
    # Inline HTML
    html_resource = McpUiServer.create_ui_resource(
      uri: 'ui://greeting/1',
-     content: { type: 'rawHtml', htmlString: '<p>Hello, from Ruby!</p>' },
-     delivery: 'text'
+     content: { type: :rawHtml, htmlString: '<p>Hello, from Ruby!</p>' },
+     delivery: :text
    )
 
    # External URL
    external_url_resource = McpUiServer.create_ui_resource(
      uri: 'ui://greeting/2',
-     content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
-     delivery: 'text'
+     content: { type: :externalUrl, iframeUrl: 'https://example.com' },
+     delivery: :text
    )
 
    # remote-dom
    remote_dom_resource = McpUiServer.create_ui_resource(
      uri: 'ui://remote-component/action-button',
      content: {
-       type: 'remoteDom',
+       type: :remoteDom,
        script: "
         const button = document.createElement('ui-button');
         button.setAttribute('label', 'Click me from Ruby!');
@@ -240,10 +240,9 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
         ",
        flavor: 'react',
      },
-     delivery: 'text'
+     delivery: :text
    )
    ```
-3. **Enjoy** interactive MCP UI — no extra configuration required.
 
 ## 🌍 Examples
 
@@ -272,7 +271,7 @@ Host and user security is one of `mcp-ui`'s primary concerns. In all content typ
 - [X] Support Web Components
 - [X] Support Remote-DOM
 - [ ] Add component libraries (in progress)
-- [X] Add SDKs for additional programming languages (Ruby available)
+- [ ] Add SDKs for additional programming languages (in progress; Ruby available)
 - [ ] Support additional frontend frameworks
 - [ ] Add declarative UI content type
 - [ ] Support generative UI?

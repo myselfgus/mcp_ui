@@ -59,6 +59,6 @@ resource = McpUiServer.create_ui_resource(
     type: :rawHtml,
     htmlString: '<h1>Hello, World!</h1>'
   },
-  delivery: 'blob'
+  delivery: :blob
 )
 ``` 
