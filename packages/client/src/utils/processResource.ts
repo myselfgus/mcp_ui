@@ -7,6 +7,17 @@ type ProcessResourceResult = {
   htmlString?: string;
 };
 
+function isValidHttpUrl(string: string): boolean {
+  let url;
+  try {
+    url = new URL(string);
+  } catch (e) {
+    console.error('Error parsing URL:', e);
+    return false;
+  }
+  return url.protocol === 'http:' || url.protocol === 'https:';
+}
+
 export function processHTMLResource(resource: Partial<Resource>): ProcessResourceResult {
   if (resource.mimeType !== 'text/html' && resource.mimeType !== 'text/uri-list') {
     return {
@@ -51,7 +62,7 @@ export function processHTMLResource(resource: Partial<Resource>): ProcessResourc
     const lines = urlContent
       .split('\n')
       .map((line) => line.trim())
-      .filter((line) => line && !line.startsWith('#'));
+      .filter((line) => line && !line.startsWith('#') && isValidHttpUrl(line));
 
     if (lines.length === 0) {
       return {

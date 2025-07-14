@@ -52,10 +52,10 @@ The primary payload returned from the server to the client is the `UIResource`:
 interface UIResource {
   type: 'resource';
   resource: {
-    uri: string;       // ui://component/id
+    uri: string;       // e.g., ui://component/id
     mimeType: 'text/html' | 'text/uri-list' | 'application/vnd.mcp-ui.remote-dom'; // text/html for HTML content, text/uri-list for URL content, application/vnd.mcp-ui.remote-dom for remote-dom content (Javascript)
-    text?: string;      // Inline HTML or external URL
-    blob?: string;      // Base64-encoded HTML or URL
+    text?: string;      // Inline HTML, external URL, or remote-dom script
+    blob?: string;      // Base64-encoded HTML, URL, or remote-dom script
   };
 }
 ```
@@ -63,7 +63,7 @@ interface UIResource {
 * **`uri`**: Unique identifier for caching and routing
   * `ui://…` — UI resources (rendering method determined by mimeType)
 * **`mimeType`**: `text/html` for HTML content (iframe srcDoc), `text/uri-list` for URL content (iframe src), `application/vnd.mcp-ui.remote-dom` for remote-dom content (Javascript)
-  * **MCP-UI requires a single URL**: While `text/uri-list` format supports multiple URLs, MCP-UI uses only the first valid URL and logs others
+  * **MCP-UI requires a single URL**: While `text/uri-list` format supports multiple URLs, MCP-UI uses only the first valid `http/s` URL and warns if additional URLs are found
 * **`text` vs. `blob`**: Choose `text` for simple strings; use `blob` for larger or encoded content.
 
 ### Resource Renderer
@@ -71,7 +71,7 @@ interface UIResource {
 The UI Resource is rendered in the `<UIResourceRenderer />` component. It automatically detects the resource type and renders the appropriate component.
 
 It accepts the following props:
-- **`resource`**: The resource object from an MCP response. Should include `uri`, `mimeType`, and content (`text`, `blob`, or `content`)
+- **`resource`**: The resource object from an MCP Tool response. It must include `uri`, `mimeType`, and content (`text`, `blob`)
 - **`onUIAction`**: Optional callback for handling UI actions from the resource:
   ```typescript
   { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
@@ -81,12 +81,12 @@ It accepts the following props:
   { type: 'link', payload: { url: string } }
   ```
 - **`supportedContentTypes`**: Optional array to restrict which content types are allowed (`['rawHtml', 'externalUrl', 'remoteDom']`)
-- **`htmlProps`**: Optional props for the `<HTMLResourceRenderer>`
-  - **`style`**: Optional custom styles for iframe-based resources
-  - **`iframeProps`**: Optional props passed to iframe elements (for HTML/URL resources)
-- **`remoteDomProps`**: Optional props for the `<RemoteDOMResourceRenderer>`
+- **`htmlProps`**: Optional props for the internal `<HTMLResourceRenderer>`
+  - **`style`**: Optional custom styles for the iframe
+  - **`iframeProps`**: Optional props passed to the iframe element
+- **`remoteDomProps`**: Optional props for the internal `<RemoteDOMResourceRenderer>`
   - **`library`**: Optional component library for Remote DOM resources (defaults to `basicComponentLibrary`)
-  - **`remoteElements`**: Optional remote element definitions for Remote DOM resources. REQUIRED for Remote DOM snippets.
+  - **`remoteElements`**: remote element definitions for Remote DOM resources.
 
 ### Supported Resource Types
 
@@ -96,17 +96,17 @@ Rendered using the `<HTMLResourceRenderer />` component, which displays content 
 
 *   **`mimeType`**:
     *   `text/html`: Renders inline HTML content.
-    *   `text/uri-list`: Renders an external URL. MCP-UI uses the first valid URL.
+    *   `text/uri-list`: Renders an external URL. MCP-UI uses the first valid `http/s` URL.
 
 #### Remote DOM (`application/vnd.mcp-ui.remote-dom`)
 
-Rendered using the `<RemoteDOMResourceRenderer />` component, which uses Shopify's [`remote-dom`](https://github.com/Shopify/remote-dom). The server responds with a script that describes the UI and events. On the host, the script is securely rendered in a sandboxed iframe, and the UI changes are communicated to the host in JSON, where they're rendered using the host's component library. This is more flexible than iframes and allows for UIs that match the host's look-and-feel.
+Rendered using the internal `<RemoteDOMResourceRenderer />` component, which utilizes Shopify's [`remote-dom`](https://github.com/Shopify/remote-dom). The server responds with a script that describes the UI and events. On the host, the script is securely rendered in a sandboxed iframe, and the UI changes are communicated to the host in JSON, where they're rendered using the host's component library. This is more flexible than iframes and allows for UIs that match the host's look-and-feel.
 
 * **`mimeType`**: `application/vnd.mcp-ui.remote-dom; flavor={react | webcomponents}`
 
 ### UI Action
 
-UI snippets must be able to interact with the agent. In `mcp-ui`, this is done by hooking into events sent from the UI snippet and reacting to them in the host. For example, an HTML may trigger a tool call when a button is clicked by sending an event which will be caught handled by the client.
+UI snippets must be able to interact with the agent. In `mcp-ui`, this is done by hooking into events sent from the UI snippet and reacting to them in the host (see `onUIAction` prop). For example, an HTML may trigger a tool call when a button is clicked by sending an event which will be caught handled by the client.
 
 ## 🏗️ Installation
 
@@ -148,6 +148,24 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
      content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
      delivery: 'text',
    });
+
+   // remote-dom
+   const remoteDomResource = createUIResource({
+     uri: 'ui://remote-component/action-button',
+     content: {
+       type: 'remoteDom',
+       script: `
+        const button = document.createElement('ui-button');
+        button.setAttribute('label', 'Click me for a tool call!');
+        button.addEventListener('press', () => {
+          window.parent.postMessage({ type: 'tool', payload: { toolName: 'uiInteraction', params: { action: 'button-click', from: 'remote-dom' } } }, '*');
+        });
+        root.appendChild(button);
+        `,
+       flavor: 'react', // or 'webcomponents'
+     },
+     delivery: 'text',
+   });
    ```
 
 2. **Client-side**: Render in your MCP host
@@ -166,7 +184,6 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
            resource={mcpResource.resource}
            onUIAction={(result) => {
              console.log('Action:', result);
-             return { status: 'ok' };
            }}
          />
        );
@@ -204,6 +221,7 @@ Host and user security is one of `mcp-ui`'s primary concerns. In all content typ
 - [X] Support Web Components
 - [X] Support Remote-DOM
 - [ ] Add component libraries (in progress)
+- [ ] Add SDKs for additional programming languages (in progress)
 - [ ] Support additional frontend frameworks
 - [ ] Add declarative UI content type
 - [ ] Support generative UI?

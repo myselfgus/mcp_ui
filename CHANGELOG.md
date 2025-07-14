@@ -1,3 +1,10 @@
+## [4.1.2](https://github.com/idosal/mcp-ui/compare/v4.1.1...v4.1.2) (2025-07-10)
+
+
+### Bug Fixes
+
+* validate URL ([b7c994d](https://github.com/idosal/mcp-ui/commit/b7c994dfdd947b3dfbb903fc8cb896d61004c8d8))
+
 ## [4.1.1](https://github.com/idosal/mcp-ui/compare/v4.1.0...v4.1.1) (2025-07-06)
 
 

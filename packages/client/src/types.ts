@@ -1,4 +1,5 @@
 import { RemoteReceiver } from '@remote-dom/core/receivers';
+import React from 'react';
 
 export type UIActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notification';
 
@@ -77,4 +78,16 @@ export interface RenderOptions {
   componentLibrary?: string;
   useReactRenderer?: boolean;
   remoteElements?: RemoteElementConfiguration[];
+}
+
+export interface ComponentLibraryElement {
+  tagName: string;
+  component: React.ComponentType<Record<string, unknown>>;
+  propMapping?: Record<string, string>;
+  eventMapping?: Record<string, string>;
+}
+
+export interface ComponentLibrary {
+  name: string;
+  elements: ComponentLibraryElement[];
 }

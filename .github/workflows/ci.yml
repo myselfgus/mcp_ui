@@ -52,7 +52,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !startsWith(github.head_commit.message, 'chore(release):') && !(contains(join(github.event.commits.*.files_changed, ','), 'examples/') || contains(join(github.event.commits.*.files_changed, ','), 'docs/'))
     permissions:
       contents: write # Needed to push new version tags, commit changelog/package.json updates
-      issues: write   # Needed to create/comment on release-related issues (optional, but good practice)
+      issues: write # Needed to create/comment on release-related issues (optional, but good practice)
       id-token: write # Required for publishing to NPM with OIDC
     steps:
       - name: Checkout repository
@@ -83,7 +83,7 @@ jobs:
           echo "--- Listing packages/client/dist ---"
           ls -R packages/client/dist || echo "packages/client/dist not found or empty"
           echo "--- End of packages/client/dist ---"
-      
+
       - name: List contents of server dist
         run: |
           echo "--- Listing packages/server/dist ---"
@@ -93,5 +93,5 @@ jobs:
       - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by Actions, used by @semantic-release/github and @semantic-release/git
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}     # Your NPM token, used by @semantic-release/npm
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # Your NPM token, used by @semantic-release/npm
         run: npx semantic-release

@@ -36,7 +36,7 @@ The component accepts the following props:
 2.  **Handles URI Schemes**:
     - For resources with `mimeType: 'text/uri-list'`:
       - Expects `resource.text` or `resource.blob` to contain a single URL in URI list format
-      - **MCP-UI requires a single URL**: While the format supports multiple URLs, only the first valid URL is used
+      - **MCP-UI requires a single URL**: While the format supports multiple URLs, only the first valid `http/s` URL is used
       - Multiple URLs are supported for fallback specification but will trigger warnings
       - Ignores comment lines starting with `#` and empty lines
       - If using `blob`, it decodes it from Base64.

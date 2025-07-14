@@ -1294,7 +1294,10 @@ export const IFRAME_SRC_DOC = `<!DOCTYPE html>
               }
             };
             Object.defineProperty(remoteElement, "name", {
-              value: \`Remote\${def.tagName.replace(/(^\w|-\w)/g, (c) => c.replace("-", "").toUpperCase())}\`
+              value: \`Remote\${def.tagName.replace(
+                /(^\w|-\w)/g,
+                (c) => c.replace("-", "").toUpperCase()
+              )}\`
             });
             customElements.define(def.tagName, remoteElement);
           });

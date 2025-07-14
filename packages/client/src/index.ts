@@ -1,12 +1,11 @@
 export { UIResourceRenderer } from './components/UIResourceRenderer';
 
 // The types needed to create a custom component library
-export type { RemoteElementConfiguration } from './types';
-
 export type {
   ComponentLibrary,
   ComponentLibraryElement,
-} from './remote-dom/types/componentLibrary';
+  RemoteElementConfiguration,
+} from './types';
 
 // Export the default libraries so hosts can register them if they choose
 export { basicComponentLibrary } from './remote-dom/component-libraries/basic';

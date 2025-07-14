@@ -4,19 +4,7 @@ import * as React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Separator from '@radix-ui/react-separator';
 import * as Label from '@radix-ui/react-label';
-
-// Define the ComponentLibrary types locally to avoid import issues
-interface ComponentLibraryElement {
-  tagName: string;
-  component: React.ComponentType<any>;
-  propMapping?: Record<string, string>;
-  eventMapping?: Record<string, string>;
-}
-
-interface ComponentLibrary {
-  name: string;
-  elements: ComponentLibraryElement[];
-}
+import type { ComponentLibrary } from '@mcp-ui/client';
 
 // Radix UI Text component using Label primitive
 const RadixText = React.forwardRef<

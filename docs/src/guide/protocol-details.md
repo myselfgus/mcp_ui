@@ -40,7 +40,7 @@ export interface UIResource {
 
 ## URI List Format Support
 
-When using `mimeType: 'text/uri-list'`, the content follows the standard URI list format (RFC 2483). However, **MCP-UI requires a single URL** for rendering.
+When using `mimeType: 'text/uri-list'`, the content follows the standard URI list format (RFC 2483). However, **MCP-UI requires a single URL** for rendering. For security reasons, the protocol must be `http/s`.
 
 - **Single URL Requirement**: MCP-UI will use only the first valid URL found
 - **Multiple URLs**: If multiple URLs are provided, the client will use the first valid URL and log a warning about the ignored alternatives
