@@ -7,16 +7,15 @@ The `mcp_ui_server` gem provides helpers for creating and sending UI Resources f
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'mcp_ui_server', git: 'https://github.com/idosal/mcp-ui', branch: 'feat/ruby'
+gem 'mcp_ui_server', git: 'https://github.com/idosal/mcp-ui'
 ```
 
 And then execute:
-
-    $ bundle install
+```bundle install```
 
 ## Quick Start
 
-The main method is `McpUiServer.create_ui_resource`. It helps you construct a valid UIResource hash.
+The main method is `McpUiServer.create_ui_resource`. It helps you construct a valid `UIResource` payload.
 
 Here's a simple example of creating a `rawHtml` resource:
 
