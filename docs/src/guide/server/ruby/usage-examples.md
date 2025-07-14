@@ -1,64 +1,131 @@
-# Ruby Usage Examples
+# mcp_ui_server Usage & Examples
 
-The `McpUiServer.create_ui_resource` method is the primary helper for building UI resource hashes.
+This page provides practical examples for using the `mcp_ui_server` gem.
 
-## Creating a `rawHtml` resource
+## Basic Setup
 
-This is the simplest resource type, where you provide a raw HTML string.
+First, ensure you have `mcp_ui_server` available in your project by adding it to your Gemfile and running `bundle install`.
 
 ```ruby
 require 'mcp_ui_server'
+require 'json'
 
-resource = McpUiServer.create_ui_resource(
-  uri: 'ui://my-app/greeting',
-  content: {
-    type: :rawHtml,
-    htmlString: '<h1>Hello, World!</h1>'
-  }
+# Example 1: Direct HTML, delivered as text
+resource1 = McpUiServer.create_ui_resource(
+  uri: 'ui://my-component/instance-1',
+  content: { type: 'rawHtml', htmlString: '<p>Hello World</p>' },
+  delivery: 'text'
 )
-
-# The resulting resource hash can be serialized to JSON and sent in your API response.
+puts "Resource 1: #{JSON.pretty_generate(resource1)}"
+# Output for Resource 1:
 # {
 #   "type": "resource",
 #   "resource": {
-#     "uri": "ui://my-app/greeting",
+#     "uri": "ui://my-component/instance-1",
 #     "mimeType": "text/html",
-#     "text": "<h1>Hello, World!</h1>"
+#     "text": "<p>Hello World</p>"
 #   }
 # }
-```
 
-## Creating a `remoteDom` resource
+# Example 2: Direct HTML, delivered as a Base64 blob
+resource2 = McpUiServer.create_ui_resource(
+  uri: 'ui://my-component/instance-2',
+  content: { type: 'rawHtml', htmlString: '<h1>Complex HTML</h1>' },
+  delivery: 'blob'
+)
+puts "Resource 2 (blob will be Base64): #{JSON.pretty_generate(resource2)}"
+# Output for Resource 2:
+# {
+#   "type": "resource",
+#   "resource": {
+#     "uri": "ui://my-component/instance-2",
+#     "mimeType": "text/html",
+#     "blob": "PGgxPkNvbXBsZXggSFRNTDwvaDE+"
+#   }
+# }
 
-For more complex and interactive UIs, you can use a `remoteDom` resource. This allows you to send a JavaScript bundle that will be executed on the client.
+# Example 3: External URL, text delivery
+dashboard_url = 'https://my.analytics.com/dashboard/123'
+resource3 = McpUiServer.create_ui_resource(
+  uri: 'ui://analytics-dashboard/main',
+  content: { type: 'externalUrl', iframeUrl: dashboard_url },
+  delivery: 'text'
+)
+puts "Resource 3: #{JSON.pretty_generate(resource3)}"
+# Output for Resource 3:
+# {
+#   "type": "resource",
+#   "resource": {
+#     "uri": "ui://analytics-dashboard/main",
+#     "mimeType": "text/uri-list",
+#     "text": "https://my.analytics.com/dashboard/123"
+#   }
+# }
 
-```ruby
-require 'mcp_ui_server'
+# Example 4: External URL, blob delivery (URL is Base64 encoded)
+chart_api_url = 'https://charts.example.com/api?type=pie&data=1,2,3'
+resource4 = McpUiServer.create_ui_resource(
+  uri: 'ui://live-chart/session-xyz',
+  content: { type: 'externalUrl', iframeUrl: chart_api_url },
+  delivery: 'blob'
+)
+puts "Resource 4 (blob will be Base64 of URL): #{JSON.pretty_generate(resource4)}"
+# Output for Resource 4:
+# {
+#   "type": "resource",
+#   "resource": {
+#     "uri": "ui://live-chart/session-xyz",
+#     "mimeType": "text/uri-list",
+#     "blob": "aHR0cHM6Ly9jaGFydHMuZXhhbXBsZS5jb20vYXBpP3R5cGU9cGllJmRhdGE9MSwyLDM="
+#   }
+# }
 
-# It is assumed that you have a build process that generates this JavaScript bundle.
-script = File.read('path/to/your/bundle.js')
+# Example 5: Remote DOM script, text delivery
+remote_dom_script = <<-SCRIPT
+  const button = document.createElement('ui-button');
+  button.setAttribute('label', 'Click me for a tool call!');
+  button.addEventListener('press', () => {
+    window.parent.postMessage({ type: 'tool', payload: { toolName: 'uiInteraction', params: { action: 'button-click', from: 'remote-dom' } } }, '*');
+  });
+  root.appendChild(button);
+SCRIPT
 
-resource = McpUiServer.create_ui_resource(
-  uri: 'ui://my-app/complex-view',
+resource5 = McpUiServer.create_ui_resource(
+  uri: 'ui://remote-component/action-button',
   content: {
-    type: :remoteDom,
-    script: script,
+    type: 'remoteDom',
+    script: remote_dom_script,
     flavor: 'react' # or 'webcomponents'
-  }
+  },
+  delivery: 'text'
 )
-```
+puts "Resource 5: #{JSON.pretty_generate(resource5)}"
+# Output for Resource 5:
+# {
+#   "type": "resource",
+#   "resource": {
+#     "uri": "ui://remote-component/action-button",
+#     "mimeType": "application/vnd.mcp-ui.remote-dom+javascript; flavor=react",
+#     "text": "  const button = document.createElement('ui-button');\n  button.setAttribute('label', 'Click me for a tool call!');\n  button.addEventListener('press', () => {\n    window.parent.postMessage({ type: 'tool', payload: { toolName: 'uiInteraction', params: { action: 'button-click', from: 'remote-dom' } } }, '*');\n  });\n  root.appendChild(button);\n"
+#   }
+# }
 
-## Using `blob` delivery
+# These resource objects would then be included in the 'content' array
+# of a toolResult in an MCP interaction.
 
-For binary content or to avoid encoding issues, you can use `blob` delivery. This will Base64 encode the content, which can be useful for larger payloads or scripts.
+## Error Handling
+
+The `create_ui_resource` method will raise an `ArgumentError` if invalid combinations are provided.
 
 ```ruby
-resource = McpUiServer.create_ui_resource(
-  uri: 'ui://my-app/greeting',
-  content: {
-    type: :rawHtml,
-    htmlString: '<h1>Hello, World!</h1>'
-  },
-  delivery: :blob
-)
-``` 
+begin
+  McpUiServer.create_ui_resource(
+    uri: 'invalid://should-be-ui',
+    content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
+    delivery: 'text'
+  )
+rescue ArgumentError => e
+  puts "Caught expected error: #{e.message}"
+  # => Caught expected error: URI must start with 'ui://' for externalUrl content type.
+end
+```

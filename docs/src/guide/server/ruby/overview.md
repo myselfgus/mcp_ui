@@ -1,36 +1,36 @@
-# Ruby Server SDK Overview
+# mcp_ui_server Overview
 
-The `mcp_ui_server` gem provides helpers for creating and sending UI Resources from a Ruby-based MCP server.
+The `mcp_ui_server` gem provides server-side utilities in Ruby to help construct `UIResource` objects, which can then be sent to a client as part of an MCP response.
+
+## Key Methods
+
+- **`McpUiServer.create_ui_resource(options)`**:
+  The primary method for creating UI snippets. It takes an options hash to define the URI, content (direct HTML or external URL), and delivery method.
+
+## Purpose
+
+- **Ease of Use**: Simplifies the creation of valid `UIResource` objects in Ruby.
+- **Validation**: Includes basic validation (e.g., URI prefixes matching content type).
+- **Encoding**: Handles Base64 encoding automatically.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'mcp_ui_server', git: 'https://github.com/idosal/mcp-ui'
+gem 'mcp_ui_server'
 ```
 
 And then execute:
-```bundle install```
 
-## Quick Start
-
-The main method is `McpUiServer.create_ui_resource`. It helps you construct a valid `UIResource` payload.
-
-Here's a simple example of creating a `rawHtml` resource:
-
-```ruby
-require 'mcp_ui_server'
-
-resource = McpUiServer.create_ui_resource(
-  uri: 'ui://my-app/greeting',
-  content: {
-    type: :rawHtml,
-    htmlString: '<h1>Hello, World!</h1>'
-  }
-)
-
-# The resulting resource hash can be serialized to JSON and sent in your API response.
+```bash
+$ bundle install
 ```
 
-For more detailed examples, see the [Usage Examples](./usage-examples.md) guide. 
+Or install it yourself as:
+
+```bash
+$ gem install mcp_ui_server
+```
+
+See the [Server SDK Usage & Examples](./usage-examples.md) page for practical examples.

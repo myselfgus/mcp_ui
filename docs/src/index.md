@@ -23,8 +23,8 @@ hero:
 features:
   - title: ⚛️ Client SDK
     details: React components and hooks for seamless frontend integration. Render interactive UI resources with the UIResourceRenderer component and handle UI actions effortlessly.
-  - title: 🛠️ Server SDK
-    details: Powerful utilities to construct interactive UI for MCP servers. Create HTML, React, Web Components, and external app UI with ergonomic API.
+  - title: 🛠️ Server SDKs
+    details: Powerful utilities to construct interactive UI for MCP servers. Create HTML, React, Web Components, and external app UI with ergonomic APIs for Typescript and Ruby.
   - title: 🔒 Secure
     details: All remote code executes in sandboxed iframes, ensuring host and user security while maintaining rich interactivity.
   - title: 🎨 Flexible
@@ -47,20 +47,35 @@ features:
 
 **Server Side** - Create interactive resources to return in your MCP tool results:
 
-```typescript
+::: code-group
+```typescript [TypeScript]
 import { createUIResource } from '@mcp-ui/server';
 
 const interactiveForm = createUIResource({
   uri: 'ui://user-form/1',
-  content: { 
-    type: 'externalUrl', 
+  content: {
+    type: 'externalUrl',
     iframeUrl: 'https://yourapp.com'
   },
   delivery: 'text',
 });
 ```
 
-**Client Side** - Render with one component:
+```ruby [Ruby]
+require 'mcp_ui_server'
+
+interactive_form = McpUiServer.create_ui_resource(
+  uri: 'ui://user-form/1',
+  content: {
+    type: :external_url,
+    iframeUrl: 'https://yourapp.com'
+  },
+  delivery: :text
+)
+```
+:::
+
+**Client Side** - Render on the host with a single component:
 
 ```tsx
 import { UIResourceRenderer } from '@mcp-ui/client';
