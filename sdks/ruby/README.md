@@ -100,7 +100,7 @@ resource = McpUiServer.create_ui_resource(
   content: {
     type: :remote_dom,
     script: script,
-    flavor: 'react' # or 'webcomponents'
+    flavor: :react # or :webcomponents
   }
 )
 ```
