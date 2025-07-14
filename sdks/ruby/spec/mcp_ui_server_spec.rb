@@ -23,7 +23,7 @@ RSpec.describe McpUiServer do
       end
 
       it 'creates a resource with blob delivery' do
-        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: 'blob')
+        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
         expect(resource[:resource][:blob]).to eq(Base64.strict_encode64('<h1>Hello</h1>'))
       end
     end
@@ -38,7 +38,7 @@ RSpec.describe McpUiServer do
       end
 
       it 'creates a resource with blob delivery' do
-        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: 'blob')
+        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
         expect(resource[:resource][:blob]).to eq(Base64.strict_encode64('https://example.com'))
       end
     end
@@ -61,7 +61,7 @@ RSpec.describe McpUiServer do
 
       it 'creates a resource with blob delivery' do
         content = { type: :remoteDom, script: script }
-        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: 'blob')
+        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
         expect(resource[:resource][:blob]).to eq(Base64.strict_encode64(script))
       end
     end
@@ -79,7 +79,7 @@ RSpec.describe McpUiServer do
         content = { type: :rawHtml, htmlString: '<h1>Hello</h1>' }
         expect do
           described_class.create_ui_resource(uri: uri, content: content,
-                                             delivery: 'invalid')
+                                             delivery: :invalid)
         end.to raise_error(ArgumentError, 'Unknown delivery type: invalid')
       end
 
