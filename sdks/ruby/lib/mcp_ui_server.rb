@@ -11,7 +11,7 @@ module McpUiServer
   # MIME type constants
   MIME_TYPE_HTML = 'text/html'
   MIME_TYPE_URI_LIST = 'text/uri-list'
-  MIME_TYPE_REMOTE_DOM = 'application/vnd.mcp-ui.remote-dom; flavor=%s'
+  MIME_TYPE_REMOTE_DOM = 'application/vnd.mcp-ui.remote-dom+javascript; flavor=%s'
 
   # Content type constants (Ruby snake_case)
   CONTENT_TYPE_RAW_HTML = :raw_html

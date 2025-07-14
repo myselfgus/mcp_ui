@@ -49,20 +49,20 @@ RSpec.describe McpUiServer do
       it 'creates a resource with react flavor' do
         content = { type: :remote_dom, script: script, flavor: :react }
         resource = described_class.create_ui_resource(uri: uri, content: content)
-        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom; flavor=react')
+        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom+javascript; flavor=react')
         expect(resource[:resource][:text]).to eq(script)
       end
 
       it 'creates a resource with a specified flavor as a symbol' do
         content = { type: :remote_dom, script: script, flavor: :webcomponents }
         resource = described_class.create_ui_resource(uri: uri, content: content)
-        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom; flavor=webcomponents')
+        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents')
       end
 
       it 'creates a resource with a specified flavor as a string' do
         content = { type: :remote_dom, script: script, flavor: 'react' }
         resource = described_class.create_ui_resource(uri: uri, content: content)
-        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom; flavor=react')
+        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom+javascript; flavor=react')
       end
 
       it 'creates a resource with blob delivery' do
@@ -74,7 +74,7 @@ RSpec.describe McpUiServer do
       it 'creates a resource with blob delivery and a specified flavor' do
         content = { type: :remote_dom, script: script, flavor: :webcomponents }
         resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
-        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom; flavor=webcomponents')
+        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents')
         expect(resource[:resource][:blob]).to eq(Base64.strict_encode64(script))
       end
     end
@@ -142,7 +142,7 @@ RSpec.describe McpUiServer do
       it 'defines expected MIME type constants' do
         expect(McpUiServer::MIME_TYPE_HTML).to eq('text/html')
         expect(McpUiServer::MIME_TYPE_URI_LIST).to eq('text/uri-list')
-        expect(McpUiServer::MIME_TYPE_REMOTE_DOM).to eq('application/vnd.mcp-ui.remote-dom; flavor=%s')
+        expect(McpUiServer::MIME_TYPE_REMOTE_DOM).to eq('application/vnd.mcp-ui.remote-dom+javascript; flavor=%s')
       end
 
       it 'defines expected content type constants' do
