@@ -103,7 +103,7 @@ export default defineConfig({
           collapsed: false,
           items: [
             {
-              text: 'Typescript',
+              text: 'TypeScript',
               collapsed: false,
               items: [
                 { text: 'Overview', link: '/guide/server/typescript/overview' },

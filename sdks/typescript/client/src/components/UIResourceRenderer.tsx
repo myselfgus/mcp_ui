@@ -24,7 +24,7 @@ function getContentType(resource: Partial<Resource>): ResourceContentType | unde
   if (resource.mimeType === 'text/uri-list') {
     return 'externalUrl';
   }
-  if (resource.mimeType?.startsWith('application/vnd.mcp-ui.remote-dom+javascript')) {
+  if (resource.mimeType?.startsWith('application/vnd.mcp-ui.remote-dom')) {
     return 'remoteDom';
   }
 }
