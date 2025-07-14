@@ -137,7 +137,7 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
 
 ### TypeScript
 
-1. **Server-side**: Build your resource blocks
+1. **Server-side**: Build your UI resources
 
    ```ts
    import { createUIResource } from '@mcp-ui/server';
@@ -206,7 +206,7 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
 
 ### Ruby
 
-**Server-side**: Build your resource blocks
+**Server-side**: Build your UI resources
 
    ```ruby
    require 'mcp_ui_server'
@@ -238,7 +238,7 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
         });
         root.appendChild(button);
         ",
-       flavor: 'react',
+       flavor: :react,
      },
      delivery: :text
    )
