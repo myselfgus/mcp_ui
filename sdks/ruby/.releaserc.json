@@ -7,7 +7,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "sed -i '' 's/VERSION = \".*\"/VERSION = \"'\"'\"${nextRelease.version}'\"'\"'/' lib/mcp_ui_server/version.rb && bundle install",
+        "prepareCmd": "ruby -pi -e \"gsub(/VERSION = \\\".*\\\"/, 'VERSION = \\\"' + ENV['NEXT_VERSION'] + '\\\"')\" lib/mcp_ui_server/version.rb && bundle install",
         "publishCmd": "gem build *.gemspec && gem push *.gem"
       }
     ],
