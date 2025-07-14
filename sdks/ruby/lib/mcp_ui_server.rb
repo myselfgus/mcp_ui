@@ -44,7 +44,7 @@ module McpUiServer
   #   - :htmlString [String] The raw HTML content (required if type is :raw_html).
   #   - :iframeUrl [String] The URL for an external page (required if type is :external_url).
   #   - :script [String] The remote-dom script (required if type is :remote_dom).
-  #   - :flavor [Symbol] The remote-dom flavor, e.g., :react or :webcomponents (optional, for :remote_dom).
+  #   - :flavor [Symbol] The remote-dom flavor, e.g., :react or :webcomponents (required, for :remote_dom).
   # @param delivery [Symbol] The delivery method. :text for plain string, :blob for base64 encoded.
   #
   # @return [Hash] A UIResource hash ready to be included in an MCP response.
@@ -111,7 +111,7 @@ module McpUiServer
   private_class_method :process_external_url_content
 
   def self.process_remote_dom_content(content, resource)
-    flavor = content.fetch(:flavor, :react)
+    flavor = content.fetch(:flavor) { raise Error, "Missing required key :flavor for remote_dom content" }
     resource[:mimeType] = MIME_TYPE_REMOTE_DOM % flavor
     required_key = REQUIRED_CONTENT_KEYS[CONTENT_TYPE_REMOTE_DOM]
     content.fetch(required_key) { raise Error, "Missing required key :#{required_key} for remote_dom content" }
