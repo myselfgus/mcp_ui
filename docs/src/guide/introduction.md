@@ -9,12 +9,13 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
 
 ## What is MCP-UI?
 
-MCP-UI is a TypeScript SDK containing:
+MCP-UI provides SDKs for multiple languages, including:
 
-- **`@mcp-ui/client`**: UI components (like `<UIResourceRenderer />`) for easy rendering of interactive UI.
-- **`@mcp-ui/server`**: Helper functions (like `createUIResource`) for server-side logic to easily construct `UIResource` objects.
+- **`@mcp-ui/client`**: A Typescript package with UI components (like `<UIResourceRenderer />`) for easy rendering of interactive UI.
+- **`@mcp-ui/server`**: A Typescript package with helper functions (like `createUIResource`) for server-side logic to easily construct `UIResource` objects.
+- **`mcp_ui_server`**: A Ruby gem with helper methods (like `create_ui_resource`) for server-side logic in Ruby applications.
 
-## Core Concept: The Interactive UI Resource Protocol
+## The Interactive UI Resource Protocol
 
 The central piece of this SDK is the `UIResource`. This object defines a contract for how interactive UI should be structured and delivered from a server/tool to a client.
 
@@ -44,13 +45,15 @@ interface UIResource {
 
 ## How It Works
 
-1. **Server Side**: Use `@mcp-ui/server` to create `HTMLResourceRenderer` objects
-2. **Client Side**: Use `@mcp-ui/client` to render these resources in your React app
+1. **Server Side**: Use the server SDK for your language to create `UIResource` objects.
+2. **Client Side**: Use `@mcp-ui/client` to render these resources in your React app.
 
 ### Example Flow
 
 **Server (MCP Tool):**
-```typescript
+::: code-group
+
+```typescript [TypeScript]
 import { createUIResource } from '@mcp-ui/server';
 
 const resource = createUIResource({
@@ -62,6 +65,21 @@ const resource = createUIResource({
 // Return in MCP response
 return { content: [resource] };
 ```
+
+```ruby [Ruby]
+require 'mcp_ui_server'
+
+resource = McpUiServer.create_ui_resource(
+  uri: 'ui://my-tool/dashboard',
+  content: { type: :raw_html, htmlString: '<h1>Dashboard</h1>' },
+  delivery: :text
+)
+
+# Return in MCP response
+{ content: [resource] }
+```
+
+:::
 
 **Client (React App):**
 ```tsx
@@ -93,14 +111,14 @@ function App({ mcpResponse }) {
 - **Flexible**: Supports both direct HTML content and external applications
 - **Future-proof**: Extensible design supports new resource types as they're added
 
+## Philosophy
+
+Allowing MCP servers to respond with UI snippets is a powerful way to create interactive experiences in hosts. Nailing down the best way to do it is challenging, and is an ongoing discussion in the MCP community and the [UI Community Working Group](https://github.com/modelcontextprotocol-community/working-groups/issues/35).
+This project is an experimental playground for MCP-UI ideas, that aims to test out philosophies in the wild.
+
 ## Next Steps
 
 - [Getting Started](./getting-started.md) - Set up your development environment
 - [Server SDK](./server/overview.md) - Learn to create resources
 - [Client SDK](./client/overview.md) - Learn to render resources
 - [Protocol Details](./protocol-details.md) - Understand the underlying protocol
-
-## Philosophy
-
-Allowing MCP servers to respond with UI snippets is a powerful way to create interactive experiences in hosts. Nailing down the best way to do it is challenging, and is an ongoing discussion in the MCP community and the [UI Community Working Group](https://github.com/modelcontextprotocol-community/working-groups/issues/35).
-This project is an experimental playground for MCP-UI ideas, that aims to test out philosophies in the wild.

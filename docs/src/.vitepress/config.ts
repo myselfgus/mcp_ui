@@ -80,6 +80,10 @@ export default defineConfig({
             text: '@mcp-ui/server',
             link: 'https://www.npmjs.com/package/@mcp-ui/server',
           },
+          {
+            text: 'Ruby Gem',
+            link: 'https://rubygems.org/gems/mcp_ui_server',
+          },
         ],
       },
     ],
@@ -95,11 +99,25 @@ export default defineConfig({
           ],
         },
         {
-          text: 'Server SDK',
+          text: 'Server SDKs',
           collapsed: false,
           items: [
-            { text: 'Overview', link: '/guide/server/overview' },
-            { text: 'Usage & Examples', link: '/guide/server/usage-examples' },
+            {
+              text: 'Typescript',
+              collapsed: false,
+              items: [
+                { text: 'Overview', link: '/guide/server/typescript/overview' },
+                { text: 'Usage & Examples', link: '/guide/server/typescript/usage-examples' },
+              ],
+            },
+            {
+              text: 'Ruby',
+              collapsed: false,
+              items: [
+                { text: 'Overview', link: '/guide/server/ruby/overview' },
+                { text: 'Usage & Examples', link: '/guide/server/ruby/usage-examples' },
+              ],
+            },
           ],
         },
         {
@@ -160,6 +178,7 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/idosal/mcp-ui' },
       { icon: 'npm', link: 'https://www.npmjs.com/package/@mcp-ui/server' },
+      { icon: 'github', link: 'https://rubygems.org/gems/mcp_ui_server' },
     ],
 
     footer: {
