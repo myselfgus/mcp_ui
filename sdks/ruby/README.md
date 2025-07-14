@@ -7,7 +7,7 @@ This is the Ruby server-side SDK for MCP UI. It provides helper methods to creat
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'mcp_ui_server', git: 'https://github.com/idosal/mcp-ui', branch: 'feat/ruby'
+gem 'mcp_ui_server', git: 'https://github.com/idosal/mcp-ui'
 ```
 
 And then execute:
