@@ -3,6 +3,6 @@ dist
 coverage 
 *.log 
 **/*.js 
-packages/client/src/remote-dom/iframe-bundle.ts
+sdks/typescript/client/src/remote-dom/iframe-bundle.ts
 
 examples
