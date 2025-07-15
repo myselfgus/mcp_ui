@@ -56,7 +56,8 @@ RSpec.describe McpUiServer do
       it 'creates a resource with a specified flavor as a symbol' do
         content = { type: :remote_dom, script: script, flavor: :webcomponents }
         resource = described_class.create_ui_resource(uri: uri, content: content)
-        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents')
+        expected_mime_type = 'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents'
+        expect(resource[:resource][:mimeType]).to eq(expected_mime_type)
       end
 
       it 'creates a resource with a specified flavor as a string' do
@@ -74,7 +75,8 @@ RSpec.describe McpUiServer do
       it 'creates a resource with blob delivery and a specified flavor' do
         content = { type: :remote_dom, script: script, flavor: :webcomponents }
         resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
-        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents')
+        expected_mime_type = 'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents'
+        expect(resource[:resource][:mimeType]).to eq(expected_mime_type)
         expect(resource[:resource][:blob]).to eq(Base64.strict_encode64(script))
       end
     end
@@ -138,7 +140,7 @@ RSpec.describe McpUiServer do
       end
     end
 
-    context 'constants' do
+    context 'with constants' do
       it 'defines expected MIME type constants' do
         expect(McpUiServer::MIME_TYPE_HTML).to eq('text/html')
         expect(McpUiServer::MIME_TYPE_URI_LIST).to eq('text/uri-list')

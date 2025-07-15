@@ -1,12 +1,13 @@
 AllCops:
   NewCops: enable
   Exclude:
-    - 'vendor/**/*'
-    - 'spec/spec_helper.rb'
+    - "bin/*"
+    - "vendor/**/*"
+    - "tmp/**/*"
 
-require:
-  - rubocop-rspec
+plugins:
   - rubocop-rake
+  - rubocop-rspec
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
