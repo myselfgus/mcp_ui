@@ -4,6 +4,7 @@ import { HTMLResourceRenderer, HTMLResourceRendererProps } from '../HTMLResource
 import { vi } from 'vitest';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
 import { UIActionResult } from '../../types.js';
+import React from 'react';
 
 describe('HTMLResource component', () => {
   const mockOnUIAction = vi.fn();
@@ -286,6 +287,12 @@ describe('HTMLResource iframe communication', () => {
         expect.objectContaining({ message: errorMessage }),
       );
     });
+  });
+
+  it('should pass ref to iframe', () => {
+    const ref = React.createRef<HTMLIFrameElement>();
+    render(<HTMLResourceRenderer resource={mockResourceBaseForUIActionTests} ref={ref} />);
+    expect(ref.current).toBeInTheDocument();
   });
 
   it('should not attempt to call onUIAction if iframeRef.current is null (e.g. resource error)', async () => {

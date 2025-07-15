@@ -1,3 +1,10 @@
+## [4.1.3](https://github.com/idosal/mcp-ui/compare/v4.1.2...v4.1.3) (2025-07-15)
+
+
+### Bug Fixes
+
+* ref passing to UIResourceRenderer ([#32](https://github.com/idosal/mcp-ui/issues/32)) ([d28c23f](https://github.com/idosal/mcp-ui/commit/d28c23f9b8ee320f4e361200ae02a23f0d2a1c0c))
+
 ## [4.1.2](https://github.com/idosal/mcp-ui/compare/v4.1.1...v4.1.2) (2025-07-10)
 
 
