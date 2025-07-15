@@ -37,7 +37,7 @@ export interface CreateUIResourceOptions {
   delivery: 'text' | 'blob';
 }
 
-export type UIActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notification';
+export type UIActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notification' | 'request-info';
 
 export type UIActionResultToolCall = {
   type: 'tool';
@@ -77,7 +77,7 @@ export type UIActionResultNotification = {
 };
 
 export type UIActionResultRequestInfo = {
-  type: 'requestInfo';
+  type: 'request-info';
   payload: {
     requestId: string;
     requestContext: string;

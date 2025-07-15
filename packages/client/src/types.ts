@@ -1,7 +1,7 @@
 import { RemoteReceiver } from '@remote-dom/core/receivers';
 import React from 'react';
 
-export type UIActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notification';
+export type UIActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notification' | 'request-info';
 
 export const ALL_RESOURCE_CONTENT_TYPES = ['rawHtml', 'externalUrl', 'remoteDom'] as const;
 export type ResourceContentType = (typeof ALL_RESOURCE_CONTENT_TYPES)[number];
@@ -44,7 +44,7 @@ export type UIActionResultNotification = {
 };
 
 export type UIActionResultRequestInfo = {
-  type: 'requestInfo';
+  type: 'request-info';
   payload: {
     requestId: string;
     requestContext: string;

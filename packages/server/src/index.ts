@@ -9,6 +9,7 @@ import {
   UIActionResultPrompt,
   UIActionResultIntent,
   UIActionResultToolCall,
+  UIActionResultRequestInfo,
 } from './types.js';
 
 export type UIResource = {
@@ -182,6 +183,21 @@ export function uiActionResultNotification(message: string): UIActionResultNotif
     type: 'notification',
     payload: {
       message,
+    },
+  };
+}
+
+export function uiActionResultRequestInfo(
+  requestId: string,
+  requestContext: string,
+  params: Record<string, unknown>,
+): UIActionResultRequestInfo {
+  return {
+    type: 'request-info',
+    payload: {
+      requestId,
+      requestContext,
+      params,
     },
   };
 }

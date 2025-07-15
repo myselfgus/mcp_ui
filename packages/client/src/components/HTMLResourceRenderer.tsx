@@ -32,10 +32,10 @@ export const HTMLResourceRenderer = React.forwardRef<
         }
         try {
           const response = await onUIAction?.(uiActionResult);
-          if (uiActionResult.type === 'requestInfo') {
+          if (uiActionResult.type === 'request-info') {
             const { requestId } = uiActionResult.payload;
             event.source?.postMessage({
-              type: 'requestInfoResponse',
+              type: 'request-info-response',
               payload: {
                 requestId,
                 response,

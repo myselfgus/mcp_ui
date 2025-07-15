@@ -29,4 +29,5 @@ export type {
   UIActionResultNotification,
   UIActionResultPrompt,
   UIActionResultToolCall,
+  UIActionResultRequestInfo,
 } from './types';
