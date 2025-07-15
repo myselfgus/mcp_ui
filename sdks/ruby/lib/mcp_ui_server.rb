@@ -49,10 +49,11 @@ module McpUiServer
   #
   # @return [Hash] A UIResource hash ready to be included in an MCP response.
   #
-  # @raise [McpUiServer::Error] if URI scheme is invalid, content type is unknown, delivery type is unknown, or required content keys are missing.
+  # @raise [McpUiServer::Error] if URI scheme is invalid, content type is unknown,
+  #   delivery type is unknown, or required content keys are missing.
   def self.create_ui_resource(uri:, content:, delivery: :text)
     validate_uri_scheme(uri)
-    
+
     resource = { uri: uri }
 
     content_value = process_content(content, resource)
@@ -67,24 +68,22 @@ module McpUiServer
   # private
 
   def self.validate_uri_scheme(uri)
-    unless uri.start_with?(UI_URI_SCHEME)
-      raise Error, "URI must start with '#{UI_URI_SCHEME}' but got: #{uri}"
-    end
+    raise Error, "URI must start with '#{UI_URI_SCHEME}' but got: #{uri}" unless uri.start_with?(UI_URI_SCHEME)
   end
   private_class_method :validate_uri_scheme
 
   def self.validate_content_type(content_type)
-    unless PROTOCOL_CONTENT_TYPES.key?(content_type)
-      supported_types = PROTOCOL_CONTENT_TYPES.keys.join(', ')
-      raise Error, "Unknown content type: #{content_type}. Supported types: #{supported_types}"
-    end
+    return if PROTOCOL_CONTENT_TYPES.key?(content_type)
+
+    supported_types = PROTOCOL_CONTENT_TYPES.keys.join(', ')
+    raise Error, "Unknown content type: #{content_type}. Supported types: #{supported_types}"
   end
   private_class_method :validate_content_type
 
   def self.process_content(content, resource)
     content_type = content.fetch(:type)
     validate_content_type(content_type)
-    
+
     case content_type
     when CONTENT_TYPE_RAW_HTML
       process_raw_html_content(content, resource)
@@ -111,7 +110,7 @@ module McpUiServer
   private_class_method :process_external_url_content
 
   def self.process_remote_dom_content(content, resource)
-    flavor = content.fetch(:flavor) { raise Error, "Missing required key :flavor for remote_dom content" }
+    flavor = content.fetch(:flavor) { raise Error, 'Missing required key :flavor for remote_dom content' }
     resource[:mimeType] = MIME_TYPE_REMOTE_DOM % flavor
     required_key = REQUIRED_CONTENT_KEYS[CONTENT_TYPE_REMOTE_DOM]
     content.fetch(required_key) { raise Error, "Missing required key :#{required_key} for remote_dom content" }
