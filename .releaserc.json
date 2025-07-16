@@ -7,14 +7,14 @@
     [
       "@semantic-release/npm",
       {
-        "pkgRoot": "packages/client",
+        "pkgRoot": "sdks/typescript/client",
         "npmPublish": true
       }
     ],
     [
       "@semantic-release/npm",
       {
-        "pkgRoot": "packages/server",
+        "pkgRoot": "sdks/typescript/server",
         "npmPublish": true
       }
     ],
@@ -36,8 +36,8 @@
         "assets": [
           "CHANGELOG.md",
           "package.json",
-          "packages/client/package.json",
-          "packages/server/package.json",
+          "sdks/typescript/client/package.json",
+          "sdks/typescript/server/package.json",
           "pnpm-lock.yaml"
         ],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
