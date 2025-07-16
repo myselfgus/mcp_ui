@@ -179,7 +179,7 @@ export function uiActionResultIntent(
 
 export function uiActionResultNotification(message: string): UIActionResultNotification {
   return {
-    type: 'notification',
+    type: 'notify',
     payload: {
       message,
     },

@@ -23,7 +23,7 @@ The component accepts the following props:
   { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
   { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
   { type: 'prompt', payload: { prompt: string } } |
-  { type: 'notification', payload: { message: string } } |
+  { type: 'notify', payload: { message: string } } |
   { type: 'link', payload: { url: string } } |
   ```
   If you don't provide a callback for a specific type, the default handler will be used.

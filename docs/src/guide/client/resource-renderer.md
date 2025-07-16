@@ -39,7 +39,7 @@ interface UIResourceRendererProps {
   { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
   { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
   { type: 'prompt', payload: { prompt: string } } |
-  { type: 'notification', payload: { message: string } } |
+  { type: 'notify', payload: { message: string } } |
   { type: 'link', payload: { url: string } }
   ```
 - **`supportedContentTypes`**: Optional array to restrict which content types are allowed (`['rawHtml', 'externalUrl', 'remoteDom']`)
@@ -75,7 +75,7 @@ function App({ mcpResource }) {
         console.log('Intent:', result.payload.intent, result.payload.params);
         // Handle intent processing
         break;
-      case 'notification':
+      case 'notify':
         console.log('Notification:', result.payload.message);
         // Handle notification display
         break;

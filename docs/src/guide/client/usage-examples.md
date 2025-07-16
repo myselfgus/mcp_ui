@@ -172,7 +172,7 @@ const App: React.FC = () => {
     } else if (result.type === 'intent') {
       console.log(`Intent received in host app:`, result.payload.intent);
       setLastAction({ intent: result.payload.intent });
-    } else if (result.type === 'notification') {
+    } else if (result.type === 'notify') {
       console.log(`Notification received in host app:`, result.payload.message);
       setLastAction({ message: result.payload.message });
     }

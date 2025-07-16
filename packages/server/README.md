@@ -77,7 +77,7 @@ It accepts the following props:
   { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
   { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
   { type: 'prompt', payload: { prompt: string } } |
-  { type: 'notification', payload: { message: string } } |
+  { type: 'notify', payload: { message: string } } |
   { type: 'link', payload: { url: string } }
   ```
 - **`supportedContentTypes`**: Optional array to restrict which content types are allowed (`['rawHtml', 'externalUrl', 'remoteDom']`)
