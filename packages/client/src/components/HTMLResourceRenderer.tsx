@@ -7,15 +7,19 @@ export type HTMLResourceRendererProps = {
   resource: Partial<Resource>;
   onUIAction?: (result: UIActionResult) => Promise<unknown>;
   style?: React.CSSProperties;
-  iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'ref' | 'style'>;
+  iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'style'> & {
+    ref?: React.RefObject<HTMLIFrameElement>;
+  };
 };
 
-export const HTMLResourceRenderer = React.forwardRef<
-  HTMLIFrameElement | null,
-  HTMLResourceRendererProps
->(({ resource, onUIAction, style, iframeProps }, ref) => {
+export const HTMLResourceRenderer = ({
+  resource,
+  onUIAction,
+  style,
+  iframeProps,
+}: HTMLResourceRendererProps) => {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  useImperativeHandle(ref, () => iframeRef.current as HTMLIFrameElement);
+  useImperativeHandle(iframeProps?.ref, () => iframeRef.current as HTMLIFrameElement);
 
   const { error, iframeSrc, iframeRenderMode, htmlString } = useMemo(
     () => processHTMLResource(resource),
@@ -78,6 +82,6 @@ export const HTMLResourceRenderer = React.forwardRef<
   }
 
   return <p className="text-gray-500">Initializing HTML resource display...</p>;
-});
+};
 
 HTMLResourceRenderer.displayName = 'HTMLResourceRenderer';

@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Resource } from '@modelcontextprotocol/sdk/types.js';
 import { ResourceContentType, UIActionResult } from '../types';
 import { HTMLResourceRenderer, HTMLResourceRendererProps } from './HTMLResourceRenderer';
@@ -29,10 +28,7 @@ function getContentType(resource: Partial<Resource>): ResourceContentType | unde
   }
 }
 
-export const UIResourceRenderer = React.forwardRef<
-  HTMLIFrameElement | null,
-  UIResourceRendererProps
->((props, ref) => {
+export const UIResourceRenderer = (props: UIResourceRendererProps) => {
   const { resource, onUIAction, supportedContentTypes, htmlProps, remoteDomProps } = props;
   const contentType = getContentType(resource);
 
@@ -42,15 +38,9 @@ export const UIResourceRenderer = React.forwardRef<
 
   switch (contentType) {
     case 'rawHtml':
-    case 'externalUrl':
-      return (
-        <HTMLResourceRenderer
-          resource={resource}
-          onUIAction={onUIAction}
-          {...htmlProps}
-          ref={ref}
-        />
-      );
+    case 'externalUrl': {
+      return <HTMLResourceRenderer resource={resource} onUIAction={onUIAction} {...htmlProps} />;
+    }
     case 'remoteDom':
       return (
         <RemoteDOMResourceRenderer
@@ -63,6 +53,6 @@ export const UIResourceRenderer = React.forwardRef<
     default:
       return <p className="text-red-500">Unsupported resource type.</p>;
   }
-});
+};
 
 UIResourceRenderer.displayName = 'UIResourceRenderer';

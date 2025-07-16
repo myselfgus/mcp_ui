@@ -291,7 +291,7 @@ describe('HTMLResource iframe communication', () => {
 
   it('should pass ref to iframe', () => {
     const ref = React.createRef<HTMLIFrameElement>();
-    render(<HTMLResourceRenderer resource={mockResourceBaseForUIActionTests} ref={ref} />);
+    render(<HTMLResourceRenderer resource={mockResourceBaseForUIActionTests} iframeProps={{ ref }} />);
     expect(ref.current).toBeInTheDocument();
   });
 

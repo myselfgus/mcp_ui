@@ -12,7 +12,7 @@ describe('UIResourceRenderer', () => {
   };
   it('should pass ref to HTMLResourceRenderer', () => {
     const ref = React.createRef<HTMLIFrameElement>();
-    render(<UIResourceRenderer resource={testResource} ref={ref} />);
+    render(<UIResourceRenderer resource={testResource} htmlProps={{ iframeProps: { ref } }} />);
     expect(ref.current).toBeInTheDocument();
   });
 });
