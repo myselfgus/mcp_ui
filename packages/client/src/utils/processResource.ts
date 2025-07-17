@@ -18,7 +18,7 @@ function isValidHttpUrl(string: string): boolean {
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
 
-export function processHTMLResource(resource: Partial<Resource>): ProcessResourceResult {
+export function processHTMLResource(resource: Partial<Resource>, proxy?: string): ProcessResourceResult {
   if (resource.mimeType !== 'text/html' && resource.mimeType !== 'text/uri-list') {
     return {
       error:
@@ -77,8 +77,23 @@ export function processHTMLResource(resource: Partial<Resource>): ProcessResourc
       );
     }
 
+    const originalUrl = lines[0];
+
+    if (proxy && proxy.trim() !== '') {
+      try {
+        const proxyUrl = new URL(proxy);
+        proxyUrl.searchParams.set('url', originalUrl);
+        return {
+          iframeSrc: proxyUrl.toString(),
+          iframeRenderMode: 'src',
+        };
+      } catch (e) {
+        console.error(`Invalid proxy URL provided: "${proxy}". Falling back to direct URL.`, e);
+      }
+    }
+
     return {
-      iframeSrc: lines[0],
+      iframeSrc: originalUrl,
       iframeRenderMode: 'src',
     };
   } else if (resource.mimeType === 'text/html') {

@@ -7,6 +7,7 @@ export type HTMLResourceRendererProps = {
   resource: Partial<Resource>;
   onUIAction?: (result: UIActionResult) => Promise<unknown>;
   style?: React.CSSProperties;
+  proxy?: string;
   iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'style'> & {
     ref?: React.RefObject<HTMLIFrameElement>;
   };
@@ -16,14 +17,15 @@ export const HTMLResourceRenderer = ({
   resource,
   onUIAction,
   style,
+  proxy,
   iframeProps,
 }: HTMLResourceRendererProps) => {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   useImperativeHandle(iframeProps?.ref, () => iframeRef.current as HTMLIFrameElement);
 
   const { error, iframeSrc, iframeRenderMode, htmlString } = useMemo(
-    () => processHTMLResource(resource),
-    [resource],
+    () => processHTMLResource(resource, proxy),
+    [resource, proxy],
   );
 
   useEffect(() => {

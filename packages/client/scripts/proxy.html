@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>MCP-UI Proxy</title>
+  <style>html,body { margin:0; height:100%; }</style>
+</head>
+<body>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const target = params.get('url');
+    
+    // Validate that the URL is a valid HTTP or HTTPS URL
+    function isValidHttpUrl(string) {
+      try {
+        const url = new URL(string);
+        return url.protocol === 'http:' || url.protocol === 'https:';
+      } catch (_) {
+        return false;
+      }
+    }
+    
+    if (!target) {
+      document.body.textContent = 'Error: missing url parameter';
+    } else if (!isValidHttpUrl(target)) {
+      document.body.textContent = 'Error: invalid URL. Only HTTP and HTTPS URLs are allowed.';
+    } else {
+      const inner = document.createElement('iframe');
+      inner.src = target;
+      inner.style = 'width:100%; height:100%; border:none;';
+      inner.sandbox = 'allow-same-origin allow-scripts';
+      document.body.appendChild(inner);
+    }
+  </script>
+</body>
+</html>

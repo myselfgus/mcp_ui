@@ -11,6 +11,7 @@ export interface HTMLResourceRendererProps {
   resource: Partial<Resource>;
   onUIAction?: (result: UIActionResult) => Promise<any>;
   style?: React.CSSProperties;
+  proxy?: string;
   iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'ref' | 'style'>;
 }
 ```
@@ -28,6 +29,7 @@ The component accepts the following props:
   ```
   If you don't provide a callback for a specific type, the default handler will be used.
 - **`style`**: (Optional) Custom styles for the iframe.
+- **`proxy`**: (Optional) A URL to a proxy service. When provided, external URLs will be appended to this URL. For example, if `proxy` is `https://my-proxy.com/`, the final URL will be `https://my-proxy.com/?url=<encoded_original_url>`.
 - **`iframeProps`**: (Optional) Custom props for the iframe.
 
 ## How It Works
@@ -41,7 +43,7 @@ The component accepts the following props:
       - Ignores comment lines starting with `#` and empty lines
       - If using `blob`, it decodes it from Base64.
       - Renders an `<iframe>` with its `src` set to the first valid URL.
-      - Sandbox: `allow-scripts allow-same-origin` (needed for some external sites; be mindful of security).
+      - If a valid URL is passed to the `proxy` prop, it will be used to render the external URL in a nested iframe. For example, if `proxy` is `https://my-proxy.com/`, the final iframe URL will be `https://my-proxy.com/?url=<encoded_original_url>`. The goal
     - For resources with `mimeType: 'text/html'`:
       - Expects `resource.text` or `resource.blob` to contain HTML.
       - If using `blob`, it decodes it from Base64.

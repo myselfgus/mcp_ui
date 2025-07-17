@@ -45,6 +45,7 @@ interface UIResourceRendererProps {
 - **`supportedContentTypes`**: Optional array to restrict which content types are allowed (`['rawHtml', 'externalUrl', 'remoteDom']`)
 - **`htmlProps`**: Optional props for the `<HTMLResourceRenderer>`
   - **`style`**: Optional custom styles for iframe-based resources
+  - **`proxy`**: Optional. A URL to a proxy script. When provided, external URLs (`text/uri-list`) iframe will be nested inside an iframe to the proxy script. For example, if `proxy` is `https://proxy.mcpui.dev/`, the iframe URL will be `https://proxy.mcpui.dev/?url=<encoded_original_url>`. This can be used by hosts to circumvent strict CSP.
   - **`iframeProps`**: Optional props passed to iframe elements (for HTML/URL resources)
 - **`remoteDomProps`**: Optional props for the `<RemoteDOMResourceRenderer>`
   - **`library`**: Optional component library for Remote DOM resources (defaults to `basicComponentLibrary`)
