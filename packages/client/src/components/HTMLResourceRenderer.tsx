@@ -39,22 +39,22 @@ export const HTMLResourceRenderer = ({
         if (!uiActionResult) {
           return;
         }
-        if (uiActionResult.requestId) {
+        if (uiActionResult.messageId) {
           event.source?.postMessage({
             type: InternalMessageType.UI_ACTION_RECEIVED,
             payload: {
-              requestId: uiActionResult.requestId,
+              messageId: uiActionResult.messageId,
               originalMessage: event.data,
             },
           });
         }
         try {
           const response = await onUIAction?.(uiActionResult);
-          if (uiActionResult.requestId) {
+          if (uiActionResult.messageId) {
             event.source?.postMessage({
               type: InternalMessageType.UI_ACTION_RESPONSE,
               payload: {
-                requestId: uiActionResult.requestId,
+                messageId: uiActionResult.messageId,
                 response,
                 originalMessage: event.data,
               },

@@ -40,7 +40,7 @@ export interface CreateUIResourceOptions {
 export type UIActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notify';
 
 type GenericActionMessage = {
-  requestId?: string;
+  messageId?: string;
 };
 
 export type UIActionResultToolCall = GenericActionMessage & {

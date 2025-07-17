@@ -7,7 +7,7 @@ export const ALL_RESOURCE_CONTENT_TYPES = ['rawHtml', 'externalUrl', 'remoteDom'
 export type ResourceContentType = (typeof ALL_RESOURCE_CONTENT_TYPES)[number];
 
 type GenericActionMessage = {
-  requestId?: string;
+  messageId?: string;
 };
 
 export type UIActionResultToolCall = GenericActionMessage & {
