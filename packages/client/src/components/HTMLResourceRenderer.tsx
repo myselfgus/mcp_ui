@@ -39,29 +39,34 @@ export const HTMLResourceRenderer = ({
         if (!uiActionResult) {
           return;
         }
-        if (uiActionResult.messageId) {
-          event.source?.postMessage({
-            type: InternalMessageType.UI_ACTION_RECEIVED,
-            payload: {
-              messageId: uiActionResult.messageId,
-              originalMessage: event.data,
-            },
-          });
-        }
-        try {
-          const response = await onUIAction?.(uiActionResult);
+
+        // return the "ui-action-received" message only if the onUIAction callback is provided
+        // otherwise we cannot know that the message was received by the client
+        if (onUIAction) {
           if (uiActionResult.messageId) {
             event.source?.postMessage({
-              type: InternalMessageType.UI_ACTION_RESPONSE,
+              type: InternalMessageType.UI_ACTION_RECEIVED,
               payload: {
                 messageId: uiActionResult.messageId,
-                response,
                 originalMessage: event.data,
               },
             });
           }
-        } catch (err) {
-          console.error('Error handling UI action result in HTMLResourceRenderer:', err);
+          try {
+            const response = await onUIAction(uiActionResult);
+            if (uiActionResult.messageId) {
+              event.source?.postMessage({
+                type: InternalMessageType.UI_ACTION_RESPONSE,
+                payload: {
+                  messageId: uiActionResult.messageId,
+                  response,
+                  originalMessage: event.data,
+                },
+              });
+            }
+          } catch (err) {
+            console.error('Error handling UI action result in HTMLResourceRenderer:', err);
+          }
         }
       }
     }
