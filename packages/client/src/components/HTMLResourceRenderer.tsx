@@ -48,7 +48,7 @@ export const HTMLResourceRenderer = ({
           boundPostResponse(InternalMessageType.UI_ACTION_RECEIVED);
           try {
             const response = await onUIAction(uiActionResult);
-            boundPostResponse(InternalMessageType.UI_ACTION_RESPONSE, response);
+            boundPostResponse(InternalMessageType.UI_ACTION_RESPONSE, { response });
           } catch (err) {
             console.error('Error handling UI action result in HTMLResourceRenderer:', err);
             boundPostResponse(InternalMessageType.UI_ACTION_ERROR, { error: err });
@@ -112,10 +112,8 @@ function postResponse(
   if (uiActionResult.messageId) {
     event.source?.postMessage({
       type,
-      payload: {
-        messageId: uiActionResult.messageId,
-        response,
-      },
+      messageId: uiActionResult.messageId,
+      payload: response,
     });
   }
 }
