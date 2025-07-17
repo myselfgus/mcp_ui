@@ -180,6 +180,6 @@ try {
   });
 } catch (e: any) {
   console.error('Caught expected error:', e.message);
-  // MCP SDK: URI must start with 'ui://' when content.type is 'externalUrl'.
+  // MCP-UI SDK: URI must start with 'ui://' when content.type is 'externalUrl'.
 }
 ```

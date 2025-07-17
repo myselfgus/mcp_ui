@@ -80,7 +80,7 @@ describe('@mcp-ui/server', () => {
       };
       // @ts-expect-error We are intentionally passing an invalid URI to test the error.
       expect(() => createUIResource(options)).toThrow(
-        "MCP SDK: URI must start with 'ui://' when content.type is 'rawHtml'.",
+        "MCP-UI SDK: URI must start with 'ui://' when content.type is 'rawHtml'.",
       );
     });
 
@@ -95,7 +95,7 @@ describe('@mcp-ui/server', () => {
       };
       // @ts-expect-error We are intentionally passing an invalid URI to test the error.
       expect(() => createUIResource(options)).toThrow(
-        "MCP SDK: URI must start with 'ui://' when content.type is 'externalUrl'.",
+        "MCP-UI SDK: URI must start with 'ui://' when content.type is 'externalUrl'.",
       );
     });
 
@@ -149,7 +149,7 @@ describe('@mcp-ui/server', () => {
       };
       // @ts-expect-error We are intentionally passing an invalid URI to test the error.
       expect(() => createUIResource(options)).toThrow(
-        "MCP SDK: URI must start with 'ui://' when content.type is 'remoteDom'.",
+        "MCP-UI SDK: URI must start with 'ui://' when content.type is 'remoteDom'.",
       );
     });
   });
