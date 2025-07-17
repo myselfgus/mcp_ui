@@ -107,13 +107,13 @@ function postResponse(
   uiActionResult: UIActionResult,
   event: MessageEvent,
   type: (typeof InternalMessageType)[keyof typeof InternalMessageType],
-  response?: unknown,
+  payload?: unknown,
 ) {
   if (uiActionResult.messageId) {
     event.source?.postMessage({
       type,
       messageId: uiActionResult.messageId,
-      payload: response,
+      payload,
     });
   }
 }
