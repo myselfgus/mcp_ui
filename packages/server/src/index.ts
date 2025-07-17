@@ -115,7 +115,7 @@ export function createUIResource(options: CreateUIResourceOptions): UIResource {
       break;
     default: {
       const exhaustiveCheck: never = options.encoding;
-      throw new Error(`Invalid encoding type: ${exhaustiveCheck}`);
+      throw new Error(`MCP-UI SDK: Invalid encoding type: ${exhaustiveCheck}`);
     }
   }
 
