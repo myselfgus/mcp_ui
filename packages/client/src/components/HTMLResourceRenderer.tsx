@@ -15,6 +15,7 @@ export type HTMLResourceRendererProps = {
 const InternalMessageType = {
   UI_ACTION_RECEIVED: 'ui-action-received',
   UI_ACTION_RESPONSE: 'ui-action-response',
+  UI_ACTION_ERROR: 'ui-action-error',
 } as const;
 
 export const HTMLResourceRenderer = ({
@@ -43,29 +44,14 @@ export const HTMLResourceRenderer = ({
         // return the "ui-action-received" message only if the onUIAction callback is provided
         // otherwise we cannot know that the message was received by the client
         if (onUIAction) {
-          if (uiActionResult.messageId) {
-            event.source?.postMessage({
-              type: InternalMessageType.UI_ACTION_RECEIVED,
-              payload: {
-                messageId: uiActionResult.messageId,
-                originalMessage: event.data,
-              },
-            });
-          }
+          const boundPostResponse = postResponse.bind(null, uiActionResult, event);
+          boundPostResponse(InternalMessageType.UI_ACTION_RECEIVED);
           try {
             const response = await onUIAction(uiActionResult);
-            if (uiActionResult.messageId) {
-              event.source?.postMessage({
-                type: InternalMessageType.UI_ACTION_RESPONSE,
-                payload: {
-                  messageId: uiActionResult.messageId,
-                  response,
-                  originalMessage: event.data,
-                },
-              });
-            }
+            boundPostResponse(InternalMessageType.UI_ACTION_RESPONSE, { response });
           } catch (err) {
             console.error('Error handling UI action result in HTMLResourceRenderer:', err);
+            boundPostResponse(InternalMessageType.UI_ACTION_ERROR, { error: err });
           }
         }
       }
@@ -116,3 +102,21 @@ export const HTMLResourceRenderer = ({
 };
 
 HTMLResourceRenderer.displayName = 'HTMLResourceRenderer';
+
+function postResponse(
+  uiActionResult: UIActionResult,
+  event: MessageEvent,
+  type: (typeof InternalMessageType)[keyof typeof InternalMessageType],
+  payload?: Record<string, unknown>,
+) {
+  if (uiActionResult.messageId) {
+    event.source?.postMessage({
+      type,
+      payload: {
+        messageId: uiActionResult.messageId,
+        originalMessage: event.data,
+        ...(payload ?? {}),
+      },
+    });
+  }
+}
