@@ -117,7 +117,7 @@ const resource5 = createUIResource({
   content: {
     type: 'remoteDom',
     script: remoteDomScript,
-    flavor: 'react', // or 'webcomponents'
+    framework: 'react', // or 'webcomponents'
   },
   delivery: 'text',
 });
@@ -127,7 +127,7 @@ console.log('Resource 5:', JSON.stringify(resource5, null, 2));
   "type": "resource",
   "resource": {
     "uri": "ui://remote-component/action-button",
-    "mimeType": "application/vnd.mcp-ui.remote-dom+javascript; flavor=react",
+    "mimeType": "application/vnd.mcp-ui.remote-dom+javascript; framework=react",
     "text": "\\n  const button = document.createElement('ui-button');\\n  button.setAttribute('label', 'Click me for a tool call!');\\n  button.addEventListener('press', () => {\\n    window.parent.postMessage({ type: 'tool', payload: { toolName: 'uiInteraction', params: { action: 'button-click', from: 'remote-dom' } } }, '*');\\n  });\\n  root.appendChild(button);\\n"
   }
 }

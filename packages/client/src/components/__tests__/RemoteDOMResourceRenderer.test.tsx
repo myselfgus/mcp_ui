@@ -28,10 +28,10 @@ describe('<RemoteDOMResourceRenderer />', () => {
     vi.clearAllMocks();
   });
 
-  it('should use React renderer when mimeType includes "flavor=react"', () => {
+  it('should use React renderer when mimeType includes "framework=react"', () => {
     const resource = {
       ...baseResource,
-      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
+      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; framework=react',
     };
 
     render(<RemoteDOMResourceRenderer resource={resource} library={basicComponentLibrary} />);
@@ -40,10 +40,10 @@ describe('<RemoteDOMResourceRenderer />', () => {
     expect(screen.queryByTestId('standard-dom-renderer-container')).not.toBeInTheDocument();
   });
 
-  it('should use standard DOM renderer when mimeType includes "flavor=webcomponents"', () => {
+  it('should use standard DOM renderer when mimeType includes "framework=webcomponents"', () => {
     const resource = {
       ...baseResource,
-      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents',
+      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; framework=webcomponents',
     };
 
     render(<RemoteDOMResourceRenderer resource={resource} />);
@@ -61,10 +61,10 @@ describe('<RemoteDOMResourceRenderer />', () => {
     expect(screen.queryByTestId('remote-root-renderer')).not.toBeInTheDocument();
   });
 
-  it('should default to standard DOM renderer for an unknown flavor', () => {
+  it('should default to standard DOM renderer for an unknown framework', () => {
     const resource = {
       ...baseResource,
-      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=unknown',
+      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; framework=unknown',
     };
 
     render(<RemoteDOMResourceRenderer resource={resource} />);
@@ -76,7 +76,7 @@ describe('<RemoteDOMResourceRenderer />', () => {
   it('should use the provided component library', () => {
     const resource = {
       ...baseResource,
-      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
+      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; framework=react',
     };
     render(<RemoteDOMResourceRenderer resource={resource} library={basicComponentLibrary} />);
 

@@ -43,7 +43,7 @@ describe('<UIResourceRenderer />', () => {
   it('should render RemoteDOMResourceRenderer for "remote-dom" mimeType', () => {
     const resource = {
       ...baseResource,
-      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
+      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; framework=react',
     };
     render(<UIResourceRenderer resource={resource} />);
     expect(screen.getByTestId('remote-dom-resource')).toBeInTheDocument();

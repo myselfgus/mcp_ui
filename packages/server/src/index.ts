@@ -89,7 +89,7 @@ export function createUIResource(options: CreateUIResourceOptions): UIResource {
         "MCP SDK: content.script must be provided as a string when content.type is 'remoteDom'.",
       );
     }
-    mimeType = `application/vnd.mcp-ui.remote-dom+javascript; flavor=${options.content.flavor}`;
+    mimeType = `application/vnd.mcp-ui.remote-dom+javascript; framework=${options.content.framework}`;
   } else {
     // This case should ideally be prevented by TypeScript's discriminated union checks
     const exhaustiveCheckContent: never = options.content;

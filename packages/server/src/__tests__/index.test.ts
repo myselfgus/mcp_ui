@@ -99,13 +99,13 @@ describe('@mcp-ui/server', () => {
       );
     });
 
-    it('should create a text-based remote DOM resource with React flavor', () => {
+    it('should create a text-based remote DOM resource with React framework', () => {
       const options = {
         uri: 'ui://test-remote-dom-react' as const,
         content: {
           type: 'remoteDom' as const,
           script: '<p>React Component</p>',
-          flavor: 'react' as const,
+          framework: 'react' as const,
         },
         delivery: 'text' as const,
       };
@@ -113,25 +113,25 @@ describe('@mcp-ui/server', () => {
       expect(resource.type).toBe('resource');
       expect(resource.resource.uri).toBe('ui://test-remote-dom-react');
       expect(resource.resource.mimeType).toBe(
-        'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
+        'application/vnd.mcp-ui.remote-dom+javascript; framework=react',
       );
       expect(resource.resource.text).toBe('<p>React Component</p>');
       expect(resource.resource.blob).toBeUndefined();
     });
 
-    it('should create a blob-based remote DOM resource with Web Components flavor', () => {
+    it('should create a blob-based remote DOM resource with Web Components framework', () => {
       const options = {
         uri: 'ui://test-remote-dom-wc' as const,
         content: {
           type: 'remoteDom' as const,
           script: '<p>Web Component</p>',
-          flavor: 'webcomponents' as const,
+          framework: 'webcomponents' as const,
         },
         delivery: 'blob' as const,
       };
       const resource = createUIResource(options);
       expect(resource.resource.mimeType).toBe(
-        'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents',
+        'application/vnd.mcp-ui.remote-dom+javascript; framework=webcomponents',
       );
       expect(resource.resource.blob).toBe(Buffer.from('<p>Web Component</p>').toString('base64'));
       expect(resource.resource.text).toBeUndefined();
@@ -143,7 +143,7 @@ describe('@mcp-ui/server', () => {
         content: {
           type: 'remoteDom' as const,
           script: '<p>Invalid</p>',
-          flavor: 'react' as const,
+          framework: 'react' as const,
         },
         delivery: 'text' as const,
       };

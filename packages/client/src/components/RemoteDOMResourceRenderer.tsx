@@ -36,19 +36,19 @@ export const RemoteDOMResourceRenderer: React.FC<RemoteDOMResourceProps> = ({
   const threadRef = useRef<ThreadIframe<SandboxAPI> | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const flavor = useMemo(() => {
+  const framework = useMemo(() => {
     const mimeType = resource.mimeType || '';
-    if (mimeType.includes('flavor=react')) {
+    if (mimeType.includes('framework=react')) {
       return 'react';
     }
     // Default to webcomponents for legacy or unspecified
     return 'webcomponents';
   }, [resource.mimeType]);
 
-  const componentKey = `${library?.name}-${flavor}`;
+  const componentKey = `${library?.name}-${framework}`;
 
   const { receiver, components } = useMemo(() => {
-    switch (flavor) {
+    switch (framework) {
       case 'react': {
         const reactReceiver = new RemoteReceiver();
         const componentLibrary = library || basicComponentLibrary;
@@ -131,7 +131,7 @@ export const RemoteDOMResourceRenderer: React.FC<RemoteDOMResourceProps> = ({
       const options = {
         code,
         remoteElements,
-        useReactRenderer: flavor === 'react',
+        useReactRenderer: framework === 'react',
         componentLibrary: library?.name,
       };
       thread.imports
@@ -156,7 +156,7 @@ export const RemoteDOMResourceRenderer: React.FC<RemoteDOMResourceProps> = ({
         onLoad={handleIframeLoad}
       />
 
-      {flavor === 'react' && components ? (
+      {framework === 'react' && components ? (
         <RemoteRootRenderer receiver={receiver as RemoteReceiver} components={components} />
       ) : (
         <RemoteDOMRenderer receiver={receiver as DOMRemoteReceiver} />

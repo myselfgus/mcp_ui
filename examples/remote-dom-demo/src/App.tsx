@@ -98,7 +98,7 @@ function App() {
 
   const mockResourceReact = useMemo(
     () => ({
-      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
+      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; framework=react',
       text: scriptContent,
     }),
     [scriptContent],
@@ -106,7 +106,7 @@ function App() {
 
   const mockResourceWebComponents = useMemo(
     () => ({
-      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents',
+      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; framework=webcomponents',
       text: scriptContent,
     }),
     [scriptContent],

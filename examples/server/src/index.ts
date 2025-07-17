@@ -192,7 +192,7 @@ export class MyMCP extends McpAgent {
         delivery: 'text',
         content: {
           type: 'remoteDom',
-          flavor: 'react',
+          framework: 'react',
           script: `
             // Create a state variable to track the current logo
             let isDarkMode = false;
@@ -265,7 +265,7 @@ export class MyMCP extends McpAgent {
           delivery: 'text',
           content: {
             type: 'remoteDom',
-            flavor: 'webcomponents',
+            framework: 'webcomponents',
             script: `
             // Create a state variable to track the current logo
             let isDarkMode = false;
