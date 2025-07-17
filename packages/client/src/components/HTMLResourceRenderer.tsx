@@ -12,6 +12,11 @@ export type HTMLResourceRendererProps = {
   };
 };
 
+const InternalMessageType = {
+  UI_ACTION_RECEIVED: 'ui-action-received',
+  UI_ACTION_RESPONSE: 'ui-action-response',
+} as const;
+
 export const HTMLResourceRenderer = ({
   resource,
   onUIAction,
@@ -27,16 +32,37 @@ export const HTMLResourceRenderer = ({
   );
 
   useEffect(() => {
-    function handleMessage(event: MessageEvent) {
+    async function handleMessage(event: MessageEvent) {
       // Only process the message if it came from this specific iframe
       if (iframeRef.current && event.source === iframeRef.current.contentWindow) {
         const uiActionResult = event.data as UIActionResult;
         if (!uiActionResult) {
           return;
         }
-        onUIAction?.(uiActionResult)?.catch((err) => {
+        if (uiActionResult.requestId) {
+          event.source?.postMessage({
+            type: InternalMessageType.UI_ACTION_RECEIVED,
+            payload: {
+              requestId: uiActionResult.requestId,
+              originalMessage: event.data,
+            },
+          });
+        }
+        try {
+          const response = await onUIAction?.(uiActionResult);
+          if (uiActionResult.requestId) {
+            event.source?.postMessage({
+              type: InternalMessageType.UI_ACTION_RESPONSE,
+              payload: {
+                requestId: uiActionResult.requestId,
+                response,
+                originalMessage: event.data,
+              },
+            });
+          }
+        } catch (err) {
           console.error('Error handling UI action result in HTMLResourceRenderer:', err);
-        });
+        }
       }
     }
     window.addEventListener('message', handleMessage);

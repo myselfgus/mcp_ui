@@ -133,6 +133,11 @@ export function postUIActionResult(result: UIActionResult): void {
   }
 }
 
+export const InternalMessageType = {
+  UI_ACTION_RECEIVED: 'ui-action-received',
+  UI_ACTION_RESPONSE: 'ui-action-response',
+};
+
 export function uiActionResultToolCall(
   toolName: string,
   params: Record<string, unknown>,

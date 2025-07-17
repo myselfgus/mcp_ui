@@ -6,7 +6,11 @@ export type UIActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notify';
 export const ALL_RESOURCE_CONTENT_TYPES = ['rawHtml', 'externalUrl', 'remoteDom'] as const;
 export type ResourceContentType = (typeof ALL_RESOURCE_CONTENT_TYPES)[number];
 
-export type UIActionResultToolCall = {
+type GenericActionMessage = {
+  requestId?: string;
+};
+
+export type UIActionResultToolCall = GenericActionMessage & {
   type: 'tool';
   payload: {
     toolName: string;
@@ -14,21 +18,21 @@ export type UIActionResultToolCall = {
   };
 };
 
-export type UIActionResultPrompt = {
+export type UIActionResultPrompt = GenericActionMessage & {
   type: 'prompt';
   payload: {
     prompt: string;
   };
 };
 
-export type UIActionResultLink = {
+export type UIActionResultLink = GenericActionMessage & {
   type: 'link';
   payload: {
     url: string;
   };
 };
 
-export type UIActionResultIntent = {
+export type UIActionResultIntent = GenericActionMessage & {
   type: 'intent';
   payload: {
     intent: string;
@@ -36,7 +40,7 @@ export type UIActionResultIntent = {
   };
 };
 
-export type UIActionResultNotification = {
+export type UIActionResultNotification = GenericActionMessage & {
   type: 'notify';
   payload: {
     message: string;
