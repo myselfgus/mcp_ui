@@ -139,14 +139,14 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
    const htmlResource = createUIResource({
      uri: 'ui://greeting/1',
      content: { type: 'rawHtml', htmlString: '<p>Hello, MCP UI!</p>' },
-     delivery: 'text',
+     encoding: 'text',
    });
 
    // External URL
    const externalUrlResource = createUIResource({
      uri: 'ui://greeting/1',
      content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
-     delivery: 'text',
+     encoding: 'text',
    });
 
    // remote-dom
@@ -164,7 +164,7 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
         `,
        framework: 'react', // or 'webcomponents'
      },
-     delivery: 'text',
+     encoding: 'text',
    });
    ```
 

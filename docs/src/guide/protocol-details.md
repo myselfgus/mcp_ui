@@ -31,7 +31,7 @@ export interface UIResource {
     - URL content: Embedding a Grafana dashboard, a third-party widget, a mini-application
     - RemoteDOM content: A component to be rendered with the host's look-and-feel (component library)
 
-## Content Delivery: `text` vs. `blob`
+## Content encoding: `text` vs. `blob`
 
 - **`text`**: Simple, direct string. Good for smaller, less complex content.
 - **`blob`**: Base64 encoded string.

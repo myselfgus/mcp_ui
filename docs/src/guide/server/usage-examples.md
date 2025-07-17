@@ -26,7 +26,7 @@ console.log('Shared Enum from server usage:', PlaceholderEnum.FOO);
 const resource1 = createUIResource({
   uri: 'ui://my-component/instance-1',
   content: { type: 'rawHtml', htmlString: '<p>Hello World</p>' },
-  delivery: 'text',
+  encoding: 'text',
 });
 console.log('Resource 1:', JSON.stringify(resource1, null, 2));
 /* Output for Resource 1:
@@ -44,7 +44,7 @@ console.log('Resource 1:', JSON.stringify(resource1, null, 2));
 const resource2 = createUIResource({
   uri: 'ui://my-component/instance-2',
   content: { type: 'rawHtml', htmlString: '<h1>Complex HTML</h1>' },
-  delivery: 'blob',
+  encoding: 'blob',
 });
 console.log(
   'Resource 2 (blob will be Base64):',
@@ -61,12 +61,12 @@ console.log(
 }
 */
 
-// Example 3: External URL, text delivery
+// Example 3: External URL, text encoding
 const dashboardUrl = 'https://my.analytics.com/dashboard/123';
 const resource3 = createUIResource({
   uri: 'ui://analytics-dashboard/main',
   content: { type: 'externalUrl', iframeUrl: dashboardUrl },
-  delivery: 'text',
+  encoding: 'text',
 });
 console.log('Resource 3:', JSON.stringify(resource3, null, 2));
 /* Output for Resource 3:
@@ -80,12 +80,12 @@ console.log('Resource 3:', JSON.stringify(resource3, null, 2));
 }
 */
 
-// Example 4: External URL, blob delivery (URL is Base64 encoded)
+// Example 4: External URL, blob encoding (URL is Base64 encoded)
 const chartApiUrl = 'https://charts.example.com/api?type=pie&data=1,2,3';
 const resource4 = createUIResource({
   uri: 'ui://live-chart/session-xyz',
   content: { type: 'externalUrl', iframeUrl: chartApiUrl },
-  delivery: 'blob',
+  encoding: 'blob',
 });
 console.log(
   'Resource 4 (blob will be Base64 of URL):',
@@ -102,7 +102,7 @@ console.log(
 }
 */
 
-// Example 5: Remote DOM script, text delivery
+// Example 5: Remote DOM script, text encoding
 const remoteDomScript = `
   const button = document.createElement('ui-button');
   button.setAttribute('label', 'Click me for a tool call!');
@@ -119,7 +119,7 @@ const resource5 = createUIResource({
     script: remoteDomScript,
     framework: 'react', // or 'webcomponents'
   },
-  delivery: 'text',
+  encoding: 'text',
 });
 console.log('Resource 5:', JSON.stringify(resource5, null, 2));
 /* Output for Resource 5:
@@ -154,7 +154,7 @@ https://emergency.dashboard.example.com/main`;
 const resource6 = createUIResource({
   uri: 'ui://dashboard-with-fallbacks/session-123',
   content: { type: 'externalUrl', iframeUrl: multiUrlContent },
-  delivery: 'text',
+  encoding: 'text',
 });
 
 /* The client will:
@@ -176,7 +176,7 @@ try {
   createUIResource({
     uri: 'invalid://should-be-ui',
     content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
-    delivery: 'text',
+    encoding: 'text',
   });
 } catch (e: any) {
   console.error('Caught expected error:', e.message);

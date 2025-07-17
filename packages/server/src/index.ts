@@ -98,7 +98,7 @@ export function createUIResource(options: CreateUIResourceOptions): UIResource {
 
   let resource: UIResource['resource'];
 
-  switch (options.delivery) {
+  switch (options.encoding) {
     case 'text':
       resource = {
         uri: options.uri,
@@ -114,8 +114,8 @@ export function createUIResource(options: CreateUIResourceOptions): UIResource {
       };
       break;
     default: {
-      const exhaustiveCheck: never = options.delivery;
-      throw new Error(`Invalid delivery type: ${exhaustiveCheck}`);
+      const exhaustiveCheck: never = options.encoding;
+      throw new Error(`Invalid encoding type: ${exhaustiveCheck}`);
     }
   }
 

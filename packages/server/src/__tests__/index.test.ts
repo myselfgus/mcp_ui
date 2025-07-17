@@ -6,7 +6,7 @@ describe('@mcp-ui/server', () => {
       const options = {
         uri: 'ui://test-html' as const,
         content: { type: 'rawHtml' as const, htmlString: '<p>Test</p>' },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       const resource = createUIResource(options);
       expect(resource.type).toBe('resource');
@@ -20,7 +20,7 @@ describe('@mcp-ui/server', () => {
       const options = {
         uri: 'ui://test-html-blob' as const,
         content: { type: 'rawHtml' as const, htmlString: '<h1>Blob</h1>' },
-        delivery: 'blob' as const,
+        encoding: 'blob' as const,
       };
       const resource = createUIResource(options);
       expect(resource.resource.blob).toBe(Buffer.from('<h1>Blob</h1>').toString('base64'));
@@ -34,7 +34,7 @@ describe('@mcp-ui/server', () => {
           type: 'externalUrl' as const,
           iframeUrl: 'https://example.com',
         },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       const resource = createUIResource(options);
       expect(resource.resource.uri).toBe('ui://test-url');
@@ -50,7 +50,7 @@ describe('@mcp-ui/server', () => {
           type: 'externalUrl' as const,
           iframeUrl: 'https://example.com/blob',
         },
-        delivery: 'blob' as const,
+        encoding: 'blob' as const,
       };
       const resource = createUIResource(options);
       expect(resource.resource.mimeType).toBe('text/uri-list');
@@ -64,7 +64,7 @@ describe('@mcp-ui/server', () => {
       const options = {
         uri: 'ui://test-html-blob' as const,
         content: { type: 'rawHtml' as const, htmlString: '<h1>Blob</h1>' },
-        delivery: 'blob' as const,
+        encoding: 'blob' as const,
       };
       const resource = createUIResource(options);
       expect(resource.resource.mimeType).toBe('text/html');
@@ -76,7 +76,7 @@ describe('@mcp-ui/server', () => {
       const options = {
         uri: 'invalid://test-html' as const,
         content: { type: 'rawHtml' as const, htmlString: '<p>Test</p>' },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       // @ts-expect-error We are intentionally passing an invalid URI to test the error.
       expect(() => createUIResource(options)).toThrow(
@@ -91,7 +91,7 @@ describe('@mcp-ui/server', () => {
           type: 'externalUrl' as const,
           iframeUrl: 'https://example.com',
         },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       // @ts-expect-error We are intentionally passing an invalid URI to test the error.
       expect(() => createUIResource(options)).toThrow(
@@ -107,7 +107,7 @@ describe('@mcp-ui/server', () => {
           script: '<p>React Component</p>',
           framework: 'react' as const,
         },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       const resource = createUIResource(options);
       expect(resource.type).toBe('resource');
@@ -127,7 +127,7 @@ describe('@mcp-ui/server', () => {
           script: '<p>Web Component</p>',
           framework: 'webcomponents' as const,
         },
-        delivery: 'blob' as const,
+        encoding: 'blob' as const,
       };
       const resource = createUIResource(options);
       expect(resource.resource.mimeType).toBe(
@@ -145,7 +145,7 @@ describe('@mcp-ui/server', () => {
           script: '<p>Invalid</p>',
           framework: 'react' as const,
         },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       // @ts-expect-error We are intentionally passing an invalid URI to test the error.
       expect(() => createUIResource(options)).toThrow(

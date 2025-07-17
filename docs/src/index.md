@@ -56,7 +56,7 @@ const interactiveForm = createUIResource({
     type: 'externalUrl', 
     iframeUrl: 'https://yourapp.com'
   },
-  delivery: 'text',
+  encoding: 'text',
 });
 ```
 

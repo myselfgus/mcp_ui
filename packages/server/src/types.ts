@@ -34,7 +34,7 @@ export type ResourceContentPayload =
 export interface CreateUIResourceOptions {
   uri: URI;
   content: ResourceContentPayload;
-  delivery: 'text' | 'blob';
+  encoding: 'text' | 'blob';
 }
 
 export type UIActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notify';
