@@ -41,14 +41,23 @@ First, create your React components. These can be any valid React component.
 // MyButton.tsx
 import React from 'react';
 
-export const MyButton = ({ label, onCustomPress }) => {
+interface MyButtonProps {
+  label: string;
+  onCustomPress: () => void;
+}
+
+export const MyButton: React.FC<MyButtonProps> = ({ label, onCustomPress }) => {
   return <button onClick={onCustomPress}>{label}</button>;
 };
 
 // MyText.tsx
 import React from 'react';
 
-export const MyText = ({ text }) => {
+interface MyTextProps {
+  text: string;
+}
+
+export const MyText: React.FC<MyTextProps> = ({ text }) => {
   return <p>{text}</p>;
 };
 ```
@@ -170,12 +179,10 @@ First, define your custom elements as Web Components.
 class MyButton extends HTMLElement {
   // ... implementation ...
 }
-customElements.define('my-button', MyButton);
 
 class MyText extends HTMLElement {
   // ... implementation ...
 }
-customElements.define('my-text', MyText);
 
 export function defineWebComponents() {
   if (!customElements.get('my-button')) {
