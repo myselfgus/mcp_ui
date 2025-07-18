@@ -119,7 +119,8 @@ function postResponse(
         payload,
       },
       {
-        targetOrigin: event.origin,
+        // in case the iframe is srcdoc, the origin is null
+        targetOrigin: event.origin && event.origin !== 'null' ? event.origin : '*',
       },
     );
   }
