@@ -24,7 +24,7 @@ import { UIResourceRenderer } from '@mcp-ui/client';
 />
 ```
 
-## Self-Hosting the Proxy script
+## Self-Hosting the Proxy Script
 
 If you prefer to host your own proxy script, you can create a simple HTML file with embedded JavaScript. This is a useful alternative to the hosted version when you want more control or a custom domain.
 
@@ -42,47 +42,6 @@ A valid proxy script must:
 
 ### Example Self-Hosted Proxy
 
-Here is an example of a self-hosted proxy script that meets these requirements. You can find the file that's served in the hosted version at `packages/client/scripts/proxy/index.html`.
+Here is an example of a self-hosted proxy script that meets these requirements. You can find this file in `packages/client/scripts/proxy/index.html`.
 
-```html
-<!doctype html>
-<html>
-  <head>
-    <title>MCP-UI Proxy</title>
-  </head>
-  <body>
-    <script>
-      const target = new URLSearchParams(location.search).get('url');
-
-      function isValidHttpUrl(string) {
-        try {
-          const url = new URL(string);
-          return url.protocol === 'http:' || url.protocol === 'https:';
-        } catch (_) {
-          return false;
-        }
-      }
-
-      if (!target) {
-        document.body.textContent = 'Error: missing url parameter';
-      } else if (!isValidHttpUrl(target)) {
-        document.body.textContent = 'Error: invalid URL. Only HTTP and HTTPS URLs are allowed.';
-      } else {
-        const inner = document.createElement('iframe');
-        inner.src = target;
-        inner.style = 'width:100%; height:100%; border:none;';
-        inner.sandbox = 'allow-same-origin allow-scripts';
-        document.body.appendChild(inner);
-        window.addEventListener('message', (event) => {
-          if (event.source === inner.contentWindow) {
-            window.parent.postMessage(event.data, '*');
-          }
-          if (event.source === window.parent) {
-            inner.contentWindow.postMessage(event.data, '*');
-          }
-        });
-      }
-    </script>
-  </body>
-</html>
-``` 
+<<< @/../../packages/client/scripts/proxy/index.html 
