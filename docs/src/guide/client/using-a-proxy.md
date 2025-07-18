@@ -46,6 +46,6 @@ A valid proxy script must:
 
 ### Example Self-Hosted Proxy
 
-Here is an example of a self-hosted proxy script that meets these requirements. You can find this file in `packages/client/scripts/proxy/index.html`.
+Here is an example of a self-hosted proxy script that meets these requirements. You can find this file in `sdks/typescript/client/scripts/proxy/index.html`.
 
-<<< @/../../packages/client/scripts/proxy/index.html 
+<<< @/../../sdks/typescript/client/scripts/proxy/index.html 
