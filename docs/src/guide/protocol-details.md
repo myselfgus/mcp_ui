@@ -93,6 +93,8 @@ if (
 
 For `ui://` resources, you can use `window.parent.postMessage` to send data or actions from the iframe back to the host client application. The client application should set up an event listener for `message` events.
 
+### Basic Communication
+
 **Iframe Script Example:**
 
 ```html
@@ -120,3 +122,140 @@ window.addEventListener('message', (event) => {
   }
 });
 ```
+
+### Asynchronous Communication with Message IDs
+
+For iframe content that needs to handle asynchronous responses, you can include a `messageId` field in your UI action messages. When the host provides an `onUIAction` callback, the iframe will receive acknowledgment and response messages.
+
+**Message Flow:**
+
+1. **Iframe sends message with `messageId`:**
+   ```javascript
+   window.parent.postMessage({
+     type: 'tool',
+     messageId: 'unique-request-id-123',
+     payload: { toolName: 'myAsyncTool', params: { data: 'some data' } }
+   }, '*');
+   ```
+
+2. **Host responds with acknowledgment:**
+   ```javascript
+   // The iframe receives this message back
+   {
+     type: 'ui-action-received',
+     messageId: 'unique-request-id-123',
+   }
+   ```
+
+3. **When `onUIAction` completes successfully:**
+   ```javascript
+   // The iframe receives the actual response
+   {
+     type: 'ui-action-response',
+     messageId: 'unique-request-id-123',
+     payload: {
+       response: { /* the result from onUIAction */ }
+     }
+   }
+   ```
+
+4. **If `onUIAction` encounters an error:**
+   ```javascript
+   // The iframe receives the error
+   {
+     type: 'ui-action-error',
+     messageId: 'unique-request-id-123',
+     payload: {
+       error: { /* the error object */ }
+     }
+   }
+   ```
+
+**Complete Iframe Example with Async Handling:**
+
+```html
+<button onclick="handleAsyncAction()">Async Action</button>
+<div id="status">Ready</div>
+<div id="result"></div>
+
+<script>
+  let messageCounter = 0;
+  const pendingRequests = new Map();
+
+  function generateMessageId() {
+    return `msg-${Date.now()}-${++messageCounter}`;
+  }
+
+  function handleAsyncAction() {
+    const messageId = generateMessageId();
+    const statusEl = document.getElementById('status');
+    const resultEl = document.getElementById('result');
+    
+    statusEl.textContent = 'Sending request...';
+    
+    // Store the request context
+    pendingRequests.set(messageId, { 
+      startTime: Date.now(),
+      action: 'async-tool-call'
+    });
+    
+    // Send the message with messageId
+    window.parent.postMessage({
+      type: 'tool',
+      messageId: messageId,
+      payload: { 
+        toolName: 'processData', 
+        params: { data: 'example data', timestamp: Date.now() }
+      }
+    }, '*');
+  }
+
+  // Listen for responses from the host
+  window.addEventListener('message', (event) => {
+    const message = event.data;
+    
+    if (!message.messageId || !pendingRequests.has(message.messageId)) {
+      return; // Not for us or unknown request
+    }
+    
+    const statusEl = document.getElementById('status');
+    const resultEl = document.getElementById('result');
+    const request = pendingRequests.get(message.messageId);
+    
+    switch (message.type) {
+      case 'ui-action-received':
+        statusEl.textContent = 'Request acknowledged, processing...';
+        break;
+        
+      case 'ui-action-response':
+        statusEl.textContent = 'Completed successfully!';
+        resultEl.innerHTML = `<pre>${JSON.stringify(message.payload.response, null, 2)}</pre>`;
+        pendingRequests.delete(message.messageId);
+        break;
+        
+      case 'ui-action-error':
+        statusEl.textContent = 'Error occurred!';
+        resultEl.innerHTML = `<div style="color: red;">Error: ${JSON.stringify(message.payload.error)}</div>`;
+        pendingRequests.delete(message.messageId);
+        break;
+    }
+  });
+</script>
+```
+
+### Message Types
+
+The following internal message types are available as constants:
+
+- `InternalMessageType.UI_ACTION_RECEIVED` (`'ui-action-received'`)
+- `InternalMessageType.UI_ACTION_RESPONSE` (`'ui-action-response'`)  
+- `InternalMessageType.UI_ACTION_ERROR` (`'ui-action-error'`)
+
+These types are exported from both `@mcp-ui/client` and `@mcp-ui/server` packages.
+
+**Important Notes:**
+
+- **Message ID is optional**: If you don't provide a `messageId`, the iframe will not receive response messages.
+- **Only with `onUIAction`**: Response messages are only sent when the host provides an `onUIAction` callback.
+- **Unique IDs**: Ensure `messageId` values are unique to avoid conflicts between multiple pending requests.
+- **Cleanup**: Always clean up pending request tracking when you receive responses to avoid memory leaks.
