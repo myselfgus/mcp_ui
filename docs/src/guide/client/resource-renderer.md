@@ -174,7 +174,7 @@ When unsupported content types are encountered, `UIResourceRenderer` will displa
 
 ### Custom Component Library (for Remote DOM resources)
 
-You can provide a custom component library to render Remote DOM resources with your own components. For a detailed guide, see [Custom Remote DOM Libraries](./custom-component-libraries.md).
+You can provide a custom component library to render Remote DOM resources with your own components. For a detailed guide, see [Custom Component Libraries](./custom-component-libraries.md).
 
 ```tsx
 import { ComponentLibrary } from '@mcp-ui/client';

@@ -253,7 +253,7 @@ function App({ resource }) {
 
 ## Examples in MCP-UI
 
-You can find a complete, working example of custom remote DOM libraries in the `remote-dom-demo` directory in the `examples` folder of this repository.
+You can find a complete, working example of custom component libraries in the `remote-dom-demo` directory in the `examples` folder of this repository.
 
 - **Demo Application**: `examples/remote-dom-demo/src/App.tsx`
 - **Radix UI Library**: `examples/remote-dom-demo/src/libraries/radix.tsx`
