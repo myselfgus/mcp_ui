@@ -112,10 +112,13 @@ function postResponse(
   payload?: unknown,
 ) {
   if (uiActionResult.messageId) {
-    event.source?.postMessage({
-      type,
-      messageId: uiActionResult.messageId,
-      payload,
-    });
+    (event.source as WindowProxy)?.postMessage(
+      {
+        type,
+        messageId: uiActionResult.messageId,
+        payload,
+      },
+      event.origin,
+    );
   }
 }
