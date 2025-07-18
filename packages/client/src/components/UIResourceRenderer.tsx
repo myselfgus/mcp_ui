@@ -40,7 +40,9 @@ export const UIResourceRenderer = (props: UIResourceRendererProps) => {
     case 'rawHtml': {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { proxy, ...otherHtmlProps } = htmlProps || {};
-      return <HTMLResourceRenderer resource={resource} onUIAction={onUIAction} {...otherHtmlProps} />;
+      return (
+        <HTMLResourceRenderer resource={resource} onUIAction={onUIAction} {...otherHtmlProps} />
+      );
     }
     case 'externalUrl': {
       return <HTMLResourceRenderer resource={resource} onUIAction={onUIAction} {...htmlProps} />;

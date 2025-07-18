@@ -80,14 +80,21 @@ describe('<UIResourceRenderer />', () => {
 
   it('should pass proxy prop to HTMLResourceRenderer for external URLs', () => {
     const resource = { ...baseResource, mimeType: 'text/uri-list' };
-    render(<UIResourceRenderer resource={resource} htmlProps={{ proxy: 'https://proxy.mcpui.dev/' }} />);
+    render(
+      <UIResourceRenderer resource={resource} htmlProps={{ proxy: 'https://proxy.mcpui.dev/' }} />,
+    );
     expect(screen.getByTestId('html-resource')).toBeInTheDocument();
-    expect(HTMLResourceRenderer).toHaveBeenCalledWith({ resource, proxy: 'https://proxy.mcpui.dev/' }, {});
+    expect(HTMLResourceRenderer).toHaveBeenCalledWith(
+      { resource, proxy: 'https://proxy.mcpui.dev/' },
+      {},
+    );
   });
 
   it('should not pass proxy prop to HTMLResourceRenderer for HTML content', () => {
     const resource = { ...baseResource, mimeType: 'text/html' };
-    render(<UIResourceRenderer resource={resource} htmlProps={{ proxy: 'https://proxy.mcpui.dev/' }} />);
+    render(
+      <UIResourceRenderer resource={resource} htmlProps={{ proxy: 'https://proxy.mcpui.dev/' }} />,
+    );
     expect(screen.getByTestId('html-resource')).toBeInTheDocument();
     expect(HTMLResourceRenderer).toHaveBeenCalledWith({ resource }, {});
   });

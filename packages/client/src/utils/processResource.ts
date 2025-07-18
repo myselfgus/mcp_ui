@@ -18,7 +18,10 @@ function isValidHttpUrl(string: string): boolean {
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
 
-export function processHTMLResource(resource: Partial<Resource>, proxy?: string): ProcessResourceResult {
+export function processHTMLResource(
+  resource: Partial<Resource>,
+  proxy?: string,
+): ProcessResourceResult {
   if (resource.mimeType !== 'text/html' && resource.mimeType !== 'text/uri-list') {
     return {
       error:
@@ -94,8 +97,11 @@ export function processHTMLResource(resource: Partial<Resource>, proxy?: string)
             iframeRenderMode: 'src',
           };
         }
-      } catch (e) {
-        console.error(`Invalid proxy URL provided: "${proxy}". Falling back to direct URL.`, e);
+      } catch (e: unknown) {
+        console.error(
+          `Invalid proxy URL provided: "${proxy}". Falling back to direct URL.`,
+          e instanceof Error ? e.message : String(e),
+        );
       }
     }
 

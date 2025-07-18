@@ -70,7 +70,9 @@ export function createUIResource(options: CreateUIResourceOptions): UIResource {
     mimeType = 'text/html';
   } else if (options.content.type === 'externalUrl') {
     if (!options.uri.startsWith('ui://')) {
-      throw new Error("MCP-UI SDK: URI must start with 'ui://' when content.type is 'externalUrl'.");
+      throw new Error(
+        "MCP-UI SDK: URI must start with 'ui://' when content.type is 'externalUrl'.",
+      );
     }
     actualContentString = options.content.iframeUrl;
     if (typeof actualContentString !== 'string') {

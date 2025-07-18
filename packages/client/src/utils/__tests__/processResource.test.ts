@@ -126,4 +126,4 @@ describe('text/uri-list', () => {
     expect(result.iframeSrc).toBe('https://example.com');
     expect(result.iframeRenderMode).toBe('src');
   });
-}); 
+});
