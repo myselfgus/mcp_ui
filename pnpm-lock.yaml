@@ -118,7 +118,7 @@ importers:
     dependencies:
       '@mcp-ui/client':
         specifier: workspace:*
-        version: link:../../packages/client
+        version: link:../../sdks/typescript/client
       react:
         specifier: ^18.3.1
         version: 18.3.1
