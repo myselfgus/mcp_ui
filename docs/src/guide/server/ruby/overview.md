@@ -5,7 +5,7 @@ The `mcp_ui_server` gem provides server-side utilities in Ruby to help construct
 ## Key Methods
 
 - **`McpUiServer.create_ui_resource(options)`**:
-  The primary method for creating UI snippets. It takes an options hash to define the URI, content (direct HTML or external URL), and delivery method.
+  The primary method for creating UI snippets. It takes an options hash to define the URI, content (direct HTML or external URL), and encoding method.
 
 ## Purpose
 

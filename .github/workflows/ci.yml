@@ -58,7 +58,7 @@ jobs:
         run: pnpm lint
 
       - name: Test
-        run: pnpm test
+        run: pnpm test:ts
 
       - name: Build
         run: pnpm build
@@ -69,6 +69,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -83,8 +97,7 @@ jobs:
         working-directory: 'sdks/ruby'
 
       - name: Run tests
-        run: bundle exec rspec
-        working-directory: 'sdks/ruby'
+        run: pnpm test:ruby
 
   release_ts_client:
     needs: [js_build_and_test]

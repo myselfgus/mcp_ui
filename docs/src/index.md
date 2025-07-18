@@ -70,7 +70,7 @@ interactive_form = McpUiServer.create_ui_resource(
     type: :external_url,
     iframeUrl: 'https://yourapp.com'
   },
-  delivery: :text
+  encoding: :text
 )
 ```
 :::

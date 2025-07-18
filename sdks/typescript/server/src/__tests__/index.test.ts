@@ -167,7 +167,7 @@ describe('@mcp-ui/server', () => {
       };
       // @ts-expect-error intentionally passing invalid type
       expect(() => createUIResource(options)).toThrow(
-        "MCP SDK: content.htmlString must be provided as a string when content.type is 'rawHtml'.",
+        "MCP-UI SDK: content.htmlString must be provided as a string when content.type is 'rawHtml'.",
       );
     });
 
@@ -178,18 +178,18 @@ describe('@mcp-ui/server', () => {
       };
       // @ts-expect-error intentionally passing invalid type
       expect(() => createUIResource(options)).toThrow(
-        "MCP SDK: content.iframeUrl must be provided as a string when content.type is 'externalUrl'.",
+        "MCP-UI SDK: content.iframeUrl must be provided as a string when content.type is 'externalUrl'.",
       );
     });
 
     it('should throw an error if script is not a string for remoteDom', () => {
       const options = {
         uri: 'ui://test' as const,
-        content: { type: 'remoteDom' as const, flavor: 'react', script: { a: 1 } },
+        content: { type: 'remoteDom' as const, framework: 'react', script: { a: 1 } },
       };
       // @ts-expect-error intentionally passing invalid type
       expect(() => createUIResource(options)).toThrow(
-        "MCP SDK: content.script must be provided as a string when content.type is 'remoteDom'.",
+        "MCP-UI SDK: content.script must be provided as a string when content.type is 'remoteDom'.",
       );
     });
   });
@@ -241,7 +241,7 @@ describe('UI Action Result Creators', () => {
   it('should create a notification action result', () => {
     const result = uiActionResultNotification('Success!');
     expect(result).toEqual({
-      type: 'notification',
+      type: 'notify',
       payload: {
         message: 'Success!',
       },

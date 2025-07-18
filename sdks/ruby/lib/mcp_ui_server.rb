@@ -11,7 +11,7 @@ module McpUiServer
   # MIME type constants
   MIME_TYPE_HTML = 'text/html'
   MIME_TYPE_URI_LIST = 'text/uri-list'
-  MIME_TYPE_REMOTE_DOM = 'application/vnd.mcp-ui.remote-dom+javascript; flavor=%s'
+  MIME_TYPE_REMOTE_DOM = 'application/vnd.mcp-ui.remote-dom+javascript; framework=%s'
 
   # Content type constants (Ruby snake_case)
   CONTENT_TYPE_RAW_HTML = :raw_html
@@ -44,20 +44,20 @@ module McpUiServer
   #   - :htmlString [String] The raw HTML content (required if type is :raw_html).
   #   - :iframeUrl [String] The URL for an external page (required if type is :external_url).
   #   - :script [String] The remote-dom script (required if type is :remote_dom).
-  #   - :flavor [Symbol] The remote-dom flavor, e.g., :react or :webcomponents (required, for :remote_dom).
-  # @param delivery [Symbol] The delivery method. :text for plain string, :blob for base64 encoded.
+  #   - :framework [Symbol] The remote-dom framework, e.g., :react or :webcomponents (required, for :remote_dom).
+  # @param encoding [Symbol] The encoding method. :text for plain string, :blob for base64 encoded.
   #
   # @return [Hash] A UIResource hash ready to be included in an MCP response.
   #
   # @raise [McpUiServer::Error] if URI scheme is invalid, content type is unknown,
-  #   delivery type is unknown, or required content keys are missing.
-  def self.create_ui_resource(uri:, content:, delivery: :text)
+  #   encoding type is unknown, or required content keys are missing.
+  def self.create_ui_resource(uri:, content:, encoding: :text)
     validate_uri_scheme(uri)
 
     resource = { uri: uri }
 
     content_value = process_content(content, resource)
-    process_delivery(delivery, resource, content_value)
+    process_encoding(encoding, resource, content_value)
 
     {
       type: 'resource',
@@ -110,22 +110,22 @@ module McpUiServer
   private_class_method :process_external_url_content
 
   def self.process_remote_dom_content(content, resource)
-    flavor = content.fetch(:flavor) { raise Error, 'Missing required key :flavor for remote_dom content' }
-    resource[:mimeType] = MIME_TYPE_REMOTE_DOM % flavor
+    framework = content.fetch(:framework) { raise Error, 'Missing required key :framework for remote_dom content' }
+    resource[:mimeType] = MIME_TYPE_REMOTE_DOM % framework
     required_key = REQUIRED_CONTENT_KEYS[CONTENT_TYPE_REMOTE_DOM]
     content.fetch(required_key) { raise Error, "Missing required key :#{required_key} for remote_dom content" }
   end
   private_class_method :process_remote_dom_content
 
-  def self.process_delivery(delivery, resource, content_value)
-    case delivery
+  def self.process_encoding(encoding, resource, content_value)
+    case encoding
     when :text
       resource[:text] = content_value
     when :blob
       resource[:blob] = Base64.strict_encode64(content_value)
     else
-      raise Error, "Unknown delivery type: #{delivery}. Supported types: :text, :blob"
+      raise Error, "Unknown encoding type: #{encoding}. Supported types: :text, :blob"
     end
   end
-  private_class_method :process_delivery
+  private_class_method :process_encoding
 end

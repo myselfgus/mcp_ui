@@ -14,7 +14,7 @@ require 'json'
 resource1 = McpUiServer.create_ui_resource(
   uri: 'ui://my-component/instance-1',
   content: { type: :raw_html, htmlString: '<p>Hello World</p>' },
-  delivery: :text
+  encoding: :text
 )
 puts "Resource 1: #{JSON.pretty_generate(resource1)}"
 # Output for Resource 1:
@@ -31,7 +31,7 @@ puts "Resource 1: #{JSON.pretty_generate(resource1)}"
 resource2 = McpUiServer.create_ui_resource(
   uri: 'ui://my-component/instance-2',
   content: { type: :raw_html, htmlString: '<h1>Complex HTML</h1>' },
-  delivery: :blob
+  encoding: :blob
 )
 puts "Resource 2 (blob will be Base64): #{JSON.pretty_generate(resource2)}"
 # Output for Resource 2:
@@ -44,12 +44,12 @@ puts "Resource 2 (blob will be Base64): #{JSON.pretty_generate(resource2)}"
 #   }
 # }
 
-# Example 3: External URL, text delivery
+# Example 3: External URL, text encoding
 dashboard_url = 'https://my.analytics.com/dashboard/123'
 resource3 = McpUiServer.create_ui_resource(
   uri: 'ui://analytics-dashboard/main',
   content: { type: :external_url, iframeUrl: dashboard_url },
-  delivery: :text
+  encoding: :text
 )
 puts "Resource 3: #{JSON.pretty_generate(resource3)}"
 # Output for Resource 3:
@@ -62,12 +62,12 @@ puts "Resource 3: #{JSON.pretty_generate(resource3)}"
 #   }
 # }
 
-# Example 4: External URL, blob delivery (URL is Base64 encoded)
+# Example 4: External URL, blob encoding (URL is Base64 encoded)
 chart_api_url = 'https://charts.example.com/api?type=pie&data=1,2,3'
 resource4 = McpUiServer.create_ui_resource(
   uri: 'ui://live-chart/session-xyz',
   content: { type: :external_url, iframeUrl: chart_api_url },
-  delivery: :blob
+  encoding: :blob
 )
 puts "Resource 4 (blob will be Base64 of URL): #{JSON.pretty_generate(resource4)}"
 # Output for Resource 4:
@@ -80,7 +80,7 @@ puts "Resource 4 (blob will be Base64 of URL): #{JSON.pretty_generate(resource4)
 #   }
 # }
 
-# Example 5: Remote DOM script, text delivery
+# Example 5: Remote DOM script, text encoding
 remote_dom_script = <<-SCRIPT
   const button = document.createElement('ui-button');
   button.setAttribute('label', 'Click me for a tool call!');
@@ -95,9 +95,9 @@ resource5 = McpUiServer.create_ui_resource(
   content: {
     type: :remote_dom,
     script: remote_dom_script,
-    flavor: :react # or :webcomponents
+    framework: :react # or :webcomponents
   },
-  delivery: :text
+  encoding: :text
 )
 puts "Resource 5: #{JSON.pretty_generate(resource5)}"
 # Output for Resource 5:
@@ -105,7 +105,7 @@ puts "Resource 5: #{JSON.pretty_generate(resource5)}"
 #   "type": "resource",
 #   "resource": {
 #     "uri": "ui://remote-component/action-button",
-#     "mimeType": "application/vnd.mcp-ui.remote-dom+javascript; flavor=react",
+#     "mimeType": "application/vnd.mcp-ui.remote-dom+javascript; framework=react",
 #     "text": "  const button = document.createElement('ui-button');\n  button.setAttribute('label', 'Click me for a tool call!');\n  button.addEventListener('press', () => {\n    window.parent.postMessage({ type: 'tool', payload: { toolName: 'uiInteraction', params: { action: 'button-click', from: 'remote-dom' } } }, '*');\n  });\n  root.appendChild(button);\n"
 #   }
 # }
@@ -122,7 +122,7 @@ begin
   McpUiServer.create_ui_resource(
     uri: 'invalid://should-be-ui',
     content: { type: :external_url, iframeUrl: 'https://example.com' },
-    delivery: :text
+    encoding: :text
   )
 rescue ArgumentError => e
   puts "Caught expected error: #{e.message}"

@@ -216,14 +216,14 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
    html_resource = McpUiServer.create_ui_resource(
      uri: 'ui://greeting/1',
      content: { type: :raw_html, htmlString: '<p>Hello, from Ruby!</p>' },
-     delivery: :text
+     encoding: :text
    )
 
    # External URL
    external_url_resource = McpUiServer.create_ui_resource(
      uri: 'ui://greeting/2',
      content: { type: :external_url, iframeUrl: 'https://example.com' },
-     delivery: :text
+     encoding: :text
    )
 
    # remote-dom
@@ -239,9 +239,9 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
         });
         root.appendChild(button);
         ",
-       flavor: :react,
+       framework: :react,
      },
-     delivery: :text
+     encoding: :text
    )
    ```
 

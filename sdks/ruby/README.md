@@ -100,14 +100,14 @@ resource = McpUiServer.create_ui_resource(
   content: {
     type: :remote_dom,
     script: script,
-    flavor: :react # or :webcomponents
+    framework: :react # or :webcomponents
   }
 )
 ```
 
-### Using `blob` delivery
+### Using `blob` encoding
 
-For binary content or to avoid encoding issues, you can use `blob` delivery, which will Base64 encode the content.
+For binary content or to avoid encoding issues, you can use `blob` encoding, which will Base64 encode the content.
 
 ```ruby
 resource = McpUiServer.create_ui_resource(
@@ -116,7 +116,7 @@ resource = McpUiServer.create_ui_resource(
     type: :raw_html,
     htmlString: '<h1>Hello, World!</h1>'
   },
-  delivery: :blob
+  encoding: :blob
 )
 ```
 
@@ -143,7 +143,7 @@ Common error scenarios:
 - Invalid URI scheme (not starting with `ui://`)
 - Unknown content type (only `:raw_html`, `:external_url`, `:remote_dom` are supported)
 - Missing required content keys (e.g., `htmlString` for `raw_html`)
-- Unknown delivery type
+- Unknown encoding type
 
 ## Constants
 
@@ -153,7 +153,7 @@ The SDK provides constants for MIME types and content types:
 # MIME type constants
 McpUiServer::MIME_TYPE_HTML          # 'text/html'
 McpUiServer::MIME_TYPE_URI_LIST      # 'text/uri-list'
-McpUiServer::MIME_TYPE_REMOTE_DOM    # 'application/vnd.mcp-ui.remote-dom; flavor=%s'
+McpUiServer::MIME_TYPE_REMOTE_DOM    # 'application/vnd.mcp-ui.remote-dom; framework=%s'
 
 # Content type constants (Ruby snake_case)
 McpUiServer::CONTENT_TYPE_RAW_HTML      # :raw_html

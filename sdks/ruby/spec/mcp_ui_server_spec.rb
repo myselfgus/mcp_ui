@@ -14,7 +14,7 @@ RSpec.describe McpUiServer do
     context 'with raw_html content' do
       let(:content) { { type: :raw_html, htmlString: '<h1>Hello</h1>' } }
 
-      it 'creates a resource with text/html mimetype and text delivery' do
+      it 'creates a resource with text/html mimetype and text encoding' do
         resource = described_class.create_ui_resource(uri: uri, content: content)
         expect(resource[:type]).to eq('resource')
         expect(resource[:resource][:uri]).to eq(uri)
@@ -22,8 +22,8 @@ RSpec.describe McpUiServer do
         expect(resource[:resource][:text]).to eq('<h1>Hello</h1>')
       end
 
-      it 'creates a resource with blob delivery' do
-        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
+      it 'creates a resource with blob encoding' do
+        resource = described_class.create_ui_resource(uri: uri, content: content, encoding: :blob)
         expect(resource[:resource][:blob]).to eq(Base64.strict_encode64('<h1>Hello</h1>'))
       end
     end
@@ -37,8 +37,8 @@ RSpec.describe McpUiServer do
         expect(resource[:resource][:text]).to eq('https://example.com')
       end
 
-      it 'creates a resource with blob delivery' do
-        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
+      it 'creates a resource with blob encoding' do
+        resource = described_class.create_ui_resource(uri: uri, content: content, encoding: :blob)
         expect(resource[:resource][:blob]).to eq(Base64.strict_encode64('https://example.com'))
       end
     end
@@ -46,36 +46,36 @@ RSpec.describe McpUiServer do
     context 'with remote_dom content' do
       let(:script) { 'console.log("hello")' }
 
-      it 'creates a resource with react flavor' do
-        content = { type: :remote_dom, script: script, flavor: :react }
+      it 'creates a resource with react framework' do
+        content = { type: :remote_dom, script: script, framework: :react }
         resource = described_class.create_ui_resource(uri: uri, content: content)
-        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom+javascript; flavor=react')
+        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom+javascript; framework=react')
         expect(resource[:resource][:text]).to eq(script)
       end
 
-      it 'creates a resource with a specified flavor as a symbol' do
-        content = { type: :remote_dom, script: script, flavor: :webcomponents }
+      it 'creates a resource with a specified framework as a symbol' do
+        content = { type: :remote_dom, script: script, framework: :webcomponents }
         resource = described_class.create_ui_resource(uri: uri, content: content)
-        expected_mime_type = 'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents'
+        expected_mime_type = 'application/vnd.mcp-ui.remote-dom+javascript; framework=webcomponents'
         expect(resource[:resource][:mimeType]).to eq(expected_mime_type)
       end
 
-      it 'creates a resource with a specified flavor as a string' do
-        content = { type: :remote_dom, script: script, flavor: 'react' }
+      it 'creates a resource with a specified framework as a string' do
+        content = { type: :remote_dom, script: script, framework: 'react' }
         resource = described_class.create_ui_resource(uri: uri, content: content)
-        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom+javascript; flavor=react')
+        expect(resource[:resource][:mimeType]).to eq('application/vnd.mcp-ui.remote-dom+javascript; framework=react')
       end
 
-      it 'creates a resource with blob delivery' do
-        content = { type: :remote_dom, script: script, flavor: :react }
-        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
+      it 'creates a resource with blob encoding' do
+        content = { type: :remote_dom, script: script, framework: :react }
+        resource = described_class.create_ui_resource(uri: uri, content: content, encoding: :blob)
         expect(resource[:resource][:blob]).to eq(Base64.strict_encode64(script))
       end
 
-      it 'creates a resource with blob delivery and a specified flavor' do
-        content = { type: :remote_dom, script: script, flavor: :webcomponents }
-        resource = described_class.create_ui_resource(uri: uri, content: content, delivery: :blob)
-        expected_mime_type = 'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents'
+      it 'creates a resource with blob encoding and a specified framework' do
+        content = { type: :remote_dom, script: script, framework: :webcomponents }
+        resource = described_class.create_ui_resource(uri: uri, content: content, encoding: :blob)
+        expected_mime_type = 'application/vnd.mcp-ui.remote-dom+javascript; framework=webcomponents'
         expect(resource[:resource][:mimeType]).to eq(expected_mime_type)
         expect(resource[:resource][:blob]).to eq(Base64.strict_encode64(script))
       end
@@ -104,11 +104,11 @@ RSpec.describe McpUiServer do
         end.to raise_error(McpUiServer::Error, /Unknown content type: rawHtml/)
       end
 
-      it 'raises McpUiServer::Error for unknown delivery type' do
+      it 'raises McpUiServer::Error for unknown encoding type' do
         content = { type: :raw_html, htmlString: '<h1>Hello</h1>' }
         expect do
-          described_class.create_ui_resource(uri: uri, content: content, delivery: :invalid)
-        end.to raise_error(McpUiServer::Error, /Unknown delivery type: invalid/)
+          described_class.create_ui_resource(uri: uri, content: content, encoding: :invalid)
+        end.to raise_error(McpUiServer::Error, /Unknown encoding type: invalid/)
       end
 
       it 'raises McpUiServer::Error if htmlString is missing' do
@@ -125,15 +125,15 @@ RSpec.describe McpUiServer do
         end.to raise_error(McpUiServer::Error, /Missing required key :iframeUrl for external_url content/)
       end
 
-      it 'raises McpUiServer::Error if flavor is missing' do
+      it 'raises McpUiServer::Error if framework is missing' do
         content = { type: :remote_dom, script: 'console.log("foo")' }
         expect do
           described_class.create_ui_resource(uri: uri, content: content)
-        end.to raise_error(McpUiServer::Error, /Missing required key :flavor for remote_dom content/)
+        end.to raise_error(McpUiServer::Error, /Missing required key :framework for remote_dom content/)
       end
 
       it 'raises McpUiServer::Error if script is missing' do
-        content = { type: :remote_dom, flavor: :react }
+        content = { type: :remote_dom, framework: :react }
         expect do
           described_class.create_ui_resource(uri: uri, content: content)
         end.to raise_error(McpUiServer::Error, /Missing required key :script for remote_dom content/)
@@ -144,7 +144,7 @@ RSpec.describe McpUiServer do
       it 'defines expected MIME type constants' do
         expect(McpUiServer::MIME_TYPE_HTML).to eq('text/html')
         expect(McpUiServer::MIME_TYPE_URI_LIST).to eq('text/uri-list')
-        expect(McpUiServer::MIME_TYPE_REMOTE_DOM).to eq('application/vnd.mcp-ui.remote-dom+javascript; flavor=%s')
+        expect(McpUiServer::MIME_TYPE_REMOTE_DOM).to eq('application/vnd.mcp-ui.remote-dom+javascript; framework=%s')
       end
 
       it 'defines expected content type constants' do

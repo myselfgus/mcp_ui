@@ -72,7 +72,7 @@ require 'mcp_ui_server'
 resource = McpUiServer.create_ui_resource(
   uri: 'ui://my-tool/dashboard',
   content: { type: :raw_html, htmlString: '<h1>Dashboard</h1>' },
-  delivery: :text
+  encoding: :text
 )
 
 # Return in MCP response
