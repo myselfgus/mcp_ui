@@ -1,3 +1,10 @@
+## [5.1.2](https://github.com/idosal/mcp-ui/compare/v5.1.1...v5.1.2) (2025-07-18)
+
+
+### Bug Fixes
+
+* use targetOrigin in the proxy message relay ([#40](https://github.com/idosal/mcp-ui/issues/40)) ([b3fb54e](https://github.com/idosal/mcp-ui/commit/b3fb54e28ca7b8eeda896b5bcf478b6343dbba47))
+
 ## [5.1.1](https://github.com/idosal/mcp-ui/compare/v5.1.0...v5.1.1) (2025-07-18)
 
 

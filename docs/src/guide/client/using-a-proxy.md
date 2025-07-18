@@ -1,6 +1,6 @@
-# Using a Proxy for External URLs
+# Using a Proxy Script for External URLs
 
-When rendering external URLs (`text/uri-list`), you may need to use a "proxy" to comply with your site's Content Security Policy (CSP). The `proxy` prop on `<UIResourceRenderer>` allows you to specify a URL for a proxy script that will render the external content in a nested iframe.
+When rendering external URLs (`text/uri-list`), you may need to use a "proxy" to comply with your host's restrictive Content Security Policy (CSP). The proxy domain must be whitelisted as a `frame-src`. The `proxy` prop on `<UIResourceRenderer>` allows you to specify a URL for a proxy script that will render the external content in a nested iframe.
 
 When `proxy` is set, the external URL is encoded and appended to the proxy URL. For example, if `proxy` is `https://my-proxy.com/`, the final URL will be `https://my-proxy.com/?url=<encoded_original_url>`.
 
@@ -23,6 +23,10 @@ import { UIResourceRenderer } from '@mcp-ui/client';
   onUIAction={handleUIAction}
 />
 ```
+
+Please verify that the host whitelists `https://proxy.mcpui.dev` as a `frame-src` in the CSP.
+
+You can find a complete example for a site with restrictive CSP that uses the hosted proxy at `examples/external-url-demo`.
 
 ## Self-Hosting the Proxy Script
 
