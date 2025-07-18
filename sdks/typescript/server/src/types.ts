@@ -5,8 +5,8 @@ export type URI = `ui://${string}`;
 export type MimeType =
   | 'text/html'
   | 'text/uri-list'
-  | 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react'
-  | 'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents';
+  | 'application/vnd.mcp-ui.remote-dom+javascript; framework=react'
+  | 'application/vnd.mcp-ui.remote-dom+javascript; framework=webcomponents';
 
 export type HTMLTextContent = {
   uri: URI;
@@ -28,18 +28,22 @@ export type ResourceContentPayload =
   | {
       type: 'remoteDom';
       script: string;
-      flavor: 'react' | 'webcomponents';
+      framework: 'react' | 'webcomponents';
     };
 
 export interface CreateUIResourceOptions {
   uri: URI;
   content: ResourceContentPayload;
-  delivery: 'text' | 'blob';
+  encoding: 'text' | 'blob';
 }
 
-export type UIActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notification';
+export type UIActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notify';
 
-export type UIActionResultToolCall = {
+type GenericActionMessage = {
+  messageId?: string;
+};
+
+export type UIActionResultToolCall = GenericActionMessage & {
   type: 'tool';
   payload: {
     toolName: string;
@@ -47,21 +51,21 @@ export type UIActionResultToolCall = {
   };
 };
 
-export type UIActionResultPrompt = {
+export type UIActionResultPrompt = GenericActionMessage & {
   type: 'prompt';
   payload: {
     prompt: string;
   };
 };
 
-export type UIActionResultLink = {
+export type UIActionResultLink = GenericActionMessage & {
   type: 'link';
   payload: {
     url: string;
   };
 };
 
-export type UIActionResultIntent = {
+export type UIActionResultIntent = GenericActionMessage & {
   type: 'intent';
   payload: {
     intent: string;
@@ -69,8 +73,8 @@ export type UIActionResultIntent = {
   };
 };
 
-export type UIActionResultNotification = {
-  type: 'notification';
+export type UIActionResultNotification = GenericActionMessage & {
+  type: 'notify';
   payload: {
     message: string;
   };

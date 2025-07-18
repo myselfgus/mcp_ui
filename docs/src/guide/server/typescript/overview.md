@@ -5,13 +5,13 @@ The `@mcp-ui/server` package provides server-side utilities to help construct `U
 ## Key Exports
 
 - **`createUIResource(options: CreateUIResourceOptions): UIResource`**:
-  The primary function for creating UI snippets. It takes an options object to define the URI, content (direct HTML or external URL), and delivery method (text or blob).
+  The primary function for creating UI snippets. It takes an options object to define the URI, content (direct HTML or external URL), and encoding method (text or blob).
 
 ## Purpose
 
 - **Ease of Use**: Simplifies the creation of valid `UIResource` objects.
 - **Validation**: Includes basic validation (e.g., URI prefixes matching content type).
-- **Encoding**: Handles Base64 encoding when `delivery: 'blob'` is specified.
+- **Encoding**: Handles Base64 encoding when `encoding: 'blob'` is specified.
 
 ## Building
 

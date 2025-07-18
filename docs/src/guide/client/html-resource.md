@@ -11,6 +11,7 @@ export interface HTMLResourceRendererProps {
   resource: Partial<Resource>;
   onUIAction?: (result: UIActionResult) => Promise<any>;
   style?: React.CSSProperties;
+  proxy?: string;
   iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'ref' | 'style'>;
 }
 ```
@@ -20,14 +21,22 @@ The component accepts the following props:
 - **`resource`**: The resource object from an `UIResource`. It should include `uri`, `mimeType`, and either `text` or `blob`.
 - **`onUIAction`**: An optional callback that fires when the iframe content (for `ui://` resources) posts a message to your app. The message should look like:
   ```typescript
-  { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
-  { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
-  { type: 'prompt', payload: { prompt: string } } |
-  { type: 'notification', payload: { message: string } } |
-  { type: 'link', payload: { url: string } } |
+  { type: 'tool', payload: { toolName: string, params: Record<string, unknown> }, messageId?: string } |
+  { type: 'intent', payload: { intent: string, params: Record<string, unknown> }, messageId?: string } |
+  { type: 'prompt', payload: { prompt: string }, messageId?: string } |
+  { type: 'notify', payload: { message: string }, messageId?: string } |
+  { type: 'link', payload: { url: string }, messageId?: string } |
   ```
   If you don't provide a callback for a specific type, the default handler will be used.
+  
+  **Asynchronous Response Handling**: When a message includes a `messageId` field, the iframe will automatically receive response messages:
+  - `ui-action-received`: Sent immediately when the message is received
+  - `ui-action-response`: Sent when your callback resolves successfully  
+  - `ui-action-error`: Sent if your callback throws an error
+  
+  See [Protocol Details](../protocol-details.md#asynchronous-communication-with-message-ids) for complete examples.
 - **`style`**: (Optional) Custom styles for the iframe.
+- **`proxy`**: (Optional) A URL to a proxy script. This is useful for hosts with a strict Content Security Policy (CSP). When provided, external URLs will be rendered in a nested iframe hosted at this URL. For example, if `proxy` is `https://my-proxy.com/`, the final URL will be `https://my-proxy.com/?url=<encoded_original_url>`. For your convenience, mcp-ui hosts a proxy script at `https://proxy.mcpui.dev`, which you can use as a the prop value without any setup (see `examples/external-url-demo`).
 - **`iframeProps`**: (Optional) Custom props for the iframe.
 
 ## How It Works
@@ -41,6 +50,7 @@ The component accepts the following props:
       - Ignores comment lines starting with `#` and empty lines
       - If using `blob`, it decodes it from Base64.
       - Renders an `<iframe>` with its `src` set to the first valid URL.
+      - If a valid URL is passed to the `proxy` prop, it will be used as the source for the iframe, which then renders the external URL in a nested iframe. For example, if `proxy` is `https://my-proxy.com/`, the final URL will be `https://my-proxy.com/?url=<encoded_original_url>`.
       - Sandbox: `allow-scripts allow-same-origin` (needed for some external sites; be mindful of security).
     - For resources with `mimeType: 'text/html'`:
       - Expects `resource.text` or `resource.blob` to contain HTML.

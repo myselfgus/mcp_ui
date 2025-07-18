@@ -35,13 +35,13 @@ function robustUtf8ToBase64(str: string): string {
     return btoa(binaryString);
   } else {
     console.warn(
-      'MCP SDK: Buffer API and TextEncoder/btoa not available. Base64 encoding might not be UTF-8 safe.',
+      'MCP-UI SDK: Buffer API and TextEncoder/btoa not available. Base64 encoding might not be UTF-8 safe.',
     );
     try {
       return btoa(str);
     } catch (e) {
       throw new Error(
-        'MCP SDK: Suitable UTF-8 to Base64 encoding method not found, and fallback btoa failed.',
+        'MCP-UI SDK: Suitable UTF-8 to Base64 encoding method not found, and fallback btoa failed.',
       );
     }
   }
@@ -59,46 +59,48 @@ export function createUIResource(options: CreateUIResourceOptions): UIResource {
 
   if (options.content.type === 'rawHtml') {
     if (!options.uri.startsWith('ui://')) {
-      throw new Error("MCP SDK: URI must start with 'ui://' when content.type is 'rawHtml'.");
+      throw new Error("MCP-UI SDK: URI must start with 'ui://' when content.type is 'rawHtml'.");
     }
     actualContentString = options.content.htmlString;
     if (typeof actualContentString !== 'string') {
       throw new Error(
-        "MCP SDK: content.htmlString must be provided as a string when content.type is 'rawHtml'.",
+        "MCP-UI SDK: content.htmlString must be provided as a string when content.type is 'rawHtml'.",
       );
     }
     mimeType = 'text/html';
   } else if (options.content.type === 'externalUrl') {
     if (!options.uri.startsWith('ui://')) {
-      throw new Error("MCP SDK: URI must start with 'ui://' when content.type is 'externalUrl'.");
+      throw new Error(
+        "MCP-UI SDK: URI must start with 'ui://' when content.type is 'externalUrl'.",
+      );
     }
     actualContentString = options.content.iframeUrl;
     if (typeof actualContentString !== 'string') {
       throw new Error(
-        "MCP SDK: content.iframeUrl must be provided as a string when content.type is 'externalUrl'.",
+        "MCP-UI SDK: content.iframeUrl must be provided as a string when content.type is 'externalUrl'.",
       );
     }
     mimeType = 'text/uri-list';
   } else if (options.content.type === 'remoteDom') {
     if (!options.uri.startsWith('ui://')) {
-      throw new Error("MCP SDK: URI must start with 'ui://' when content.type is 'remoteDom'.");
+      throw new Error("MCP-UI SDK: URI must start with 'ui://' when content.type is 'remoteDom'.");
     }
     actualContentString = options.content.script;
     if (typeof actualContentString !== 'string') {
       throw new Error(
-        "MCP SDK: content.script must be provided as a string when content.type is 'remoteDom'.",
+        "MCP-UI SDK: content.script must be provided as a string when content.type is 'remoteDom'.",
       );
     }
-    mimeType = `application/vnd.mcp-ui.remote-dom+javascript; flavor=${options.content.flavor}`;
+    mimeType = `application/vnd.mcp-ui.remote-dom+javascript; framework=${options.content.framework}`;
   } else {
     // This case should ideally be prevented by TypeScript's discriminated union checks
     const exhaustiveCheckContent: never = options.content;
-    throw new Error(`MCP SDK: Invalid content.type specified: ${exhaustiveCheckContent}`);
+    throw new Error(`MCP-UI SDK: Invalid content.type specified: ${exhaustiveCheckContent}`);
   }
 
   let resource: UIResource['resource'];
 
-  switch (options.delivery) {
+  switch (options.encoding) {
     case 'text':
       resource = {
         uri: options.uri,
@@ -114,8 +116,8 @@ export function createUIResource(options: CreateUIResourceOptions): UIResource {
       };
       break;
     default: {
-      const exhaustiveCheck: never = options.delivery;
-      throw new Error(`Invalid delivery type: ${exhaustiveCheck}`);
+      const exhaustiveCheck: never = options.encoding;
+      throw new Error(`MCP-UI SDK: Invalid encoding type: ${exhaustiveCheck}`);
     }
   }
 
@@ -132,6 +134,12 @@ export function postUIActionResult(result: UIActionResult): void {
     window.parent.postMessage(result, '*');
   }
 }
+
+export const InternalMessageType = {
+  UI_ACTION_RECEIVED: 'ui-action-received',
+  UI_ACTION_RESPONSE: 'ui-action-response',
+  UI_ACTION_ERROR: 'ui-action-error',
+};
 
 export function uiActionResultToolCall(
   toolName: string,
@@ -179,7 +187,7 @@ export function uiActionResultIntent(
 
 export function uiActionResultNotification(message: string): UIActionResultNotification {
   return {
-    type: 'notification',
+    type: 'notify',
     payload: {
       message,
     },

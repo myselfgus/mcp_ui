@@ -62,7 +62,7 @@ const myHtmlPayload = `<h1>Hello from Server!</h1><p>Timestamp: ${new Date().toI
 const resourceBlock = createUIResource({
   uri: 'ui://server-generated/item1',
   content: { type: 'rawHtml', htmlString: myHtmlPayload },
-  delivery: 'text',
+  encoding: 'text',
 });
 
 
@@ -110,7 +110,7 @@ function App() {
       console.log(`Link from resource:`, result.payload.url);
     } else if (result.type === 'intent') {
       console.log(`Intent from resource:`, result.payload.intent);
-    } else if (result.type === 'notification') {
+    } else if (result.type === 'notify') {
       console.log(`Notification from resource:`, result.payload.message);
     }
     // Add your handling logic (e.g., initiate followup tool call)

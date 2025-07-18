@@ -7,36 +7,58 @@ export type HTMLResourceRendererProps = {
   resource: Partial<Resource>;
   onUIAction?: (result: UIActionResult) => Promise<unknown>;
   style?: React.CSSProperties;
+  proxy?: string;
   iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'style'> & {
     ref?: React.RefObject<HTMLIFrameElement>;
   };
 };
 
+const InternalMessageType = {
+  UI_ACTION_RECEIVED: 'ui-action-received',
+  UI_ACTION_RESPONSE: 'ui-action-response',
+  UI_ACTION_ERROR: 'ui-action-error',
+} as const;
+
 export const HTMLResourceRenderer = ({
   resource,
   onUIAction,
   style,
+  proxy,
   iframeProps,
 }: HTMLResourceRendererProps) => {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   useImperativeHandle(iframeProps?.ref, () => iframeRef.current as HTMLIFrameElement);
 
   const { error, iframeSrc, iframeRenderMode, htmlString } = useMemo(
-    () => processHTMLResource(resource),
-    [resource],
+    () => processHTMLResource(resource, proxy),
+    [resource, proxy],
   );
 
   useEffect(() => {
-    function handleMessage(event: MessageEvent) {
+    async function handleMessage(event: MessageEvent) {
       // Only process the message if it came from this specific iframe
       if (iframeRef.current && event.source === iframeRef.current.contentWindow) {
         const uiActionResult = event.data as UIActionResult;
         if (!uiActionResult) {
           return;
         }
-        onUIAction?.(uiActionResult)?.catch((err) => {
-          console.error('Error handling UI action result in HTMLResourceRenderer:', err);
-        });
+
+        // return the "ui-action-received" message only if the onUIAction callback is provided
+        // otherwise we cannot know that the message was received by the client
+        if (onUIAction) {
+          postToFrame(InternalMessageType.UI_ACTION_RECEIVED, event, uiActionResult);
+          try {
+            const response = await onUIAction(uiActionResult);
+            postToFrame(InternalMessageType.UI_ACTION_RESPONSE, event, uiActionResult, {
+              response,
+            });
+          } catch (err) {
+            console.error('Error handling UI action result in HTMLResourceRenderer:', err);
+            postToFrame(InternalMessageType.UI_ACTION_ERROR, event, uiActionResult, {
+              error: err,
+            });
+          }
+        }
       }
     }
     window.addEventListener('message', handleMessage);
@@ -85,3 +107,24 @@ export const HTMLResourceRenderer = ({
 };
 
 HTMLResourceRenderer.displayName = 'HTMLResourceRenderer';
+
+function postToFrame(
+  type: (typeof InternalMessageType)[keyof typeof InternalMessageType],
+  event: MessageEvent,
+  uiActionResult: UIActionResult,
+  payload?: unknown,
+) {
+  if (uiActionResult.messageId) {
+    event.source?.postMessage(
+      {
+        type,
+        messageId: uiActionResult.messageId,
+        payload,
+      },
+      {
+        // in case the iframe is srcdoc, the origin is null
+        targetOrigin: event.origin && event.origin !== 'null' ? event.origin : '*',
+      },
+    );
+  }
+}

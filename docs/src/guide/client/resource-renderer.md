@@ -36,19 +36,25 @@ interface UIResourceRendererProps {
 - **`resource`**: The resource object from an MCP response. Should include `uri`, `mimeType`, and content (`text`, `blob`, or `content`)
 - **`onUIAction`**: Optional callback for handling UI actions from the resource:
   ```typescript
-  { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
-  { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
-  { type: 'prompt', payload: { prompt: string } } |
-  { type: 'notification', payload: { message: string } } |
-  { type: 'link', payload: { url: string } }
+  { type: 'tool', payload: { toolName: string, params: Record<string, unknown> }, messageId?: string } |
+  { type: 'intent', payload: { intent: string, params: Record<string, unknown> }, messageId?: string } |
+  { type: 'prompt', payload: { prompt: string }, messageId?: string } |
+  { type: 'notify', payload: { message: string }, messageId?: string } |
+  { type: 'link', payload: { url: string }, messageId?: string }
   ```
+  
+  **Asynchronous Communication**: When actions include a `messageId`, the iframe automatically receives response messages (`ui-action-received`, `ui-action-response`, `ui-action-error`). See [Protocol Details](../protocol-details.md#asynchronous-communication-with-message-ids) for examples.
 - **`supportedContentTypes`**: Optional array to restrict which content types are allowed (`['rawHtml', 'externalUrl', 'remoteDom']`)
 - **`htmlProps`**: Optional props for the `<HTMLResourceRenderer>`
   - **`style`**: Optional custom styles for iframe-based resources
+  - **`proxy`**: Optional. A URL to a static "proxy" script for rendering external URLs. See [Using a Proxy for External URLs](./using-a-proxy.md) for details.
   - **`iframeProps`**: Optional props passed to iframe elements (for HTML/URL resources)
+    - **`ref`**: Optional React ref to access the underlying iframe element
 - **`remoteDomProps`**: Optional props for the `<RemoteDOMResourceRenderer>`
   - **`library`**: Optional component library for Remote DOM resources (defaults to `basicComponentLibrary`)
   - **`remoteElements`**: Optional remote element definitions for Remote DOM resources. REQUIRED for Remote DOM snippets.
+
+See [Custom Component Libraries](./custom-component-libraries.md) for a detailed guide on how to create and use your own libraries for `remoteDom` resources.
 
 ## Basic Usage
 
@@ -75,7 +81,7 @@ function App({ mcpResource }) {
         console.log('Intent:', result.payload.intent, result.payload.params);
         // Handle intent processing
         break;
-      case 'notification':
+      case 'notify':
         console.log('Notification:', result.payload.message);
         // Handle notification display
         break;
@@ -112,43 +118,59 @@ function App({ mcpResource }) {
 />
 ```
 
-### Custom Component Library (for Remote DOM)
-
-```tsx
-import { ComponentLibrary } from '@mcp-ui/client';
-import { MyButton, MyCard } from './MyComponents';
-
-const customLibrary: ComponentLibrary = {
-  name: 'custom',
-  elements: [
-    { tagName: 'my-button', component: MyButton },
-    { tagName: 'my-card', component: MyCard },
-  ],
-};
-
-<UIResourceRenderer
-  resource={mcpResource.resource}
-  library={customLibrary}
-  onUIAction={handleUIAction}
-/>
-```
-
 ### Custom Styling
 
 ```tsx
 <UIResourceRenderer
   resource={mcpResource.resource}
-  style={{ 
-    border: '2px solid #007acc',
-    borderRadius: '8px',
-    minHeight: '400px'
-  }}
-  iframeProps={{
-    title: 'Custom MCP Resource',
-    className: 'mcp-resource-frame'
+  htmlProps={{
+    style: { 
+      border: '2px solid #007acc',
+      borderRadius: '8px',
+      minHeight: '400px'
+    },
+    iframeProps: {
+      title: 'Custom MCP Resource',
+      className: 'mcp-resource-frame'
+    }
   }}
   onUIAction={handleUIAction}
 />
+```
+
+### Accessing the Iframe Element
+
+You can pass a ref through `iframeProps` to access the underlying iframe element:
+
+```tsx
+import React, { useRef } from 'react';
+
+function MyComponent({ mcpResource }) {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  const handleFocus = () => {
+    // Access the iframe element directly
+    if (iframeRef.current) {
+      iframeRef.current.focus();
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleFocus}>Focus Iframe</button>
+      <UIResourceRenderer
+        resource={mcpResource.resource}
+        htmlProps={{
+          iframeProps: {
+            ref: iframeRef,
+            title: 'MCP Resource'
+          }
+        }}
+        onUIAction={handleUIAction}
+      />
+    </div>
+  );
+}
 ```
 
 ## Resource Type Detection
@@ -189,6 +211,31 @@ function App({ mcpResource }) {
 When unsupported content types are encountered, `UIResourceRenderer` will display appropriate error messages:
 - `"Unsupported content type: {type}."`
 - `"Unsupported resource type."`
+
+### Custom Component Library (for Remote DOM resources)
+
+You can provide a custom component library to render Remote DOM resources with your own components. For a detailed guide, see [Custom Component Libraries](./custom-component-libraries.md).
+
+```tsx
+import { ComponentLibrary } from '@mcp-ui/client';
+import { MyButton, MyCard } from './MyComponents';
+
+const customLibrary: ComponentLibrary = {
+  name: 'custom',
+  elements: [
+    { tagName: 'my-button', component: MyButton },
+    { tagName: 'my-card', component: MyCard },
+  ],
+};
+
+<UIResourceRenderer
+  resource={mcpResource.resource}
+  remoteDomProps={{
+    library: customLibrary,
+  }}
+  onUIAction={handleUIAction}
+/>
+```
 
 ## Security Considerations
 

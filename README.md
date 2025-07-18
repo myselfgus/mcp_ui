@@ -76,12 +76,13 @@ It accepts the following props:
 - **`resource`**: The resource object from an MCP Tool response. It must include `uri`, `mimeType`, and content (`text`, `blob`)
 - **`onUIAction`**: Optional callback for handling UI actions from the resource:
   ```typescript
-  { type: 'tool', payload: { toolName: string, params: Record<string, unknown> } } |
-  { type: 'intent', payload: { intent: string, params: Record<string, unknown> } } |
-  { type: 'prompt', payload: { prompt: string } } |
-  { type: 'notify', payload: { message: string } } |
-  { type: 'link', payload: { url: string } }
+  { type: 'tool', payload: { toolName: string, params: Record<string, unknown> }, messageId?: string } |
+  { type: 'intent', payload: { intent: string, params: Record<string, unknown> }, messageId?: string } |
+  { type: 'prompt', payload: { prompt: string }, messageId?: string } |
+  { type: 'notify', payload: { message: string }, messageId?: string } |
+  { type: 'link', payload: { url: string }, messageId?: string }
   ```
+  When actions include a `messageId`, the iframe automatically receives response messages for asynchronous handling.
 - **`supportedContentTypes`**: Optional array to restrict which content types are allowed (`['rawHtml', 'externalUrl', 'remoteDom']`)
 - **`htmlProps`**: Optional props for the internal `<HTMLResourceRenderer>`
   - **`style`**: Optional custom styles for the iframe
@@ -104,7 +105,7 @@ Rendered using the internal `<HTMLResourceRenderer />` component, which displays
 
 Rendered using the internal `<RemoteDOMResourceRenderer />` component, which utilizes Shopify's [`remote-dom`](https://github.com/Shopify/remote-dom). The server responds with a script that describes the UI and events. On the host, the script is securely rendered in a sandboxed iframe, and the UI changes are communicated to the host in JSON, where they're rendered using the host's component library. This is more flexible than iframes and allows for UIs that match the host's look-and-feel.
 
-* **`mimeType`**: `application/vnd.mcp-ui.remote-dom; flavor={react | webcomponents}`
+* **`mimeType`**: `application/vnd.mcp-ui.remote-dom; framework={react | webcomponents}`
 
 ### UI Action
 
@@ -151,14 +152,14 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
    const htmlResource = createUIResource({
      uri: 'ui://greeting/1',
      content: { type: 'rawHtml', htmlString: '<p>Hello, MCP UI!</p>' },
-     delivery: 'text',
+     encoding: 'text',
    });
 
    // External URL
    const externalUrlResource = createUIResource({
      uri: 'ui://greeting/1',
      content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
-     delivery: 'text',
+     encoding: 'text',
    });
 
    // remote-dom
@@ -174,9 +175,9 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
         });
         root.appendChild(button);
         `,
-       flavor: 'react', // or 'webcomponents'
+       framework: 'react', // or 'webcomponents'
      },
-     delivery: 'text',
+     encoding: 'text',
    });
    ```
 
