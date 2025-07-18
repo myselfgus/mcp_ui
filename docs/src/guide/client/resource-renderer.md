@@ -51,6 +51,8 @@ interface UIResourceRendererProps {
   - **`library`**: Optional component library for Remote DOM resources (defaults to `basicComponentLibrary`)
   - **`remoteElements`**: Optional remote element definitions for Remote DOM resources. REQUIRED for Remote DOM snippets.
 
+See [Custom Component Libraries](./custom-remote-dom-library.md) for a detailed guide on how to create and use your own libraries for `remoteDom` resources.
+
 ## Basic Usage
 
 ```tsx
@@ -115,6 +117,8 @@ function App({ mcpResource }) {
 
 ### Custom Component Library (for Remote DOM)
 
+You can provide a custom component library to render Remote DOM resources with your own components. For a detailed guide, see [Custom Remote DOM Libraries](./custom-remote-dom-library.md).
+
 ```tsx
 import { ComponentLibrary } from '@mcp-ui/client';
 import { MyButton, MyCard } from './MyComponents';
@@ -129,7 +133,9 @@ const customLibrary: ComponentLibrary = {
 
 <UIResourceRenderer
   resource={mcpResource.resource}
-  library={customLibrary}
+  remoteDomProps={{
+    library: customLibrary,
+  }}
   onUIAction={handleUIAction}
 />
 ```

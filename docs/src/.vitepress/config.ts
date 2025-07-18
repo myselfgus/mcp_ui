@@ -115,6 +115,10 @@ export default defineConfig({
                   link: '/guide/client/resource-renderer',
                 },
                 {
+                  text: 'Custom Component Libraries',
+                  link: '/guide/client/custom-component-libraries',
+                },
+                {
                   text: 'Using a Proxy',
                   link: '/guide/client/using-a-proxy',
                 },
