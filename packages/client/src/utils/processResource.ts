@@ -82,11 +82,18 @@ export function processHTMLResource(resource: Partial<Resource>, proxy?: string)
     if (proxy && proxy.trim() !== '') {
       try {
         const proxyUrl = new URL(proxy);
-        proxyUrl.searchParams.set('url', originalUrl);
-        return {
-          iframeSrc: proxyUrl.toString(),
-          iframeRenderMode: 'src',
-        };
+        // The proxy host MUST NOT be the host URL, or the proxy can escape the sandbox
+        if (typeof window !== 'undefined' && proxyUrl.host === window.location.host) {
+          console.error(
+            'For security, the proxy host must not be the same as the application host. Using original URL instead.',
+          );
+        } else {
+          proxyUrl.searchParams.set('url', originalUrl);
+          return {
+            iframeSrc: proxyUrl.toString(),
+            iframeRenderMode: 'src',
+          };
+        }
       } catch (e) {
         console.error(`Invalid proxy URL provided: "${proxy}". Falling back to direct URL.`, e);
       }
