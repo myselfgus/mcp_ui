@@ -85,7 +85,7 @@ export function processHTMLResource(resource: Partial<Resource>, proxy?: string)
         // The proxy host MUST NOT be the host URL, or the proxy can escape the sandbox
         if (typeof window !== 'undefined' && proxyUrl.host === window.location.host) {
           console.error(
-            'For security, the proxy host must not be the same as the application host. Using original URL instead.',
+            'For security, the proxy origin must not be the same as the host origin. Using original URL instead.',
           );
         } else {
           proxyUrl.searchParams.set('url', originalUrl);
