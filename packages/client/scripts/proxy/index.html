@@ -35,7 +35,7 @@
         try {
           const url = new URL(string);
           return url.protocol === 'http:' || url.protocol === 'https:';
-        } catch (_) {
+        } catch (e) {
           return false;
         }
       }
@@ -50,14 +50,15 @@
         inner.style = 'width:100%; height:100%; border:none;';
         inner.sandbox = 'allow-same-origin allow-scripts';
         document.body.appendChild(inner);
+        const urlOrigin = new URL(target).origin;
+
         window.addEventListener('message', (event) => {
-          // listen for messages from the iframe and send them to the parent
-          if (event.source === inner.contentWindow) {
-            window.parent.postMessage(event.data, '*');
-          }
-          // listen for messages from the parent and send them to the iframe
           if (event.source === window.parent) {
-            inner.contentWindow.postMessage(event.data, '*');
+            // listen for messages from the parent and send them to the iframe
+            inner.contentWindow.postMessage(event.data, urlOrigin);
+          } else if (event.source === inner.contentWindow) {
+            // listen for messages from the iframe and send them to the parent
+            window.parent.postMessage(event.data, '*');
           }
         });
       }

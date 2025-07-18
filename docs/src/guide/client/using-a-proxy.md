@@ -38,7 +38,7 @@ A valid proxy script must:
 2.  **Validate the URL**: It must validate that the provided URL is a valid `http:` or `https:` URL to prevent abuse.
 3.  **Render in an Iframe**: The script should dynamically create an iframe and set its `src` to the validated target URL.
 4.  **Sandbox the Iframe**: The iframe must be sandboxed to restrict its capabilities. A minimal sandbox policy would be `allow-scripts allow-same-origin`.
-5.  **Forward `postMessage` Events**: To allow communication between the host application and the embedded external URL, the proxy needs to forward `message` events between `window.parent` and the iframe's `contentWindow`.
+5.  **Forward `postMessage` Events**: To allow communication between the host application and the embedded external URL, the proxy needs to forward `message` events between `window.parent` and the iframe's `contentWindow`. For security, it's critical to use a specific `targetOrigin` instead of `*` in `postMessage` calls whenever possible. The `targetOrigin` for messages to the iframe should be the external URL's origin; Messages to the parent will resort to `*`.
 
 ### Example Self-Hosted Proxy
 
