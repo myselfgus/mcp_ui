@@ -152,10 +152,16 @@ jobs:
         run: npx semantic-release
 
   release_ruby_sdk:
+    name: Release Ruby SDK
     needs: [ruby_sdk_test]
     if: github.ref == 'refs/heads/main' && needs.filter_changed_paths.outputs.ruby_sdk_files == 'true'
     runs-on: ubuntu-latest
-    permissions: { contents: write, issues: write, id-token: write }
+    environment: release
+    permissions:
+      contents: write # to push commits and tags
+      id-token: write # for trusted publishing
+      issues: write # to comment on issues
+      pull-requests: write # to comment on pull requests
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
