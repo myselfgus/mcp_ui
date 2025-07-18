@@ -57,9 +57,12 @@ function App() {
       <div className="demo-section">
         <h2>Interactive Demo</h2>
         <p>Toggle between direct and proxied loading:</p>
-        <button className="toggle" onClick={() => setUseProxy(!useProxy)}>
-          Toggle Proxy
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <button className="toggle" onClick={() => setUseProxy(!useProxy)}>
+            Toggle Proxy
+          </button>
+          <h1>{useProxy ? 'Proxied' : 'Direct (no proxy)'}</h1>
+        </div>
         <div id="demo-container">
           <UIResourceRenderer resource={resource} htmlProps={useProxy ? { proxy } : {}} />
         </div>
