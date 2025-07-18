@@ -56,7 +56,7 @@ import { createUIResource } from '@mcp-ui/server';
 const resource = createUIResource({
   uri: 'ui://my-tool/dashboard',
   content: { type: 'rawHtml', htmlString: '<h1>Dashboard</h1>' },
-  delivery: 'text'
+  encoding: 'text'
 });
 
 // Return in MCP response

@@ -62,7 +62,7 @@ const myHtmlPayload = `<h1>Hello from Server!</h1><p>Timestamp: ${new Date().toI
 const resourceBlock = createUIResource({
   uri: 'ui://server-generated/item1',
   content: { type: 'rawHtml', htmlString: myHtmlPayload },
-  delivery: 'text',
+  encoding: 'text',
 });
 
 

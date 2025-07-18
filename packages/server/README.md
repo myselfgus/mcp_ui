@@ -102,7 +102,7 @@ Rendered using the `<HTMLResourceRenderer />` component, which displays content 
 
 Rendered using the `<RemoteDOMResourceRenderer />` component, which uses Shopify's [`remote-dom`](https://github.com/Shopify/remote-dom). The server responds with a script that describes the UI and events. On the host, the script is securely rendered in a sandboxed iframe, and the UI changes are communicated to the host in JSON, where they're rendered using the host's component library. This is more flexible than iframes and allows for UIs that match the host's look-and-feel.
 
-* **`mimeType`**: `application/vnd.mcp-ui.remote-dom; flavor={react | webcomponents}`
+* **`mimeType`**: `application/vnd.mcp-ui.remote-dom+javascript; framework={react | webcomponents}`
 
 ### UI Action
 
@@ -139,14 +139,14 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
    const htmlResource = createUIResource({
      uri: 'ui://greeting/1',
      content: { type: 'rawHtml', htmlString: '<p>Hello, MCP UI!</p>' },
-     delivery: 'text',
+     encoding: 'text',
    });
 
    // External URL
    const externalUrlResource = createUIResource({
      uri: 'ui://greeting/1',
      content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
-     delivery: 'text',
+     encoding: 'text',
    });
 
    // remote-dom
@@ -162,9 +162,9 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
         });
         root.appendChild(button);
         `,
-       flavor: 'react', // or 'webcomponents'
+       framework: 'react', // or 'webcomponents'
      },
-     delivery: 'text',
+     encoding: 'text',
    });
    ```
 

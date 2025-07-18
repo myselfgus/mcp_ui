@@ -153,7 +153,7 @@ export class MyMCP extends McpAgent {
         const resourceBlock = createUIResource({
           uri: uniqueUIAppUri,
           content: { type: 'externalUrl', iframeUrl: pickerPageUrl },
-          delivery: 'text', // The URL itself is delivered as text
+          encoding: 'text', // The URL itself is delivered as text
         });
 
         return {
@@ -177,7 +177,7 @@ export class MyMCP extends McpAgent {
         const resourceBlock = createUIResource({
           uri: uniqueUIAppUri,
           content: { type: 'externalUrl', iframeUrl: pickerPageUrl },
-          delivery: 'text', // The URL itself is delivered as text
+          encoding: 'text', // The URL itself is delivered as text
         });
 
         return {
@@ -189,10 +189,10 @@ export class MyMCP extends McpAgent {
     this.server.tool('show_remote_dom_react', 'Shows a react remote-dom component', async () => {
       const resourceBlock = createUIResource({
         uri: `ui://remote-dom-react/${Date.now()}` as `ui://${string}`,
-        delivery: 'text',
+        encoding: 'text',
         content: {
           type: 'remoteDom',
-          flavor: 'react',
+          framework: 'react',
           script: `
             // Create a state variable to track the current logo
             let isDarkMode = false;
@@ -262,10 +262,10 @@ export class MyMCP extends McpAgent {
       async () => {
         const resourceBlock = createUIResource({
           uri: `ui://remote-dom-wc/${Date.now()}` as `ui://${string}`,
-          delivery: 'text',
+          encoding: 'text',
           content: {
             type: 'remoteDom',
-            flavor: 'webcomponents',
+            framework: 'webcomponents',
             script: `
             // Create a state variable to track the current logo
             let isDarkMode = false;

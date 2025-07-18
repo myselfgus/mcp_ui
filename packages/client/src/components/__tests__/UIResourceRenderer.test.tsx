@@ -43,7 +43,7 @@ describe('<UIResourceRenderer />', () => {
   it('should render RemoteDOMResourceRenderer for "remote-dom" mimeType', () => {
     const resource = {
       ...baseResource,
-      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
+      mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; framework=react',
     };
     render(<UIResourceRenderer resource={resource} />);
     expect(screen.getByTestId('remote-dom-resource')).toBeInTheDocument();
@@ -75,6 +75,27 @@ describe('<UIResourceRenderer />', () => {
     render(<UIResourceRenderer resource={resource} supportedContentTypes={['rawHtml']} />);
     expect(screen.getByTestId('html-resource')).toBeInTheDocument();
     expect(RemoteDOMResourceRenderer).not.toHaveBeenCalled();
+    expect(HTMLResourceRenderer).toHaveBeenCalledWith({ resource }, {});
+  });
+
+  it('should pass proxy prop to HTMLResourceRenderer for external URLs', () => {
+    const resource = { ...baseResource, mimeType: 'text/uri-list' };
+    render(
+      <UIResourceRenderer resource={resource} htmlProps={{ proxy: 'https://proxy.mcpui.dev/' }} />,
+    );
+    expect(screen.getByTestId('html-resource')).toBeInTheDocument();
+    expect(HTMLResourceRenderer).toHaveBeenCalledWith(
+      { resource, proxy: 'https://proxy.mcpui.dev/' },
+      {},
+    );
+  });
+
+  it('should not pass proxy prop to HTMLResourceRenderer for HTML content', () => {
+    const resource = { ...baseResource, mimeType: 'text/html' };
+    render(
+      <UIResourceRenderer resource={resource} htmlProps={{ proxy: 'https://proxy.mcpui.dev/' }} />,
+    );
+    expect(screen.getByTestId('html-resource')).toBeInTheDocument();
     expect(HTMLResourceRenderer).toHaveBeenCalledWith({ resource }, {});
   });
 });

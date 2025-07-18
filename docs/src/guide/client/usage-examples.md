@@ -38,7 +38,7 @@ const remoteDomResource = {
   type: 'resource',
   resource: {
     uri: 'ui://remote-component/action-button',
-    mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
+    mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; framework=react',
     text: remoteDomScript,
   },
 };
@@ -130,7 +130,7 @@ const fetchMcpResource = async (id: string): Promise<any> => {
       type: 'resource',
       resource: {
         uri: 'ui://remote-component/action-button',
-        mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
+        mimeType: 'application/vnd.mcp-ui.remote-dom+javascript; framework=react',
         text: remoteDomScript,
       },
     };

@@ -5,8 +5,8 @@ export type URI = `ui://${string}`;
 export type MimeType =
   | 'text/html'
   | 'text/uri-list'
-  | 'application/vnd.mcp-ui.remote-dom+javascript; flavor=react'
-  | 'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents';
+  | 'application/vnd.mcp-ui.remote-dom+javascript; framework=react'
+  | 'application/vnd.mcp-ui.remote-dom+javascript; framework=webcomponents';
 
 export type HTMLTextContent = {
   uri: URI;
@@ -28,13 +28,13 @@ export type ResourceContentPayload =
   | {
       type: 'remoteDom';
       script: string;
-      flavor: 'react' | 'webcomponents';
+      framework: 'react' | 'webcomponents';
     };
 
 export interface CreateUIResourceOptions {
   uri: URI;
   content: ResourceContentPayload;
-  delivery: 'text' | 'blob';
+  encoding: 'text' | 'blob';
 }
 
 export type UIActionType = 'tool' | 'prompt' | 'link' | 'intent' | 'notify';

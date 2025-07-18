@@ -109,7 +109,16 @@ export default defineConfig({
             { text: 'Overview', link: '/guide/client/overview' },
             {
               text: 'UIResourceRenderer',
-              link: '/guide/client/resource-renderer',
+              items: [
+                {
+                  text: 'Overview',
+                  link: '/guide/client/resource-renderer',
+                },
+                {
+                  text: 'Using a Proxy',
+                  link: '/guide/client/using-a-proxy',
+                },
+              ],
             },
             {
               text: 'HTMLResourceRenderer',

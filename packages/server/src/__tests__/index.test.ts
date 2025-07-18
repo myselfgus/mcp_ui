@@ -6,7 +6,7 @@ describe('@mcp-ui/server', () => {
       const options = {
         uri: 'ui://test-html' as const,
         content: { type: 'rawHtml' as const, htmlString: '<p>Test</p>' },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       const resource = createUIResource(options);
       expect(resource.type).toBe('resource');
@@ -20,7 +20,7 @@ describe('@mcp-ui/server', () => {
       const options = {
         uri: 'ui://test-html-blob' as const,
         content: { type: 'rawHtml' as const, htmlString: '<h1>Blob</h1>' },
-        delivery: 'blob' as const,
+        encoding: 'blob' as const,
       };
       const resource = createUIResource(options);
       expect(resource.resource.blob).toBe(Buffer.from('<h1>Blob</h1>').toString('base64'));
@@ -34,7 +34,7 @@ describe('@mcp-ui/server', () => {
           type: 'externalUrl' as const,
           iframeUrl: 'https://example.com',
         },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       const resource = createUIResource(options);
       expect(resource.resource.uri).toBe('ui://test-url');
@@ -50,7 +50,7 @@ describe('@mcp-ui/server', () => {
           type: 'externalUrl' as const,
           iframeUrl: 'https://example.com/blob',
         },
-        delivery: 'blob' as const,
+        encoding: 'blob' as const,
       };
       const resource = createUIResource(options);
       expect(resource.resource.mimeType).toBe('text/uri-list');
@@ -64,7 +64,7 @@ describe('@mcp-ui/server', () => {
       const options = {
         uri: 'ui://test-html-blob' as const,
         content: { type: 'rawHtml' as const, htmlString: '<h1>Blob</h1>' },
-        delivery: 'blob' as const,
+        encoding: 'blob' as const,
       };
       const resource = createUIResource(options);
       expect(resource.resource.mimeType).toBe('text/html');
@@ -76,11 +76,11 @@ describe('@mcp-ui/server', () => {
       const options = {
         uri: 'invalid://test-html' as const,
         content: { type: 'rawHtml' as const, htmlString: '<p>Test</p>' },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       // @ts-expect-error We are intentionally passing an invalid URI to test the error.
       expect(() => createUIResource(options)).toThrow(
-        "MCP SDK: URI must start with 'ui://' when content.type is 'rawHtml'.",
+        "MCP-UI SDK: URI must start with 'ui://' when content.type is 'rawHtml'.",
       );
     });
 
@@ -91,47 +91,47 @@ describe('@mcp-ui/server', () => {
           type: 'externalUrl' as const,
           iframeUrl: 'https://example.com',
         },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       // @ts-expect-error We are intentionally passing an invalid URI to test the error.
       expect(() => createUIResource(options)).toThrow(
-        "MCP SDK: URI must start with 'ui://' when content.type is 'externalUrl'.",
+        "MCP-UI SDK: URI must start with 'ui://' when content.type is 'externalUrl'.",
       );
     });
 
-    it('should create a text-based remote DOM resource with React flavor', () => {
+    it('should create a text-based remote DOM resource with React framework', () => {
       const options = {
         uri: 'ui://test-remote-dom-react' as const,
         content: {
           type: 'remoteDom' as const,
           script: '<p>React Component</p>',
-          flavor: 'react' as const,
+          framework: 'react' as const,
         },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       const resource = createUIResource(options);
       expect(resource.type).toBe('resource');
       expect(resource.resource.uri).toBe('ui://test-remote-dom-react');
       expect(resource.resource.mimeType).toBe(
-        'application/vnd.mcp-ui.remote-dom+javascript; flavor=react',
+        'application/vnd.mcp-ui.remote-dom+javascript; framework=react',
       );
       expect(resource.resource.text).toBe('<p>React Component</p>');
       expect(resource.resource.blob).toBeUndefined();
     });
 
-    it('should create a blob-based remote DOM resource with Web Components flavor', () => {
+    it('should create a blob-based remote DOM resource with Web Components framework', () => {
       const options = {
         uri: 'ui://test-remote-dom-wc' as const,
         content: {
           type: 'remoteDom' as const,
           script: '<p>Web Component</p>',
-          flavor: 'webcomponents' as const,
+          framework: 'webcomponents' as const,
         },
-        delivery: 'blob' as const,
+        encoding: 'blob' as const,
       };
       const resource = createUIResource(options);
       expect(resource.resource.mimeType).toBe(
-        'application/vnd.mcp-ui.remote-dom+javascript; flavor=webcomponents',
+        'application/vnd.mcp-ui.remote-dom+javascript; framework=webcomponents',
       );
       expect(resource.resource.blob).toBe(Buffer.from('<p>Web Component</p>').toString('base64'));
       expect(resource.resource.text).toBeUndefined();
@@ -143,13 +143,13 @@ describe('@mcp-ui/server', () => {
         content: {
           type: 'remoteDom' as const,
           script: '<p>Invalid</p>',
-          flavor: 'react' as const,
+          framework: 'react' as const,
         },
-        delivery: 'text' as const,
+        encoding: 'text' as const,
       };
       // @ts-expect-error We are intentionally passing an invalid URI to test the error.
       expect(() => createUIResource(options)).toThrow(
-        "MCP SDK: URI must start with 'ui://' when content.type is 'remoteDom'.",
+        "MCP-UI SDK: URI must start with 'ui://' when content.type is 'remoteDom'.",
       );
     });
   });
