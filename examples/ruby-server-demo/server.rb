@@ -61,7 +61,6 @@ class RemoteDomTool < MCP::Tool
         p.textContent = 'This is a remote DOM element from the server.';
         root.appendChild(p);
       STR
-      puts remote_dom_script
 
       ui_resource_object = McpUiServer.create_ui_resource(
         uri: 'ui://my-remote-dom-script',
