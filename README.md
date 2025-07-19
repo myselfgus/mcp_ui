@@ -15,7 +15,8 @@
   <a href="#-whats-mcp-ui">What's mcp-ui?</a> •
   <a href="#-core-concepts">Core Concepts</a> •
   <a href="#-installation">Installation</a> •
-  <a href="#-quickstart">Quickstart</a> •
+  <a href="#-getting-started">Getting Started</a> •
+  <a href="#-walkthrough">Walkthrough</a> •
   <a href="#-examples">Examples</a> •
   <a href="#-security">Security</a> •
   <a href="#-roadmap">Roadmap</a> •
@@ -132,7 +133,7 @@ yarn add @mcp-ui/server @mcp-ui/client
 gem install mcp_ui_server
 ```
 
-## 🎬 Quickstart
+## 🚀 Getting Started
 
 You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to `mcp-ui`'s latest documentation! 
 
@@ -244,6 +245,15 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
      encoding: :text
    )
    ```
+
+## 🚶 Walkthrough
+
+For a detailed, dimple, step-by-step guide on how to integrate `mcp-ui` into your own server, check out the full server walkthroughs on the [mcp-ui documentation site](https://mcpui.dev):
+
+- **[TypeScript Server Walkthrough](https://mcpui.dev/guide/server/typescript/walkthrough)**
+- **[Ruby Server Walkthrough](https://mcpui.dev/guide/server/ruby/walkthrough)**
+
+These guides will show you how to add a `mcp-ui` endpoint to an existing server, create tools that return UI resources, and test your setup with the `ui-inspector`!
 
 ## 🌍 Examples
 

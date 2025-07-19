@@ -107,6 +107,7 @@ export default defineConfig({
               collapsed: false,
               items: [
                 { text: 'Overview', link: '/guide/server/typescript/overview' },
+                { text: 'Walkthrough', link: '/guide/server/typescript/walkthrough' },
                 { text: 'Usage & Examples', link: '/guide/server/typescript/usage-examples' },
               ],
             },
@@ -115,6 +116,7 @@ export default defineConfig({
               collapsed: false,
               items: [
                 { text: 'Overview', link: '/guide/server/ruby/overview' },
+                { text: 'Walkthrough', link: '/guide/server/ruby/walkthrough' },
                 { text: 'Usage & Examples', link: '/guide/server/ruby/usage-examples' },
               ],
             },
