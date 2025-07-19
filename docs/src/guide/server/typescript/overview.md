@@ -1,6 +1,8 @@
 # @mcp-ui/server Overview
 
-The `@mcp-ui/server` package provides server-side utilities to help construct `UIResource` objects, which can then be sent to a client as part of an MCP response.
+The `@mcp-ui/server` package provides utilities to generate UI resources (`UIResource`) on your MCP server. It allows you to define UI snippets on the server-side, which can then be seamlessly and securely rendered on the client.
+
+For a complete example, see the [`typescript-server-demo`](https://github.com/idosal/mcp-ui/tree/docs/ts-example/examples/typescript-server-demo).
 
 ## Key Exports
 

@@ -254,8 +254,10 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
 
 **Server Examples**
 * **TypeScript**: A [full-featured server](examples/server) that is deployed to a hosted environment for easy testing.
-  * **HTTP Streaming**: `https://remote-mcp-server-authless.idosalomon.workers.dev/mcp`
-  * **SSE**: `https://remote-mcp-server-authless.idosalomon.workers.dev/sse`
+  * **[`typescript-server-demo`](./examples/typescript-server-demo)**: A simple Typescript server that demonstrates how to generate UI resources.
+  * **server**: A [full-featured Typescript server](examples/server) that is deployed to a hosted Cloudflare environment for easy testing.
+    * **HTTP Streaming**: `https://remote-mcp-server-authless.idosalomon.workers.dev/mcp`
+    * **SSE**: `https://remote-mcp-server-authless.idosalomon.workers.dev/sse`
 * **Ruby**: A barebones [demo server](/examples/ruby-server-demo) that shows how to use `mcp_ui_server` and `mcp` gems together.
 
 Drop those URLs into any MCP-compatible host to see `mcp-ui` in action. For a supported local inspector, see the [ui-inspector](https://github.com/idosal/ui-inspector).

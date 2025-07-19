@@ -2,6 +2,8 @@
 
 This page provides practical examples for using the `@mcp-ui/server` package.
 
+For a complete example, see the [`typescript-server-demo`](https://github.com/idosal/mcp-ui/tree/docs/ts-example/examples/typescript-server-demo).
+
 ## Basic Setup
 
 First, ensure you have `@mcp-ui/server` available in your project:
