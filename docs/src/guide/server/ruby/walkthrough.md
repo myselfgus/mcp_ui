@@ -1,77 +1,134 @@
 # Ruby Server Walkthrough
 
-This guide provides a step-by-step walkthrough for integrating `mcp_ui_server` into a Ruby web application using the [Sinatra](https://sinatrarb.com/) framework.
+This guide provides a step-by-step walkthrough for creating a barebones MCP UI server using Ruby's built-in WEBrick library.
 
-For a complete, runnable example using WEBrick, see the [`ruby-server-demo`](https://github.com/idosal/mcp-ui/tree/main/examples/ruby-server-demo).
+For a complete, runnable example, see the [`ruby-server-demo`](https://github.com/idosal/mcp-ui/tree/main/examples/ruby-server-demo).
 
-## 1. Set up a Sinatra Application
+## 1. Project Setup
 
-If you don't have an existing server, you can create a simple one.
+First, set up your project directory and dependencies.
 
-First, create a `Gemfile` with the necessary dependencies:
-
-```ruby
-source "https://rubygems.org"
-
-gem "sinatra"
-gem "sinatra-contrib" # for JSON support
-```
-
-Then, run `bundle install`.
-
-Create a basic server file (e.g., `app.rb`):
-
-```ruby
-require 'sinatra'
-require 'sinatra/json'
-
-get '/' do
-  'Hello, world!'
-end
-```
-
-You can run this with `bundle exec ruby app.rb`.
-
-## 2. Install MCP and mcp-ui Dependencies
-
-Next, add the Model Context Protocol gem and the `mcp_ui_server` gem to your `Gemfile`:
+Create a `Gemfile` with the necessary gems:
 
 ```ruby
 source "https://rubygems.org"
 
-gem "sinatra"
-gem "sinatra-contrib"
 gem "mcp", git: "https://github.com/modelcontextprotocol/ruby-sdk"
 gem "mcp_ui_server"
 ```
 
-Run `bundle install` again.
+The `mcp` gem is the core Model Context Protocol SDK, while `mcp_ui_server` provides helpers for creating UI resources.
 
-## 3. Create an MCP Tool
+Install the dependencies:
 
-In MCP, tools are classes that can be invoked by the client. For this example, we'll create a tool that returns a `UIResource`.
+```sh
+bundle install
+```
 
-Create a new file, `tools.rb`, and add the following code:
+Create an empty `server.rb` file. We will add code to it in the next steps.
+
+```sh
+touch server.rb
+```
+
+## 2. Create an MCP Tool
+
+In MCP, a "tool" is a class that can be invoked by a client. For this example, we'll create a tool that returns a `UIResource` containing an external URL.
+
+Add the following to your `server.rb`:
 
 ```ruby
 require 'mcp'
 require 'mcp_ui_server'
+require 'webrick'
+require 'json'
 
-class GreetTool < MCP::Tool
-  description 'A simple tool that returns a UI resource'
+class ExternalUrlTool < MCP::Tool
+  description 'A simple tool that returns an external URL resource'
   input_schema(
     type: 'object',
     properties: {}
   )
 
   def self.call(server_context:)
-    ui_resource = McpUiServer.create_ui_resource(
-      uri: 'ui://greeting',
+    ui_resource_object = McpUiServer.create_ui_resource(
+      uri: 'ui://my-external-site',
       content: { type: :external_url, iframeUrl: 'https://example.com' },
       encoding: :text
     )
 
-    MCP::Tool::Response.new([ui_resource])
+    MCP::Tool::Response.new([ui_resource_object])
   end
 end
 ```
+
+The `require 'mcp_ui_server'` line imports the mcp-ui library. The `ExternalUrlTool` is a standard MCP `Tool`, but it uses `McpUiServer.create_ui_resource` to return a `UIResource`, which is the primary integration point with `mcp-ui`. The following sections describe how to set up a standard MCP server and expose it over HTTP.
+
+## 3. Set Up the MCP Server
+
+Next, instantiate the MCP server and register the tool with it.
+
+Add this to `server.rb`:
+
+```ruby
+# --- MCP Server Setup ---
+mcp_server = MCP::Server.new(tools: [ExternalUrlTool])
+```
+
+## 4. Set Up an HTTP Server
+
+We'll use WEBrick to create a simple HTTP server to handle MCP requests.
+
+Add the following to `server.rb` to create an HTTP server that listens on port 8081 and handles requests at the `/mcp` endpoint:
+
+```ruby
+# --- WEBrick HTTP Server Setup ---
+http_server = WEBrick::HTTPServer.new(Port: 8081)
+
+# Create a servlet to handle requests to /mcp
+class MCPServlet < WEBrick::HTTPServlet::AbstractServlet
+  def initialize(server, mcp_instance)
+    super(server)
+    @mcp = mcp_instance
+  end
+
+  # Handle pre-flight CORS requests
+  def do_OPTIONS(_request, response)
+    response.status = 200
+    response['Access-Control-Allow-Origin'] = '*'
+    response['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+    response['Access-Control-Allow-Headers'] = 'Content-Type, Accept'
+  end
+
+  def do_POST(request, response)
+    response['Access-control-Allow-Origin'] = '*'
+    response.status = 200
+    response['Content-Type'] = 'application/json'
+    response.body = @mcp.handle_json(request.body)
+  end
+end
+
+# Mount the servlet at the /mcp endpoint
+http_server.mount('/mcp', MCPServlet, mcp_server)
+```
+
+The `MCPServlet` processes incoming `POST` requests, passes them to the MCP server instance, and returns the JSON response. It also handles CORS `OPTIONS` requests to allow cross-origin communication with a web client.
+
+## 5. Run the Server
+
+Finally, add the code to start the server.
+
+```ruby
+# Start the server and handle shutdown
+trap('INT') { http_server.shutdown }
+puts 'MCP server running on http://localhost:8081/mcp'
+http_server.start
+```
+
+Your `server.rb` is now complete. You can run it with:
+
+```sh
+ruby server.rb
+```
+
+The server will be available at `http://localhost:8081/mcp`.

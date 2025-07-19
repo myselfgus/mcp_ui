@@ -43,6 +43,8 @@ Next, add the Model Context Protocol SDK and the `mcp-ui` server package to your
 npm install @modelcontextprotocol/sdk @mcp-ui/server
 ```
 
+The `@modelcontextprotocol/sdk` package provides the core functionality for creating an MCP server, while `@mcp-ui/server` includes helpers specifically for creating UI resources.
+
 ## 3. Create an MCP Tool
 
 In MCP, tools are functions that the client can invoke. For this example, we'll create a tool that returns a `UIResource`.
@@ -80,7 +82,7 @@ export class GreetTool extends Tool {
 }
 ```
 
-This tool, when called, will generate a simple HTML UI resource.
+This tool, when called, will generate a simple HTML UI resource. The `import { createUIResource } from '@mcp-ui/server'` line imports the `mcp-ui` helper. The `GreetTool` is a standard MCP `Tool`, but it uses `createUIResource` to generate a `UIResource`, which is the primary integration point with `mcp-ui`. The following section describes how to set up a standard MCP server and expose it over HTTP.
 
 ## 4. Set up the MCP Server Handler
 

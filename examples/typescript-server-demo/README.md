@@ -19,5 +19,5 @@ pnpm dev
 
 The server will be available at `http://localhost:3000`.
 
-You can view the UI resources from this server by connecting to it with the [`ui-inspector`](https://github.com/idosal/ui-inspector) (target `http://localhost:3000/mcp`).
+You can view the UI resources from this server by connecting to it with the [`ui-inspector`](https://github.com/idosal/ui-inspector) (target `http://localhost:3000/mcp` with Streamable HTTP Transport Type).
 

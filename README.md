@@ -248,7 +248,7 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
 
 ## 🚶 Walkthrough
 
-For a detailed, dimple, step-by-step guide on how to integrate `mcp-ui` into your own server, check out the full server walkthroughs on the [mcp-ui documentation site](https://mcpui.dev):
+For a detailed, simple, step-by-step guide on how to integrate `mcp-ui` into your own server, check out the full server walkthroughs on the [mcp-ui documentation site](https://mcpui.dev):
 
 - **[TypeScript Server Walkthrough](https://mcpui.dev/guide/server/typescript/walkthrough)**
 - **[Ruby Server Walkthrough](https://mcpui.dev/guide/server/ruby/walkthrough)**

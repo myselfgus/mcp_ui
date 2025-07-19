@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/@mcp-ui/server"><img src="https://img.shields.io/npm/v/@mcp-ui/server?label=server&color=green" alt="Server Version"></a>
   <a href="https://www.npmjs.com/package/@mcp-ui/client"><img src="https://img.shields.io/npm/v/@mcp-ui/client?label=client&color=blue" alt="Client Version"></a>
-  <a href="https://rubygems.org/gems/mcp_ui_server"><img src="https://img.shields.io/gem/v/mcp_ui_server?label=ruby-server&color=red" alt="Ruby Server SDK Version"></a>
+  <a href="https://rubygems.org/gems/mcp_ui_server"><img src="https://img.shields.io/gem/v/mcp_ui_server" alt="Ruby Server SDK Version"></a>
   <a href="https://gitmcp.io/idosal/mcp-ui"><img src="https://img.shields.io/endpoint?url=https://gitmcp.io/badge/idosal/mcp-ui" alt="MCP Documentation"></a>
 </p>
 
@@ -15,7 +15,8 @@
   <a href="#-whats-mcp-ui">What's mcp-ui?</a> •
   <a href="#-core-concepts">Core Concepts</a> •
   <a href="#-installation">Installation</a> •
-  <a href="#-quickstart">Quickstart</a> •
+  <a href="#-getting-started">Getting Started</a> •
+  <a href="#-walkthrough">Walkthrough</a> •
   <a href="#-examples">Examples</a> •
   <a href="#-security">Security</a> •
   <a href="#-roadmap">Roadmap</a> •
@@ -105,7 +106,7 @@ Rendered using the internal `<HTMLResourceRenderer />` component, which displays
 
 Rendered using the internal `<RemoteDOMResourceRenderer />` component, which utilizes Shopify's [`remote-dom`](https://github.com/Shopify/remote-dom). The server responds with a script that describes the UI and events. On the host, the script is securely rendered in a sandboxed iframe, and the UI changes are communicated to the host in JSON, where they're rendered using the host's component library. This is more flexible than iframes and allows for UIs that match the host's look-and-feel.
 
-* **`mimeType`**: `application/vnd.mcp-ui.remote-dom+javascript; framework={react | webcomponents}`
+* **`mimeType`**: `application/vnd.mcp-ui.remote-dom; framework={react | webcomponents}`
 
 ### UI Action
 
@@ -132,7 +133,7 @@ yarn add @mcp-ui/server @mcp-ui/client
 gem install mcp_ui_server
 ```
 
-## 🎬 Quickstart
+## 🚀 Getting Started
 
 You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to `mcp-ui`'s latest documentation! 
 
@@ -245,21 +246,33 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
    )
    ```
 
+## 🚶 Walkthrough
+
+For a detailed, simple, step-by-step guide on how to integrate `mcp-ui` into your own server, check out the full server walkthroughs on the [mcp-ui documentation site](https://mcpui.dev):
+
+- **[TypeScript Server Walkthrough](https://mcpui.dev/guide/server/typescript/walkthrough)**
+- **[Ruby Server Walkthrough](https://mcpui.dev/guide/server/ruby/walkthrough)**
+
+These guides will show you how to add a `mcp-ui` endpoint to an existing server, create tools that return UI resources, and test your setup with the `ui-inspector`!
+
 ## 🌍 Examples
 
-**Client example**
+**Client Examples**
 * [ui-inspector](https://github.com/idosal/ui-inspector) - inspect local `mcp-ui`-enabled servers. 
 * [MCP-UI Chat](https://github.com/idosal/scira-mcp-ui-chat) - interactive chat built with the `mcp-ui` client. Check out the [hosted version](https://scira-mcp-chat-git-main-idosals-projects.vercel.app/)!
 * MCP-UI RemoteDOM Playground (`examples/remote-dom-demo`) - local demo app to test RemoteDOM resources (intended for hosts)
 
-**Server example**
-Try out the hosted app -
-* **HTTP Streaming**: `https://remote-mcp-server-authless.idosalomon.workers.dev/mcp`
-* **SSE**: `https://remote-mcp-server-authless.idosalomon.workers.dev/sse`
+**Server Examples**
+* **TypeScript**: A [full-featured server](examples/server) that is deployed to a hosted environment for easy testing.
+  * **[`typescript-server-demo`](./examples/typescript-server-demo)**: A simple Typescript server that demonstrates how to generate UI resources.
+  * **server**: A [full-featured Typescript server](examples/server) that is deployed to a hosted Cloudflare environment for easy testing.
+    * **HTTP Streaming**: `https://remote-mcp-server-authless.idosalomon.workers.dev/mcp`
+    * **SSE**: `https://remote-mcp-server-authless.idosalomon.workers.dev/sse`
+* **Ruby**: A barebones [demo server](/examples/ruby-server-demo) that shows how to use `mcp_ui_server` and `mcp` gems together.
 
-The app is deployed from `examples/server`.
+Drop those URLs into any MCP-compatible host to see `mcp-ui` in action. For a supported local inspector, see the [ui-inspector](https://github.com/idosal/ui-inspector).
 
-Drop those URLs into any MCP-compatible host to see `mcp-ui` in action.
+
 
 ## 🔒 Security
 Host and user security is one of `mcp-ui`'s primary concerns. In all content types, the remote code is executed in a sandboxed iframe.
