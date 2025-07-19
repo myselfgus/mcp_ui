@@ -100,7 +100,7 @@ jobs:
         run: pnpm test:ruby
 
   release_ts_client:
-    needs: [js_build_and_test]
+    needs: [js_build_and_test, filter_changed_paths]
     if: github.ref == 'refs/heads/main' && needs.filter_changed_paths.outputs.ts_client_files == 'true'
     runs-on: ubuntu-latest
     permissions:
@@ -126,8 +126,12 @@ jobs:
         run: npx semantic-release
 
   release_ts_server:
-    needs: [js_build_and_test]
-    if: github.ref == 'refs/heads/main' && needs.filter_changed_paths.outputs.ts_server_files == 'true'
+    needs: [js_build_and_test, release_ts_client, filter_changed_paths]
+    if: >
+      always() &&
+      github.ref == 'refs/heads/main' &&
+      needs.filter_changed_paths.outputs.ts_server_files == 'true' &&
+      needs.js_build_and_test.result == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -153,8 +157,12 @@ jobs:
 
   release_ruby_sdk:
     name: Release Ruby SDK
-    needs: [ruby_sdk_test]
-    if: github.ref == 'refs/heads/main' && needs.filter_changed_paths.outputs.ruby_sdk_files == 'true'
+    needs: [ruby_sdk_test, release_ts_server, filter_changed_paths]
+    if: >
+      always() &&
+      github.ref == 'refs/heads/main' &&
+      needs.filter_changed_paths.outputs.ruby_sdk_files == 'true' &&
+      needs.ruby_sdk_test.result == 'success'
     runs-on: ubuntu-latest
     environment: release
     permissions:
