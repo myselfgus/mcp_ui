@@ -60,4 +60,4 @@ http_server.mount('/mcp', MCPServlet, mcp_server)
 # Start the server and handle shutdown
 trap('INT') { http_server.shutdown }
 puts 'MCP server running on http://localhost:8081/mcp'
-http_server.start 
+http_server.start
