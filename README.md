@@ -247,19 +247,20 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
 
 ## 🌍 Examples
 
-**Client example**
+**Client Examples**
 * [ui-inspector](https://github.com/idosal/ui-inspector) - inspect local `mcp-ui`-enabled servers. 
 * [MCP-UI Chat](https://github.com/idosal/scira-mcp-ui-chat) - interactive chat built with the `mcp-ui` client. Check out the [hosted version](https://scira-mcp-chat-git-main-idosals-projects.vercel.app/)!
 * MCP-UI RemoteDOM Playground (`examples/remote-dom-demo`) - local demo app to test RemoteDOM resources (intended for hosts)
 
-**Server example**
-Try out the hosted app -
-* **HTTP Streaming**: `https://remote-mcp-server-authless.idosalomon.workers.dev/mcp`
-* **SSE**: `https://remote-mcp-server-authless.idosalomon.workers.dev/sse`
+**Server Examples**
+* **TypeScript**: A [full-featured server](examples/server) that is deployed to a hosted environment for easy testing.
+  * **HTTP Streaming**: `https://remote-mcp-server-authless.idosalomon.workers.dev/mcp`
+  * **SSE**: `https://remote-mcp-server-authless.idosalomon.workers.dev/sse`
+* **Ruby**: A barebones [demo server](/examples/ruby-server-demo) that shows how to use `mcp_ui_server` and `mcp` gems together.
 
-The app is deployed from `examples/server`.
+Drop those URLs into any MCP-compatible host to see `mcp-ui` in action. For a supported local inspector, see the [ui-inspector](https://github.com/idosal/ui-inspector).
 
-Drop those URLs into any MCP-compatible host to see `mcp-ui` in action.
+
 
 ## 🔒 Security
 Host and user security is one of `mcp-ui`'s primary concerns. In all content types, the remote code is executed in a sandboxed iframe.

@@ -2,6 +2,8 @@
 
 This page provides practical examples for using the `mcp_ui_server` gem.
 
+For a complete, runnable server implementation that demonstrates how to use these resources within an MCP tool, see the [Ruby Server Demo](/examples/ruby-server-demo/server.rb).
+
 ## Basic Setup
 
 First, ensure you have `mcp_ui_server` available in your project by adding it to your Gemfile and running `bundle install`.
