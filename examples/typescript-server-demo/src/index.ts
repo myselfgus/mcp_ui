@@ -54,8 +54,7 @@ app.post('/mcp', async (req, res) => {
     // Register our tool on the new server instance.
     server.registerTool('greet', {
       title: 'Greet',
-      description: 'Returns an example.com external URL resource.',
-      inputSchema: {},
+      description: 'Creates a UI resource displaying an external URL (example.com).',      inputSchema: {},
     }, async () => {
       // Create the UI resource to be returned to the client
       // This is the only MCP-UI specific code in this example
@@ -64,7 +63,7 @@ app.post('/mcp', async (req, res) => {
         content: { type: 'externalUrl', iframeUrl: 'https://example.com' },
         encoding: 'text',
       });
-      
+
       return {
         content: [uiResource],
       };
