@@ -14,11 +14,14 @@ hero:
       text: Get Started
       link: /guide/introduction
     - theme: alt
-      text: View on GitHub
+      text: GitHub
       link: https://github.com/idosal/mcp-ui
     - theme: alt
       text: Live Demo
       link: https://scira-mcp-chat-git-main-idosals-projects.vercel.app/
+    - theme: alt
+      text: About
+      link: /about
 
 features:
   - title: ⚛️ Client SDK
@@ -145,5 +148,15 @@ function MyApp({ mcpResource }) {
     width: 200px;
     text-align: center;
   }
+}
+
+a.VPButton.medium[href="/about"] {
+  background-color: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-1);
+}
+
+a.VPButton.medium[href="/about"]:hover {
+  background-color: var(--vp-c-bg-mute);
 }
 </style>

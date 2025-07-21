@@ -129,6 +129,7 @@ dist
 
 # VitePress
 docs/src/.vitepress/dist
+docs/.vitepress/cache
 docs/src/.vitepress/cache
 
 # Monorepo specific

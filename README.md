@@ -290,6 +290,9 @@ Host and user security is one of `mcp-ui`'s primary concerns. In all content typ
 - [ ] Add declarative UI content type
 - [ ] Support generative UI?
       
+## Core Team
+`mcp-ui` is a project by [Ido Salomon](https://x.com/idosal1), in collaboration with [Liad Yosef](https://x.com/liadyosef).
+
 ## 🤝 Contributing
 
 Contributions, ideas, and bug reports are welcome! See the [contribution guidelines](https://github.com/idosal/mcp-ui/blob/main/.github/CONTRIBUTING.md) to get started.
