@@ -57,17 +57,15 @@ export const HTMLResourceRenderer = ({
       if (iframeRenderData) {
         const iframeWindow = event.currentTarget.contentWindow;
         const iframeOrigin = iframeSrcToRender ? new URL(iframeSrcToRender).origin : '*';
-        setTimeout(() => {
-          postToFrame(
-            InternalMessageType.UI_LIFECYCLE_IFRAME_RENDER_DATA,
-            iframeWindow,
-            iframeOrigin,
-            undefined,
-            {
-              renderData: iframeRenderData,
-            },
-          );
-        }, 0);
+        postToFrame(
+          InternalMessageType.UI_LIFECYCLE_IFRAME_RENDER_DATA,
+          iframeWindow,
+          iframeOrigin,
+          undefined,
+          {
+            renderData: iframeRenderData,
+          },
+        );
       }
       iframeProps?.onLoad?.(event);
     },
