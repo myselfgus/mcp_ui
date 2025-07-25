@@ -344,6 +344,19 @@ describe('HTMLResource iframe communication', () => {
     expect(ref.current).toBeInTheDocument();
     expect(ref.current?.src).toContain(`${ReservedUrlParams.WAIT_FOR_RENDER_DATA}=true`);
   });
+
+  it('shouldnt hang the query param if there is no render data', async () => {
+    const resource = {
+      mimeType: 'text/uri-list',
+      text: 'https://example.com/app',
+    };
+    const ref = React.createRef<HTMLIFrameElement>();
+    render(
+      <HTMLResourceRenderer resource={resource} iframeProps={{ ref }} iframeRenderData={undefined} />,
+    );
+    expect(ref.current).toBeInTheDocument();
+    expect(ref.current?.src).not.toContain(`${ReservedUrlParams.WAIT_FOR_RENDER_DATA}=true`);
+  });
 });
 
 // Helper to dispatch a message event
