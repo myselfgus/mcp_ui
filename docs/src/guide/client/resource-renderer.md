@@ -172,28 +172,27 @@ Inside the iframe, you can listen for this data:
 // If the iframe needs to do async work, it can tell the parent when it's ready
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('waitForRenderData') === 'true') {
-  let renderData = null;
+  let customRenderData = null;
 
   // The parent will send this message on load or when we notify it we're ready
   window.addEventListener('message', (event) => {
     // Add origin checks for security
     if (event.data.type === 'ui-lifecycle-iframe-render-data') {
       // If the iframe has already received data, we don't need to do anything
-      if(renderData) {
+      if(customRenderData) {
         return;
       } else {
-        renderData = event.data.payload.renderData;
+        customRenderData = event.data.payload.renderData;
         // Now you can render the UI with the received data
         renderUI(renderData);
-        showUI();
       }
     }
   });
   // We can let the parent know we're ready to receive data
   window.parent.postMessage({ type: 'ui-lifecycle-iframe-ready' }, '*');
 } else {
-  // If the iframe doesn't need to wait for data, we can show the UI immediately
-  showUI();
+  // If the iframe doesn't need to wait for data, we can render the default UI immediately
+  renderUI();
 }
 ```
 
