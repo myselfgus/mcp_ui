@@ -69,7 +69,7 @@ export const HTMLResourceRenderer = ({
       }
       iframeProps?.onLoad?.(event);
     },
-    [iframeRenderData],
+    [iframeRenderData, iframeSrcToRender, iframeProps?.onLoad],
   );
 
   useEffect(() => {
