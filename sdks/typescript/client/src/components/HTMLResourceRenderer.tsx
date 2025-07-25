@@ -19,8 +19,8 @@ const InternalMessageType = {
   UI_ACTION_RESPONSE: 'ui-action-response',
   UI_ACTION_ERROR: 'ui-action-error',
 
-  UI_LIFECYCLE_FRAME_READY: 'ui-lifecycle-frame-ready',
-  UI_LIFECYCLE_FRAME_RENDER_DATA: 'ui-lifecycle-frame-render-data',
+  UI_LIFECYCLE_IFRAME_READY: 'ui-lifecycle-iframe-ready',
+  UI_LIFECYCLE_IFRAME_RENDER_DATA: 'ui-lifecycle-iframe-render-data',
 } as const;
 
 export const ReservedUrlParams = {
@@ -59,7 +59,7 @@ export const HTMLResourceRenderer = ({
         const iframeOrigin = iframeSrcToRender ? new URL(iframeSrcToRender).origin : '*';
         setTimeout(() => {
           postToFrame(
-            InternalMessageType.UI_LIFECYCLE_FRAME_RENDER_DATA,
+            InternalMessageType.UI_LIFECYCLE_IFRAME_RENDER_DATA,
             iframeWindow,
             iframeOrigin,
             undefined,
@@ -80,9 +80,9 @@ export const HTMLResourceRenderer = ({
       // Only process the message if it came from this specific iframe
       if (iframeRef.current && source === iframeRef.current.contentWindow) {
         // if the iframe is ready, send the render data to the iframe
-        if (data?.type === InternalMessageType.UI_LIFECYCLE_FRAME_READY && iframeRenderData) {
+        if (data?.type === InternalMessageType.UI_LIFECYCLE_IFRAME_READY && iframeRenderData) {
           postToFrame(
-            InternalMessageType.UI_LIFECYCLE_FRAME_RENDER_DATA,
+            InternalMessageType.UI_LIFECYCLE_IFRAME_RENDER_DATA,
             source,
             origin,
             undefined,
