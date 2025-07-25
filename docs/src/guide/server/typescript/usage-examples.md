@@ -137,6 +137,7 @@ console.log('Resource 5:', JSON.stringify(resource5, null, 2));
 
 // These resource objects would then be included in the 'content' array
 // of a toolResult in an MCP interaction.
+```
 
 ## Advanced URI List Example
 
