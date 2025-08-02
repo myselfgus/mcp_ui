@@ -31,12 +31,12 @@ export const UIResourceRendererWCWrapper: FC<UIResourceRendererWCProps> = (props
         remoteDomProps: rawRemoteDomProps,
     } = props;
 
-    const resource = normalizeJsonProp(rawResource);
+    const resource = normalizeJsonProp(rawResource) as Partial<Resource> | undefined;
     const supportedContentTypes = normalizeJsonProp(rawSupportedContentTypes) as ResourceContentType[] | undefined;
     const htmlProps = normalizeJsonProp(rawHtmlProps);
     const remoteDomProps = normalizeJsonProp(rawRemoteDomProps);
 
-    const ref = useRef<HTMLElement>(null);
+    const ref = useRef<HTMLDivElement>(null);
 
     const onUIActionCallback = useCallback(async (event: UIActionResult): Promise<void> => {
         if (ref.current) {
@@ -54,7 +54,7 @@ export const UIResourceRendererWCWrapper: FC<UIResourceRendererWCProps> = (props
     }
     
     return (
-        <div ref={ref as React.RefObject<HTMLDivElement>}>
+        <div ref={ref}>
             <UIResourceRenderer
                 resource={resource}
                 supportedContentTypes={supportedContentTypes}
