@@ -239,18 +239,15 @@ div[class*='language-'] code {
 }
 
 /* Enhanced navigation */
-.VPNav {
+.VPNavBar {
   backdrop-filter: blur(12px);
   background: rgba(255, 255, 255, 0.85);
   border-bottom: 1px solid var(--vp-c-divider);
-}
-
-.dark .VPNav {
-  background: rgba(26, 26, 26, 0.85);
-}
-
-.VPNavBar {
   box-shadow: var(--vp-shadow-1);
+}
+
+.dark .VPNavBar {
+  background: rgba(26, 26, 26, 0.85);
 }
 
 /* Enhanced sidebar */
