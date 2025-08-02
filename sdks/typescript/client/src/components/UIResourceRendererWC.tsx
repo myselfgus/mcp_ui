@@ -66,11 +66,15 @@ export const UIResourceRendererWCWrapper: FC<UIResourceRendererWCProps> = (props
     );
 };
 
+
 customElements.define('ui-resource-renderer', r2wc(UIResourceRendererWCWrapper, {
     props: {
         resource: 'json',
         supportedContentTypes: 'json',
         htmlProps: 'json',
-        remoteDomProps: 'json'
+        remoteDomProps: 'json',
+        /* `onUIAction` is intentionally omitted as the WC implements its own event dispatching mechanism for UI actions
+         * Consumers should listen for the `onUIAction` CustomEvent on the element instead of passing an `onUIAction` prop.
+         */
     }
 }));
