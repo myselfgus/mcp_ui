@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import r2wc from '@r2wc/react-to-web-component';
 import { UIResourceRenderer, type UIResourceRendererProps } from './UIResourceRenderer';
-import React, { useCallback, useRef } from 'react';
+import { FC, useCallback, useRef } from 'react';
 
-// Using 'any' as a workaround for the persistent module resolution issue.
 type Resource = any;
 
-type UIResourceWCProps = Omit<UIResourceRendererProps, 'resource' | 'onUIAction'> & {
+type UIResourceRendererWCProps = Omit<UIResourceRendererProps, 'resource' | 'onUIAction'> & {
     resource?: Resource | string;
 };
 
@@ -25,7 +24,7 @@ function parseJsonProp(prop: any): any {
     return prop;
 }
 
-export const UIResourceWCWrapper: React.FC<UIResourceWCProps> = (props) => {
+export const UIResourceRendererWCWrapper: FC<UIResourceRendererWCProps> = (props) => {
     const {
         resource: rawResource,
         supportedContentTypes: rawSupportedContentTypes,
@@ -56,7 +55,7 @@ export const UIResourceWCWrapper: React.FC<UIResourceWCProps> = (props) => {
     }
     
     return (
-        <div ref={ref as any}>
+        <div ref={ref as React.RefObject<HTMLDivElement>}>
             <UIResourceRenderer
                 resource={resource}
                 supportedContentTypes={supportedContentTypes}
@@ -68,7 +67,7 @@ export const UIResourceWCWrapper: React.FC<UIResourceWCProps> = (props) => {
     );
 };
 
-customElements.define('ui-resource-renderer', r2wc(UIResourceWCWrapper, {
+customElements.define('ui-resource-renderer', r2wc(UIResourceRendererWCWrapper, {
     props: {
         resource: 'json',
         supportedContentTypes: 'json',

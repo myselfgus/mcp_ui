@@ -7,7 +7,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     lib: {
-      entry: path.resolve(__dirname, 'src/components/UIResourceWC.tsx'),
+      entry: path.resolve(__dirname, 'src/components/UIResourceRendererWC.tsx'),
       name: 'McpUiClientWC',
       formats: ['es'],
       fileName: () => 'ui-resource-renderer.wc.js',

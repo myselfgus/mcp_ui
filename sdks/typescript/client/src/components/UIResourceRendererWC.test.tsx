@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, waitFor, cleanup, act } from '@testing-library/react';
 import React from 'react';
-import './UIResourceWC';
+import './UIResourceRendererWC';
 import { UIResourceRenderer } from './UIResourceRenderer';
 
 // Mock the underlying renderer to control the onUIAction callback
@@ -17,7 +17,7 @@ vi.mock('./UIResourceRenderer', () => ({
 }));
 
 
-describe('UIResourceWC', () => {
+describe('UIResourceRendererWC', () => {
   const resource = {
     mimeType: 'text/html',
     text: '<h1>Hello, World!</h1>',
