@@ -4,12 +4,13 @@ import React from 'react';
 import './UIResourceRendererWC';
 import { UIResourceRenderer } from './UIResourceRenderer';
 
+let triggerUIAction: (event: unknown) => void;
+
 // Mock the underlying renderer to control the onUIAction callback
 vi.mock('./UIResourceRenderer', () => ({
   UIResourceRenderer: vi.fn((props) => {
     // This mock simulates the renderer and allows us to trigger the action
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (globalThis as any).triggerUIAction = (event: unknown) => props.onUIAction?.(event);
+    triggerUIAction = (event: unknown) => props.onUIAction?.(event);
     return (
       <iframe title="MCP HTML Resource (Embedded Content)" srcDoc={props.resource?.text || ''} />
     );
@@ -27,8 +28,6 @@ describe('UIResourceRendererWC', () => {
     cleanup();
     document.body.innerHTML = '';
     vi.clearAllMocks();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    delete (globalThis as any).triggerUIAction;
   });
 
   it('should register the custom element', () => {
@@ -78,10 +77,8 @@ describe('UIResourceRendererWC', () => {
 
     const mockEventPayload = { type: 'testAction', payload: { data: '123' } };
 
-    // Use the global function exposed by our mock to trigger the action
     await act(async () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (globalThis as any).triggerUIAction(mockEventPayload);
+      triggerUIAction(mockEventPayload);
     });
     
     expect(onUIAction).toHaveBeenCalled();

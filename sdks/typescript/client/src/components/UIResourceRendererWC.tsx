@@ -17,7 +17,7 @@ function normalizeJsonProp(prop: unknown): Record<string, unknown> | undefined {
       try {
         return JSON.parse(prop);
       } catch (e) {
-        console.error('Failed to parse JSON prop:', prop);
+        console.error(`Failed to parse JSON prop:`, prop);
         return undefined;
       }
     }
@@ -31,8 +31,8 @@ export const UIResourceRendererWCWrapper: FC<UIResourceRendererWCProps> = (props
         remoteDomProps: rawRemoteDomProps,
     } = props;
 
-    const resource = normalizeJsonProp(rawResource) as Partial<Resource> | undefined;
-    const supportedContentTypes = normalizeJsonProp(rawSupportedContentTypes) as ResourceContentType[] | undefined;
+    const resource = normalizeJsonProp(rawResource);
+    const supportedContentTypes = normalizeJsonProp(rawSupportedContentTypes);
     const htmlProps = normalizeJsonProp(rawHtmlProps);
     const remoteDomProps = normalizeJsonProp(rawRemoteDomProps);
 
