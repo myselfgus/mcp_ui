@@ -9,7 +9,7 @@ type UIResourceRendererWCProps = Omit<UIResourceRendererProps, 'resource' | 'onU
     resource?: Resource | string;
 };
 
-function parseJsonProp(prop: any): any {
+function normalizeJsonProp(prop: any): any {
     if (typeof prop === 'object' && prop !== null) {
         return prop;
     }
@@ -32,10 +32,10 @@ export const UIResourceRendererWCWrapper: FC<UIResourceRendererWCProps> = (props
         remoteDomProps: rawRemoteDomProps,
     } = props;
 
-    const resource = parseJsonProp(rawResource);
-    const supportedContentTypes = parseJsonProp(rawSupportedContentTypes);
-    const htmlProps = parseJsonProp(rawHtmlProps);
-    const remoteDomProps = parseJsonProp(rawRemoteDomProps);
+    const resource = normalizeJsonProp(rawResource);
+    const supportedContentTypes = normalizeJsonProp(rawSupportedContentTypes);
+    const htmlProps = normalizeJsonProp(rawHtmlProps);
+    const remoteDomProps = normalizeJsonProp(rawRemoteDomProps);
 
     const ref = useRef<HTMLElement>(null);
 
