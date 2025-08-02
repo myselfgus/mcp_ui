@@ -73,7 +73,7 @@ See [Client SDK Usage & Examples](./usage-examples.md) for examples using the re
 ## Auto-Resizing the Iframe
 
 To make the iframe auto-resize, two things need to happen:
-1. The `autoResizeIframe` prop must be set on the `<HTMLResourceRenderer />` (or passed via `htmlProps` to `<UIResourceRenderer />`).
+1. The `autoResizeIframe` prop must be set in `htmlProps`when rendering `<UIResourceRenderer />`).
 2. The content inside the iframe must send a `ui-size-change` message to the parent window when its size changes.
 
 The payload of the message should be an object with `width` and/or `height` properties.
