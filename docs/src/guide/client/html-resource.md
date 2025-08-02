@@ -68,7 +68,7 @@ By default, the iframe stretches to 100% width and is at least 200px tall. You c
 
 ## Example Usage
 
-See [Client SDK Usage & Examples](./usage-examples.md) for examples using the recommended `<UIResourceRenderer />` component.
+See [Client SDK Usage & Examples](./react-usage-examples.md) for examples using the recommended `<UIResourceRenderer />` component.
 
 ## Auto-Resizing the Iframe
 

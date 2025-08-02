@@ -11,7 +11,7 @@ You can use [GitMCP](https://gitmcp.io/idosal/mcp-ui) to give your IDE access to
 
 MCP-UI provides SDKs for multiple languages, including:
 
-- **`@mcp-ui/client`**: A Typescript package with UI components (like `<UIResourceRenderer />`) for easy rendering of interactive UI.
+- **`@mcp-ui/client`**: A Typescript package with UI components for easy rendering of interactive UI. It includes a React component (`<UIResourceRenderer />`) and a standard Web Component (`<ui-resource-renderer>`).
 - **`@mcp-ui/server`**: A Typescript package with helper functions (like `createUIResource`) for server-side logic to easily construct `UIResource` objects.
 - **`mcp_ui_server`**: A Ruby gem with helper methods (like `create_ui_resource`) for server-side logic in Ruby applications.
 
@@ -46,7 +46,7 @@ interface UIResource {
 ## How It Works
 
 1. **Server Side**: Use the server SDK for your language to create `UIResource` objects.
-2. **Client Side**: Use `@mcp-ui/client` to render these resources in your React app.
+2. **Client Side**: Use `@mcp-ui/client` to render these resources in your frontend application.
 
 ### Example Flow
 
@@ -81,8 +81,10 @@ resource = McpUiServer.create_ui_resource(
 
 :::
 
-**Client (React App):**
-```tsx
+**Client (Frontend App):**
+::: code-group
+
+```tsx [React]
 import { UIResourceRenderer } from '@mcp-ui/client';
 
 function App({ mcpResponse }) {
@@ -102,6 +104,36 @@ function App({ mcpResponse }) {
   );
 }
 ```
+
+```html [Web Component]
+<!-- index.html -->
+<ui-resource-renderer id="resource-renderer"></ui-resource-renderer>
+
+<!-- main.js -->
+<script type="module">
+  // 1. Import the script to register the component
+  import '@mcp-ui/client/ui-resource-renderer.wc.js';
+
+  // 2. This object would come from your MCP response
+  const mcpResource = {
+    resource: {
+      uri: 'ui://user-form/1',
+      mimeType: 'text/uri-list',
+      text: 'https://example.com'
+    }
+  };
+
+  // 3. Get the element and pass data
+  const renderer = document.getElementById('resource-renderer');
+  renderer.resource = mcpResource.resource;
+
+  // 4. Listen for events
+  renderer.addEventListener('onUIAction', (event) => {
+    console.log('User action:', event.detail);
+  });
+</script>
+```
+:::
 
 ## Key Benefits
 

@@ -242,7 +242,8 @@ All resource types are handled automatically by `<UIResourceRenderer />`.
   - [TypeScript SDK Usage & Examples](./server/typescript/usage-examples.md)
   - [Ruby SDK Usage & Examples](./server/ruby/usage-examples.md)
 - **Client SDK**: Learn how to render resources.
-  - [Client SDK Usage & Examples](./client/usage-examples.md)
+  - [React Usage & Examples](./client/react-usage-examples.md)
+- [Web Component Usage & Examples](./client/wc-usage-examples.md)
 - **Protocol & Components**:
   - [Protocol Details](./protocol-details.md)
   - [UIResourceRenderer Component](./client/resource-renderer.md)

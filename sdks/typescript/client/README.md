@@ -73,6 +73,10 @@ interface UIResource {
 
 The UI Resource is rendered in the `<UIResourceRenderer />` component. It automatically detects the resource type and renders the appropriate component.
 
+It is available as a React component and as a Web Component.
+
+**React Component**
+
 It accepts the following props:
 - **`resource`**: The resource object from an MCP Tool response. It must include `uri`, `mimeType`, and content (`text`, `blob`)
 - **`onUIAction`**: Optional callback for handling UI actions from the resource:
@@ -91,6 +95,27 @@ It accepts the following props:
 - **`remoteDomProps`**: Optional props for the internal `<RemoteDOMResourceRenderer>`
   - **`library`**: Optional component library for Remote DOM resources (defaults to `basicComponentLibrary`)
   - **`remoteElements`**: remote element definitions for Remote DOM resources.
+
+**Web Component**
+
+The Web Component is available as `<ui-resource-renderer>`. It accepts the same props as the React component, but they must be passed as strings.
+
+Example:
+```html
+<ui-resource-renderer
+  resource='{ "mimeType": "text/html", "text": "<h2>Hello from the Web Component!</h2>" }'
+></ui-resource-renderer>
+```
+
+The `onUIAction` prop can be handled by attaching an event listener to the component:
+```javascript
+const renderer = document.querySelector('ui-resource-renderer');
+renderer.addEventListener('onUIAction', (event) => {
+  console.log('Action:', event.detail);
+});
+```
+
+The Web Component is available in the `@mcp-ui/client` package at `dist/ui-resource-renderer.wc.js`.
 
 ### Supported Resource Types
 

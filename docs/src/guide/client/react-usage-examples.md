@@ -1,6 +1,6 @@
-# @mcp-ui/client Usage & Examples
+# React Usage & Examples
 
-Here's how to use the `<UIResourceRenderer />` component from `@mcp-ui/client`.
+Here's how to use the `<UIResourceRenderer />` component from `@mcp-ui/client` in a React environment.
 
 ## Installation
 

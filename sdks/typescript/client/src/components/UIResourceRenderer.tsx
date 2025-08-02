@@ -4,7 +4,7 @@ import { HTMLResourceRenderer, HTMLResourceRendererProps } from './HTMLResourceR
 import { RemoteDOMResourceProps, RemoteDOMResourceRenderer } from './RemoteDOMResourceRenderer';
 import { basicComponentLibrary } from '../remote-dom/component-libraries/basic';
 
-type UIResourceRendererProps = {
+export type UIResourceRendererProps = {
   resource: Partial<Resource>;
   onUIAction?: (result: UIActionResult) => Promise<unknown>;
   supportedContentTypes?: ResourceContentType[];

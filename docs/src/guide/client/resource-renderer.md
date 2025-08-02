@@ -1,6 +1,17 @@
 # UIResourceRenderer Component
 
-The `<UIResourceRenderer />` component is the **main entry point** for rendering MCP-UI resources in your React application. It automatically detects the resource type and renders the appropriate component internally.
+The `UIResourceRenderer` component is the **main entry point** for rendering MCP-UI resources in your application. It automatically detects the resource type and renders the appropriate component internally.
+It is available as a React component and as a Web Component.
+
+## React Component
+
+React applications may use the `<UIResourceRenderer />` component.
+
+## Web Component
+
+For developers using frameworks other than React, a Web Component version is available. It can be used as a standard HTML element (`<ui-resource-renderer>`) and styled with regular CSS.
+
+[**» See the Web Component Usage & Examples for more details**](./wc-usage-examples.md)
 
 ## Why use `UIResourceRenderer`?
 
@@ -348,4 +359,4 @@ const customLibrary: ComponentLibrary = {
 
 ## Examples
 
-See [Client SDK Usage & Examples](./usage-examples.md) for complete working examples.
+See [Client SDK Usage & Examples](./react-usage-examples.md) for complete working examples.

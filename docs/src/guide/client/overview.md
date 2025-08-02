@@ -29,4 +29,5 @@ See the following pages for more details:
 - [UIResourceRenderer Component](./resource-renderer.md) - **Main entry point**
 - [HTMLResourceRenderer Component](./html-resource.md)
 - [RemoteDOMResourceRenderer Component](./remote-dom-resource.md)
-- [Client SDK Usage & Examples](./usage-examples.md)
+- [React Usage & Examples](./react-usage-examples.md)
+- [Web Component Usage & Examples](./wc-usage-examples.md)

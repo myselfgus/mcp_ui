@@ -25,7 +25,7 @@ hero:
 
 features:
   - title: ⚛️ Client SDK
-    details: React components and hooks for seamless frontend integration. Render interactive UI resources with the UIResourceRenderer component and handle UI actions effortlessly.
+    details: Provides a React component and Web Component for easy frontend integration. Render interactive UI resources and handle UI actions effortlessly.
   - title: 🛠️ Server SDKs
     details: Powerful utilities to construct interactive UI for MCP servers. Create HTML, React, Web Components, and external app UI with ergonomic APIs for Typescript and Ruby.
   - title: 🔒 Secure
@@ -80,9 +80,11 @@ interactive_form = McpUiServer.create_ui_resource(
 
 **Client Side** - Render on the host with a single component:
 
-```tsx
+::: code-group
+```tsx [React]
 import { UIResourceRenderer } from '@mcp-ui/client';
 
+// `mcpResource` would come from your MCP response
 function MyApp({ mcpResource }) {
   return (
     <UIResourceRenderer
@@ -94,6 +96,36 @@ function MyApp({ mcpResource }) {
   );
 }
 ```
+
+```html [Web Component / HTML]
+<!-- index.html -->
+<ui-resource-renderer id="resource-renderer"></ui-resource-renderer>
+
+<!-- main.js -->
+<script type="module">
+  // 1. Import the script to register the component
+  import '@mcp-ui/client/ui-resource-renderer.wc.js';
+
+  // 2. This object would come from your MCP response
+  const mcpResource = {
+    resource: {
+      uri: 'ui://user-form/1',
+      mimeType: 'text/uri-list',
+      text: 'https://example.com'
+    }
+  };
+
+  // 3. Get the element and pass data
+  const renderer = document.getElementById('resource-renderer');
+  renderer.setAttribute('resource', JSON.stringify(mcpResource.resource));
+
+  // 4. Listen for events
+  renderer.addEventListener('onUIAction', (event) => {
+    console.log('User action:', event.detail);
+  });
+</script>
+```
+:::
 
 
 <style>
