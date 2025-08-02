@@ -1,17 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import r2wc from '@r2wc/react-to-web-component';
 import { UIResourceRenderer, type UIResourceRendererProps } from './UIResourceRenderer';
 import { FC, useCallback, useRef } from 'react';
+import { UIActionResult, ResourceContentType } from '../types';
+import { Resource } from '@modelcontextprotocol/sdk/types.js';
 
-type Resource = any;
 
 type UIResourceRendererWCProps = Omit<UIResourceRendererProps, 'resource' | 'onUIAction'> & {
     resource?: Resource | string;
 };
 
-function normalizeJsonProp(prop: any): any {
+function normalizeJsonProp(prop: unknown): Record<string, unknown> | undefined {
     if (typeof prop === 'object' && prop !== null) {
-        return prop;
+        return prop as Record<string, unknown>;
     }
     if (typeof prop === 'string' && prop.trim() !== '') {
       try {
@@ -21,7 +21,6 @@ function normalizeJsonProp(prop: any): any {
         return undefined;
       }
     }
-    return prop;
 }
 
 export const UIResourceRendererWCWrapper: FC<UIResourceRendererWCProps> = (props) => {
@@ -33,13 +32,13 @@ export const UIResourceRendererWCWrapper: FC<UIResourceRendererWCProps> = (props
     } = props;
 
     const resource = normalizeJsonProp(rawResource);
-    const supportedContentTypes = normalizeJsonProp(rawSupportedContentTypes);
+    const supportedContentTypes = normalizeJsonProp(rawSupportedContentTypes) as ResourceContentType[] | undefined;
     const htmlProps = normalizeJsonProp(rawHtmlProps);
     const remoteDomProps = normalizeJsonProp(rawRemoteDomProps);
 
     const ref = useRef<HTMLElement>(null);
 
-    const onUIActionCallback = useCallback(async (event: any): Promise<void> => {
+    const onUIActionCallback = useCallback(async (event: UIActionResult): Promise<void> => {
         if (ref.current) {
             const customEvent = new CustomEvent('onUIAction', { 
                 detail: event,
