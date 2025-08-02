@@ -51,6 +51,7 @@ interface UIResourceRendererProps {
   - **`iframeProps`**: Optional props passed to iframe elements (for HTML/URL resources)
     - **`ref`**: Optional React ref to access the underlying iframe element
   - **`iframeRenderData`**: Optional `Record<string, unknown>` to pass data to the iframe upon rendering. This enables advanced use cases where the parent application needs to provide initial state or configuration to the sandboxed iframe content.
+  - **`autoResizeIframe`**: Optional `boolean | { width?: boolean; height?: boolean }` to automatically resize the iframe to the size of the content.
 - **`remoteDomProps`**: Optional props for the `<RemoteDOMResourceRenderer>`
   - **`library`**: Optional component library for Remote DOM resources (defaults to `basicComponentLibrary`)
   - **`remoteElements`**: Optional remote element definitions for Remote DOM resources. REQUIRED for Remote DOM snippets.
@@ -195,6 +196,49 @@ if (urlParams.get('waitForRenderData') === 'true') {
   renderUI();
 }
 ```
+
+### Automatically Resizing the Iframe
+
+The `autoResizeIframe` prop allows you to automatically resize the iframe to the size of the content.
+
+```tsx
+<UIResourceRenderer
+  resource={mcpResource.resource}
+  htmlProps={{
+    autoResizeIframe: true,
+  }}
+  onUIAction={handleUIAction}
+/>
+```
+
+The `autoResizeIframe` prop can be a boolean or an object with the following properties:
+
+- **`width`**: Optional boolean to automatically resize the iframe's width to the size of the content.
+- **`height`**: Optional boolean to automatically resize the iframe's height to the size of the content.
+
+If `autoResizeIframe` is a boolean, the iframe will be resized to the size of the content.
+
+Inside the iframe, you can listen for the `ui-size-change` message and resize the iframe to the size of the content.
+
+```javascript
+const resizeObserver = new ResizeObserver((entries) => {
+  entries.forEach((entry) => {
+    window.parent.postMessage(
+      {
+        type: "ui-size-change",
+        payload: {
+          height: entry.contentRect.height,
+        },
+      },
+      "*",
+    );
+  });
+});
+
+resizeObserver.observe(document.documentElement)
+```
+
+See [Automatically Resizing the Iframe](./html-resource.md#automatically-resizing-the-iframe) for a more detailed example.
 
 ### Accessing the Iframe Element
 
