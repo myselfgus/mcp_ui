@@ -154,7 +154,7 @@ export const HTMLResourceRenderer = ({
       <iframe
         srcDoc={htmlString}
         sandbox="allow-scripts"
-        style={{ width: '100%', minHeight: 200, ...style }}
+        style={{ width: '100%', height: '100%', ...style }}
         title="MCP HTML Resource (Embedded Content)"
         {...iframeProps}
         ref={iframeRef}
@@ -173,7 +173,7 @@ export const HTMLResourceRenderer = ({
       <iframe
         src={iframeSrcToRender}
         sandbox="allow-scripts allow-same-origin"
-        style={{ width: '100%', minHeight: 200, ...style }}
+        style={{ width: '100%', height: '100%', ...style }}
         title="MCP HTML Resource (URL)"
         {...iframeProps}
         ref={iframeRef}
