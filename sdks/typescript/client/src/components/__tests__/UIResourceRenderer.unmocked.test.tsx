@@ -49,7 +49,7 @@ describe('UIResourceRenderer', () => {
       payload: { width: 100, height: 100 },
     });
     expect(ref.current?.style.width).toBe('100px');
-    expect(ref.current?.style.height).toBe('');
+    expect(ref.current?.style.height).toBe('100%');
   });
 });
 
