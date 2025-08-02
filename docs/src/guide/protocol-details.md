@@ -142,7 +142,7 @@ For iframe content that needs to handle asynchronous responses, you can include 
    ```javascript
    // The iframe receives this message back
    {
-     type: 'ui-action-received',
+     type: 'ui-message-received',
      messageId: 'unique-request-id-123',
    }
    ```
@@ -151,7 +151,7 @@ For iframe content that needs to handle asynchronous responses, you can include 
    ```javascript
    // The iframe receives the actual response
    {
-     type: 'ui-action-response',
+     type: 'ui-message-response',
      messageId: 'unique-request-id-123',
      payload: {
        response: { /* the result from onUIAction */ }
@@ -163,7 +163,7 @@ For iframe content that needs to handle asynchronous responses, you can include 
    ```javascript
    // The iframe receives the error
    {
-     type: 'ui-action-error',
+     type: 'ui-message-response',
      messageId: 'unique-request-id-123',
      payload: {
        error: { /* the error object */ }
@@ -223,19 +223,19 @@ For iframe content that needs to handle asynchronous responses, you can include 
     const request = pendingRequests.get(message.messageId);
     
     switch (message.type) {
-      case 'ui-action-received':
+      case 'ui-message-received':
         statusEl.textContent = 'Request acknowledged, processing...';
         break;
         
-      case 'ui-action-response':
+      case 'ui-message-response':
+        if (message.payload.error) {
+          statusEl.textContent = 'Error occurred!';
+          resultEl.innerHTML = `<div style="color: red;">Error: ${JSON.stringify(message.payload.error)}</div>`;
+          pendingRequests.delete(message.messageId);
+          break;
+        }
         statusEl.textContent = 'Completed successfully!';
         resultEl.innerHTML = `<pre>${JSON.stringify(message.payload.response, null, 2)}</pre>`;
-        pendingRequests.delete(message.messageId);
-        break;
-        
-      case 'ui-action-error':
-        statusEl.textContent = 'Error occurred!';
-        resultEl.innerHTML = `<div style="color: red;">Error: ${JSON.stringify(message.payload.error)}</div>`;
         pendingRequests.delete(message.messageId);
         break;
     }
@@ -247,9 +247,8 @@ For iframe content that needs to handle asynchronous responses, you can include 
 
 The following internal message types are available as constants:
 
-- `InternalMessageType.UI_ACTION_RECEIVED` (`'ui-action-received'`)
-- `InternalMessageType.UI_ACTION_RESPONSE` (`'ui-action-response'`)  
-- `InternalMessageType.UI_ACTION_ERROR` (`'ui-action-error'`)
+- `InternalMessageType.UI_MESSAGE_RECEIVED` (`'ui-message-received'`)
+- `InternalMessageType.UI_MESSAGE_RESPONSE` (`'ui-message-response'`)
 
 These types are exported from both `@mcp-ui/client` and `@mcp-ui/server` packages.
 

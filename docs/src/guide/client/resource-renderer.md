@@ -43,7 +43,7 @@ interface UIResourceRendererProps {
   { type: 'link', payload: { url: string }, messageId?: string }
   ```
   
-  **Asynchronous Communication**: When actions include a `messageId`, the iframe automatically receives response messages (`ui-action-received`, `ui-action-response`, `ui-action-error`). See [Protocol Details](../protocol-details.md#asynchronous-communication-with-message-ids) for examples.
+  **Asynchronous Communication**: When actions include a `messageId`, the iframe automatically receives response messages (`ui-message-received`, `ui-message-response`). See [Protocol Details](../protocol-details.md#asynchronous-communication-with-message-ids) for examples.
 - **`supportedContentTypes`**: Optional array to restrict which content types are allowed (`['rawHtml', 'externalUrl', 'remoteDom']`)
 - **`htmlProps`**: Optional props for the `<HTMLResourceRenderer>`
   - **`style`**: Optional custom styles for iframe-based resources
