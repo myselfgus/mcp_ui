@@ -9,6 +9,7 @@ export type HTMLResourceRendererProps = {
   style?: React.CSSProperties;
   proxy?: string;
   iframeRenderData?: Record<string, unknown>;
+  autoResizeIframe?: boolean | { width?: boolean; height?: boolean };
   iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'style'> & {
     ref?: React.RefObject<HTMLIFrameElement>;
   };
@@ -18,6 +19,8 @@ const InternalMessageType = {
   UI_ACTION_RECEIVED: 'ui-action-received',
   UI_ACTION_RESPONSE: 'ui-action-response',
   UI_ACTION_ERROR: 'ui-action-error',
+
+  UI_SIZE_CHANGE: 'ui-size-change',
 
   UI_LIFECYCLE_IFRAME_READY: 'ui-lifecycle-iframe-ready',
   UI_LIFECYCLE_IFRAME_RENDER_DATA: 'ui-lifecycle-iframe-render-data',
@@ -33,6 +36,7 @@ export const HTMLResourceRenderer = ({
   style,
   proxy,
   iframeRenderData,
+  autoResizeIframe,
   iframeProps,
 }: HTMLResourceRendererProps) => {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -88,6 +92,24 @@ export const HTMLResourceRenderer = ({
               renderData: iframeRenderData,
             },
           );
+          return;
+        }
+
+        if (data?.type === InternalMessageType.UI_SIZE_CHANGE) {
+          const { width, height } = data.payload as { width?: number; height?: number };
+          if (autoResizeIframe && iframeRef.current) {
+            const shouldAdjustHeight =
+              (typeof autoResizeIframe === 'boolean' || autoResizeIframe.height) && height;
+            const shouldAdjustWidth =
+              (typeof autoResizeIframe === 'boolean' || autoResizeIframe.width) && width;
+
+            if (shouldAdjustHeight) {
+              iframeRef.current.style.height = `${height}px`;
+            }
+            if (shouldAdjustWidth) {
+              iframeRef.current.style.width = `${width}px`;
+            }
+          }
           return;
         }
 
