@@ -17,7 +17,7 @@ function normalizeJsonProp(prop: unknown): Record<string, unknown> | undefined {
       try {
         return JSON.parse(prop);
       } catch (e) {
-        console.error(`Failed to parse JSON prop:`, prop);
+        console.error('Failed to parse JSON prop:', { prop, error: e });
         return undefined;
       }
     }
@@ -50,14 +50,14 @@ export const UIResourceRendererWCWrapper: FC<UIResourceRendererWCProps> = (props
     }, []);
 
     if (!resource) {
-        return <p className="text-red-500">Resource not provided.</p>;
+        return <p style={{ color: 'red' }}>Resource not provided.</p>;
     }
     
     return (
         <div ref={ref}>
             <UIResourceRenderer
                 resource={resource as Resource}
-                supportedContentTypes={supportedContentTypes as UIResourceRendererProps['supportedContentTypes']}
+                supportedContentTypes={supportedContentTypes as unknown as UIResourceRendererProps['supportedContentTypes']}
                 htmlProps={htmlProps}
                 remoteDomProps={remoteDomProps}
                 onUIAction={onUIActionCallback}
