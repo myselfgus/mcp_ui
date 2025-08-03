@@ -16,9 +16,8 @@ export type HTMLResourceRendererProps = {
 };
 
 const InternalMessageType = {
-  UI_ACTION_RECEIVED: 'ui-action-received',
-  UI_ACTION_RESPONSE: 'ui-action-response',
-  UI_ACTION_ERROR: 'ui-action-error',
+  UI_MESSAGE_RECEIVED: 'ui-message-received',
+  UI_MESSAGE_RESPONSE: 'ui-message-response',
 
   UI_SIZE_CHANGE: 'ui-size-change',
 
@@ -118,19 +117,19 @@ export const HTMLResourceRenderer = ({
           return;
         }
 
-        // return the "ui-action-received" message only if the onUIAction callback is provided
+        // return the "ui-message-received" message only if the onUIAction callback is provided
         // otherwise we cannot know that the message was received by the client
         if (onUIAction) {
           const messageId = uiActionResult.messageId;
-          postToFrame(InternalMessageType.UI_ACTION_RECEIVED, source, origin, messageId);
+          postToFrame(InternalMessageType.UI_MESSAGE_RECEIVED, source, origin, messageId);
           try {
             const response = await onUIAction(uiActionResult);
-            postToFrame(InternalMessageType.UI_ACTION_RESPONSE, source, origin, messageId, {
+            postToFrame(InternalMessageType.UI_MESSAGE_RESPONSE, source, origin, messageId, {
               response,
             });
           } catch (err) {
             console.error('Error handling UI action result in HTMLResourceRenderer:', err);
-            postToFrame(InternalMessageType.UI_ACTION_ERROR, source, origin, messageId, {
+            postToFrame(InternalMessageType.UI_MESSAGE_RESPONSE, source, origin, messageId, {
               error: err,
             });
           }

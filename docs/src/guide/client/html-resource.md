@@ -32,9 +32,8 @@ The component accepts the following props:
   If you don't provide a callback for a specific type, the default handler will be used.
   
   **Asynchronous Response Handling**: When a message includes a `messageId` field, the iframe will automatically receive response messages:
-  - `ui-action-received`: Sent immediately when the message is received
-  - `ui-action-response`: Sent when your callback resolves successfully  
-  - `ui-action-error`: Sent if your callback throws an error
+  - `ui-message-received`: Sent immediately when the message is received
+  - `ui-message-response`: Sent when your callback resolves successfully or throws an error
   
   See [Protocol Details](../protocol-details.md#asynchronous-communication-with-message-ids) for complete examples.
 - **`style`**: (Optional) Custom styles for the iframe.
