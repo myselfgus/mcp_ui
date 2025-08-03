@@ -1,7 +1,7 @@
 import r2wc from '@r2wc/react-to-web-component';
 import { UIResourceRenderer, type UIResourceRendererProps } from './UIResourceRenderer';
 import { FC, useCallback, useRef } from 'react';
-import { UIActionResult, ResourceContentType } from '../types';
+import { UIActionResult } from '../types';
 import { Resource } from '@modelcontextprotocol/sdk/types.js';
 
 
