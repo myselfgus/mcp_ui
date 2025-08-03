@@ -56,8 +56,8 @@ export const UIResourceRendererWCWrapper: FC<UIResourceRendererWCProps> = (props
     return (
         <div ref={ref}>
             <UIResourceRenderer
-                resource={resource}
-                supportedContentTypes={supportedContentTypes}
+                resource={resource as Resource}
+                supportedContentTypes={supportedContentTypes as UIResourceRendererProps['supportedContentTypes']}
                 htmlProps={htmlProps}
                 remoteDomProps={remoteDomProps}
                 onUIAction={onUIActionCallback}
