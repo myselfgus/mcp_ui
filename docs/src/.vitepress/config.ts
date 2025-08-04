@@ -97,6 +97,7 @@ export default defineConfig({
             { text: 'Introduction', link: '/guide/introduction' },
             { text: 'Installation', link: '/guide/getting-started' },
             { text: 'Core Concepts', link: '/guide/protocol-details' },
+            { text: 'Embeddable UI', link: '/guide/embeddable-ui' },
           ],
         },
         {
