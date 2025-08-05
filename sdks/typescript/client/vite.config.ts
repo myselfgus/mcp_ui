@@ -13,6 +13,7 @@ export default defineConfig({
     }) as any,
   ],
   build: {
+    emptyOutDir: false,
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'McpUiClient',

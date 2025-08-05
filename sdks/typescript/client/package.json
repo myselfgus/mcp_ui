@@ -41,9 +41,10 @@
   },
   "scripts": {
     "prepublishOnly": "pnpm run build",
-    "build": "pnpm run bundle:iframe && tsc && vite build && pnpm run build:wc",
+    "build": "pnpm run clean && pnpm run bundle:iframe && tsc && vite build && pnpm run build:wc",
     "build:wc": "vite build --config vite.config.wc.ts",
     "bundle:iframe": "node scripts/bundle-iframe.js",
+    "clean": "rm -rf dist",
     "dev": "pnpm run bundle:iframe && vite",
     "test": "vitest run",
     "test:watch": "vitest watch",
