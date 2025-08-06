@@ -143,7 +143,15 @@ export default defineConfig({
                 {
                   text: 'Web Component Usage & Examples',
                   link: '/guide/client/wc-usage-examples',
-                }
+                },
+                {
+                  text: 'HTMLResourceRenderer',
+                  link: '/guide/client/html-resource',
+                },
+                {
+                  text: 'RemoteDOMResourceRenderer',
+                  link: '/guide/client/remote-dom-resource',
+                },
               ],
             },
             {
