@@ -28,6 +28,11 @@
   --vp-shadow-3: 0 12px 32px rgba(0, 0, 0, 0.1);
   --vp-shadow-4: 0 14px 44px rgba(0, 0, 0, 0.12);
   --vp-shadow-5: 0 18px 56px rgba(0, 0, 0, 0.16);
+
+  /* Custom sidebar spacing */
+  --vp-sidebar-width: 310px;
+  --active-item-left-padding: 8px;
+  --items-left-padding: 18px;
 }
 
 /* Dark mode adjustments */
@@ -256,15 +261,26 @@ div[class*='language-'] code {
   border-right: 1px solid var(--vp-c-divider);
 }
 
+
+.VPSidebarItem[class*="level-"]:not(.level-0) .items {
+  padding-left: var(--items-left-padding) !important;
+}
+
 .VPSidebarItem.level-0 > .item > .link {
   font-weight: 600;
   color: var(--vp-c-text-1);
+}
+
+.VPSidebarItem.is-active > .item > .indicator {
+  left: calc(calc(var(--items-left-padding) * -1) - 1px);
 }
 
 .VPSidebarItem.is-active > .item > .link {
   background: var(--vp-c-brand-soft);
   color: var(--vp-c-brand-1);
   border-radius: 6px;
+  padding-left: var(--active-item-left-padding);
+  margin-left: calc(var(--active-item-left-padding) * -1);
 }
 
 /* Enhanced content area */
