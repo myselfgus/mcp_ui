@@ -196,7 +196,7 @@ if (urlParams.get('waitForRenderData') === 'true') {
       } else {
         customRenderData = event.data.payload.renderData;
         // Now you can render the UI with the received data
-        renderUI(renderData);
+        renderUI(customRenderData);
       }
     }
   });
