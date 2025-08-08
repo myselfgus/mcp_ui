@@ -43,8 +43,8 @@ Before you start working on MCP-UI, make sure you have the following installed:
 1. Clone your forked repository:
 
    ```bash
-   git clone https://github.com/your-username/git-mcp.git
-   cd git-mcp
+   git clone https://github.com/your-username/mcp-ui.git
+   cd mcp-ui
    ```
 
 2. Install dependencies:
@@ -129,7 +129,7 @@ We welcome ideas for improvements and new features. To suggest an enhancement, o
 3. Test your changes and ensure that they don't introduce new issues or break existing functionality.
 4. Commit your changes, following the [commit message guidelines](#commit-messages).
 5. Push your branch to your fork on GitHub.
-6. Open a new pull request against the `main` branch of the Wolverine repository. Include a clear and concise description of your changes, referencing any related issues.
+6. Open a new pull request against the `main` branch of the `mcp-ui` repository. Include a clear and concise description of your changes, referencing any related issues.
 
 ## Style Guidelines
 
