@@ -72,6 +72,7 @@ const AppWithRemoteDOM: React.FC = () => {
     </div>
   );
 };
+```
 
 ## Rendering HTML Resources
 
