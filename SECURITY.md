@@ -1,6 +1,6 @@
 # Security Policy
 
-MCP-UI is committed to maintain the highest security standards, and actively works with web security experts to improve the spec and implementations. We welcome disclosures, suggestions, and feedback that can improve it.
+MCP-UI is committed to maintaining the highest security standards, and actively works with web security experts to improve the spec and implementations. We welcome disclosures, suggestions, and feedback that can improve it.
 
 ## Disclosing an Issue
 
