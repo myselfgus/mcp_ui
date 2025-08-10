@@ -4,4 +4,4 @@ MCP-UI is committed to maintaining the highest security standards, and actively 
 
 ## Disclosing an Issue
 
-Please report any issues using this private [form](https://forms.gle/6WbAJU7m2LSxfY6K6). All disclosure will be handled as soon as possible.
+Please report any issues using this private [form](https://forms.gle/6WbAJU7m2LSxfY6K6). All disclosures will be handled as soon as possible.
