@@ -91,7 +91,7 @@ describe('HTMLResource component', () => {
     expect(iframe.srcdoc).toContain(html);
   });
 
-  it('sets blob HTML src without preferSrcDocOverBlob', () => {
+  it('sets blob HTML src without useSrcDoc', () => {
     const originalCreateObjectURL = window.URL.createObjectURL;
     window.URL.createObjectURL = (blob: Blob) => {
       return `blob:${blob.size}`;
@@ -112,7 +112,7 @@ describe('HTMLResource component', () => {
     expect(iframe.src).toContain(`blob:${new Blob([html]).size}`);
   })
 
-  it('respects preferSrcDocOverBlob', () => {
+  it('respects useSrcDoc', () => {
     const originalCreateObjectURL = window.URL.createObjectURL;
     window.URL.createObjectURL = (blob: Blob) => {
       return `blob:${blob.size}`;
@@ -126,7 +126,7 @@ describe('HTMLResource component', () => {
         blob: encodedHtml,
         },
         onUIAction: mockOnUIAction,
-        preferSrcDocOverBlob: true,
+        useSrcDoc: true,
     };
     render(<HTMLResourceRenderer {...props} />);
     window.URL.createObjectURL = originalCreateObjectURL;

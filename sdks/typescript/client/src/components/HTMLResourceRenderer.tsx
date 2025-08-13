@@ -10,7 +10,7 @@ export type HTMLResourceRendererProps = {
   proxy?: string;
   iframeRenderData?: Record<string, unknown>;
   autoResizeIframe?: boolean | { width?: boolean; height?: boolean };
-  preferSrcDocOverBlob?: boolean;
+  useSrcDoc?: boolean;
   iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'style'> & {
     ref?: React.RefObject<HTMLIFrameElement>;
   };
@@ -37,7 +37,7 @@ export const HTMLResourceRenderer = ({
   proxy,
   iframeRenderData,
   autoResizeIframe,
-  preferSrcDocOverBlob,
+  useSrcDoc,
   iframeProps,
 }: HTMLResourceRendererProps) => {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -163,7 +163,7 @@ export const HTMLResourceRenderer = ({
     } = {
       srcDoc: htmlString,
     }
-    if (!preferSrcDocOverBlob && typeof URL.createObjectURL === 'function') {
+    if (!useSrcDoc && typeof URL.createObjectURL === 'function') {
       const blob = new Blob([htmlString], { type: 'text/html' });
       const blobUrl = URL.createObjectURL(blob);
       iframeSrcBlobUrl.current = blobUrl;
