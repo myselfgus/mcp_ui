@@ -14,6 +14,7 @@ export interface HTMLResourceRendererProps {
   proxy?: string;
   iframeRenderData?: Record<string, unknown>;
   autoResizeIframe?: boolean | { width?: boolean; height?: boolean };
+  preferSrcDocOverBlob?: boolean;
   iframeProps?: Omit<React.HTMLAttributes<HTMLIFrameElement>, 'src' | 'srcDoc' | 'ref' | 'style'>;
 }
 ```
@@ -40,6 +41,7 @@ The component accepts the following props:
 - **`proxy`**: (Optional) A URL to a proxy script. This is useful for hosts with a strict Content Security Policy (CSP). When provided, external URLs will be rendered in a nested iframe hosted at this URL. For example, if `proxy` is `https://my-proxy.com/`, the final URL will be `https://my-proxy.com/?url=<encoded_original_url>`. For your convenience, mcp-ui hosts a proxy script at `https://proxy.mcpui.dev`, which you can use as a the prop value without any setup (see `examples/external-url-demo`).
 - **`iframeProps`**: (Optional) Custom props for the iframe.
 - **`autoResizeIframe`**: (Optional) When enabled, the iframe will automatically resize based on messages from the iframe's content. This prop can be a boolean (to enable both width and height resizing) or an object (`{width?: boolean, height?: boolean}`) to control dimensions independently.
+- **`preferSrcDocOverBlob`**: (Optional) Defaults to `false`. When `false` (default), HTML content is rendered using a blob URL set as the iframe's `src` attribute. When `true`, HTML content is rendered using the `srcDoc` attribute with the raw HTML string. Setting this to `true` can be useful in environments with strict Content Security Policies that block blob URLs.
 
 ## How It Works
 
