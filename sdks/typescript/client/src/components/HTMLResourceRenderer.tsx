@@ -42,6 +42,7 @@ export const HTMLResourceRenderer = ({
 }: HTMLResourceRendererProps) => {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   useImperativeHandle(iframeProps?.ref, () => iframeRef.current as HTMLIFrameElement);
+  const iframeSrcBlobUrl = useRef<string | null>(null);
 
   const { error, iframeSrc, iframeRenderMode, htmlString } = useMemo(
     () => processHTMLResource(resource, proxy),
@@ -71,6 +72,10 @@ export const HTMLResourceRenderer = ({
             renderData: iframeRenderData,
           },
         );
+      }
+      if (iframeSrcBlobUrl.current && typeof window?.URL?.revokeObjectURL === 'function') {
+        window.URL.revokeObjectURL(iframeSrcBlobUrl.current);
+        iframeSrcBlobUrl.current = null;
       }
       iframeProps?.onLoad?.(event);
     },
@@ -160,8 +165,10 @@ export const HTMLResourceRenderer = ({
     }
     if (!preferSrcDocOverBlob && typeof URL.createObjectURL === 'function') {
       const blob = new Blob([htmlString], { type: 'text/html' });
+      const blobUrl = URL.createObjectURL(blob);
+      iframeSrcBlobUrl.current = blobUrl;
       iframeSrcProp = {
-        src: URL.createObjectURL(blob),
+        src: blobUrl,
       };
     }
     return (
