@@ -304,7 +304,7 @@ if (urlParams.get("waitForRenderData") === "true") {
 
 ## Asynchronous Data Requests with Message IDs
 
-Actions initiated from the iframe are handled by the host asynchronously (e.g., data requests, tool calls, etc.). It's useful for the iframe to get feedback on the status of the request and its result. This is achieved using a `messageId` to track the request through its lifecycle. Example use cases: fetching additional information, showing a progress bar in the iframe, signal success of failure, etc.
+Actions initiated from the iframe are handled by the host asynchronously (e.g., data requests, tool calls, etc.). It's useful for the iframe to get feedback on the status of the request and its result. This is achieved using a `messageId` to track the request through its lifecycle. Example use cases include fetching additional information, displaying a progress bar in the iframe, signaling success or failure, and more.
 
 The primary message types are:
 - `ui-request-data`: Sent from the iframe to the host to request some data or action.
