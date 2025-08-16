@@ -232,7 +232,7 @@ export default App;
 
 ## Handling Asynchronous Actions with Message IDs
 
-When an action from the iframe requires asynchronous processing on the host, the `messageId` property can be used to track the action's lifecycle and result. This allows the iframe to show fetch data from the host, present feedback to the user (e.g., loading indicators), success messages, etc.
+When an action from the iframe requires asynchronous processing on the host, the `messageId` property can be used to track the action's lifecycle and result. This allows the iframe to fetch data from the host, present feedback to the user (e.g., loading indicators), success messages, etc.
 
 ### Communication Flow
 
