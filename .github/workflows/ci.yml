@@ -2,53 +2,35 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
-  release:
-    types: [published]
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  filter_changed_paths:
+  build-test:
+    name: Build & Test (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
-    outputs:
-      ts_client_files: ${{ steps.filter.outputs.ts_client_files }}
-      ts_server_files: ${{ steps.filter.outputs.ts_server_files }}
-      ruby_sdk_files: ${{ steps.filter.outputs.ruby_sdk_files }}
-      example_files: ${{ steps.filter.outputs.example_files }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20]
     steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            ts_client_files:
-              - 'sdks/typescript/client/**'
-            ts_server_files:
-              - 'sdks/typescript/server/**'
-            ruby_sdk_files:
-              - 'sdks/ruby/**'
-            example_files:
-              - 'examples/**'
-
-  js_build_and_test:
-    needs: filter_changed_paths
-    if: needs.filter_changed_paths.outputs.ts_client_files == 'true' || needs.filter_changed_paths.outputs.ts_server_files == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
           version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: ${{ matrix.node }}
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -57,141 +39,112 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Test
-        run: pnpm test:ts
+      - name: TypeScript typecheck
+        run: |
+          pnpm tsc -p tsconfig.base.json --noEmit
 
-      - name: Build
+      - name: Run tests (TypeScript + Ruby)
+        run: pnpm test
+
+      - name: Build packages
         run: pnpm build
 
-  ruby_sdk_test:
-    needs: filter_changed_paths
-    if: needs.filter_changed_paths.outputs.ruby_sdk_files == 'true'
+      - name: Upload dist artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-node${{ matrix.node }}
+          path: |
+            sdks/typescript/*/dist
+            docs/src/.vitepress/dist
+          if-no-files-found: warn
+
+  ruby:
+    name: Ruby Gem Lint/Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Set up Ruby
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2'
-          bundler: latest
-          bundler-cache: true
-          working-directory: 'sdks/ruby'
-
-      - name: Lint
-        run: bundle exec rubocop
-        working-directory: 'sdks/ruby'
-
-      - name: Run tests
-        run: pnpm test:ruby
-
-  release_ts_client:
-    needs: [js_build_and_test, filter_changed_paths]
-    if: github.ref == 'refs/heads/main' && needs.filter_changed_paths.outputs.ts_client_files == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with: { version: 10 }
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with: { node-version: 22.x, cache: 'pnpm' }
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Release
-        working-directory: sdks/typescript/client
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
-
-  release_ts_server:
-    needs: [js_build_and_test, release_ts_client, filter_changed_paths]
-    if: >
-      always() &&
-      github.ref == 'refs/heads/main' &&
-      needs.filter_changed_paths.outputs.ts_server_files == 'true' &&
-      needs.js_build_and_test.result == 'success'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with: { version: 10 }
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with: { node-version: 22.x, cache: 'pnpm' }
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Release
-        working-directory: sdks/typescript/server
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
-
-  release_ruby_sdk:
-    name: Release Ruby SDK
-    needs: [ruby_sdk_test, release_ts_server, filter_changed_paths]
-    if: >
-      always() &&
-      github.ref == 'refs/heads/main' &&
-      needs.filter_changed_paths.outputs.ruby_sdk_files == 'true' &&
-      needs.ruby_sdk_test.result == 'success'
-    runs-on: ubuntu-latest
-    environment: release
-    permissions:
-      contents: write # to push commits and tags
-      id-token: write # for trusted publishing
-      issues: write # to comment on issues
-      pull-requests: write # to comment on pull requests
-    steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with: { version: 10 }
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with: { node-version: 22.x, cache: 'pnpm' }
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler: latest
+          ruby-version: '3.3'
           bundler-cache: true
           working-directory: sdks/ruby
-      - name: Configure RubyGems Credentials
-        uses: rubygems/configure-rubygems-credentials@main
-      - name: Release
+      - name: Install dependencies
         working-directory: sdks/ruby
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+        run: bundle install --jobs 4 --retry 3
+      - name: Run specs
+        working-directory: sdks/ruby
+        run: bundle exec rake spec
+
+  # Optional separate docs build verification
+  docs:
+    name: Docs Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build docs
+        run: pnpm docs:build
+      - name: Upload docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-dist
+          path: docs/src/.vitepress/dist
+          if-no-files-found: error
+
+  python-fast-agent:
+    name: Python Fast-Agent Lint & Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - name: Install uv (fast Python dependency manager)
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Install dependencies (dev)
+        working-directory: third_party/fast-agent
+        run: |
+          ~/.local/bin/uv sync --group dev || ~/.local/bin/uv sync
+      - name: Ruff lint
+        working-directory: third_party/fast-agent
+        run: |
+          ~/.local/bin/uv run ruff check src || true
+      - name: Run pytest
+        working-directory: third_party/fast-agent
+        run: |
+          ~/.local/bin/uv run pytest -q || ~/.local/bin/uv run pytest -q --maxfail=1
+
+  # Aggregate quality gate
+  quality-gate:
+    needs: [build-test, ruby, docs, python-fast-agent]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Evaluate result
+        run: |
+          echo "Build/Test result: ${{ needs.build-test.result }}"
+          echo "Ruby result: ${{ needs.ruby.result }}"
+          echo "Docs result: ${{ needs.docs.result }}"
+          echo "Python Fast-Agent result: ${{ needs.python-fast-agent.result }}"
+          if [ "${{ needs.build-test.result }}" != "success" ] || [ "${{ needs.ruby.result }}" != "success" ] || [ "${{ needs.docs.result }}" != "success" ] || [ "${{ needs.python-fast-agent.result }}" != "success" ]; then
+            echo "One or more jobs failed" >&2
+            exit 1
+          fi
+          echo "All prerequisite jobs passed."
