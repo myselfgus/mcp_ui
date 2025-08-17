@@ -24,21 +24,29 @@ This document captures the proposed unified architecture combining:
 | Storage | Large artifacts, logs, model caches | GCS bucket (later) |
 | Deployment | Container images & runtime | Cloud Run (multi-service) |
 
-## Data Model (Draft)
+## Data Model (Implemented)
 ```
-Session(id, created_at, user_id, title)
-Message(id, session_id, role, content_json, created_at, tokens_in, tokens_out, cost_estimate)
+# Chat & Sessions
+Session(id, title, created_at, last_activity)
+Message(id, session_id, role, content_json, created_at)
 ToolExecution(id, message_id, tool_name, input_json, output_json, status, started_at, finished_at)
-FileArtifact(id, session_id, path, sha256, created_at, source)  # for tracked outputs
-EmbeddingChunk(id, repo_id, file_path, start, end, vector, meta_json)
+
+# Memory Four Axes (Implemented)
+OntologyItem(id, key, title, body, created_at, updated_at, tags)
+ParsingItem(id, source, content, created_at)  
+VectorChunk(id, source, content, embedding, dim, created_at)
+GraphEdge(id, src_id, dst_id, relation, created_at)
+Metadata(id, key, value_json, updated_at)
 ```
 
-## Tool Invocation Flow
-1. User message received.
-2. Planner selects tools (chain-of-thought or static mapping) -> plan graph.
-3. Executor runs each tool sequentially or in parallel (bounded), collecting results.
-4. Aggregated tool context appended to assistant prompt & final LLM call produced.
-5. UI receives streaming tokens + structured side-channel events (tool_start, tool_end, patch, notify, ui_resource).
+## Tool Invocation Flow (Updated)
+1. User message received with optional `include_memory=true`.
+2. **Memory retrieval**: If enabled, search relevant context across 4 axes (ontology, parsing, vectors, graphs).
+3. **Context augmentation**: Prepend memory results to system prompt for enhanced context.
+4. Planner selects tools (chain-of-thought or static mapping) -> plan graph.
+5. Executor runs each tool sequentially or in parallel (bounded), collecting results.
+6. Aggregated tool context appended to assistant prompt & final LLM call produced.
+7. UI receives streaming tokens + structured side-channel events (tool_start, tool_end, patch, notify, ui_resource).
 
 ## Security & Guardrails
 - Path allowlist for FS operations.
@@ -47,18 +55,47 @@ EmbeddingChunk(id, repo_id, file_path, start, end, vector, meta_json)
 - Rate limiting per user+LLM provider (sliding window) at API gateway.
 - Tool execution timeouts + max output size caps.
 
-## Speech Subsystem
-Abstraction interface (pseudo-code TS):
-```ts
-interface SpeechProvider {
-  transcribe(input: ReadableStream | Buffer, opts: { language?: string }): Promise<{ text: string; words?: WordTiming[] }>;
-  synthesize(text: string, opts: { voice?: string; model?: string; format?: 'mp3'|'wav'|'ogg' }): Promise<Buffer>;
-}
+## Speech Subsystem (Implemented)
+Provider interface (Python):
+```python
+class SpeechProvider:
+  async def transcribe(audio_bytes: bytes, language?: str) -> Dict[str, Any]
+  async def synthesize(text: str, voice?: str, format?: str) -> bytes
 ```
-Implementations:
-- OpenAI Whisper / Realtime (transcription) + TTS voices
-- Google Cloud Speech-to-Text + Cloud Text-to-Speech
-Configuration selects provider per session.
+**Implemented providers:**
+- ✅ OpenAI: Whisper (transcription) + TTS API (synthesis)
+- ✅ Google Cloud: Stub implementation (placeholder for future integration)
+
+**API endpoints:**
+- `POST /speech/transcribe` (multipart file or base64 JSON)
+- `POST /speech/tts` (JSON with text, voice, format options)
+- `GET /speech/providers` (list available providers)
+
+**Tools:** `speech.transcribe`, `speech.synthesize` integrated with chat system.
+
+## Memory/Persistence Layer (Implemented)
+**Four-axis architecture:**
+- **Ontology**: Structured knowledge items with key, title, body, tags
+- **Parsing**: Raw parsed content with source attribution  
+- **Vectors**: Content chunks with embeddings for semantic search
+- **Graphs**: Entity relationships with typed edges
+
+**Database:** SQLite (default) or PostgreSQL via `DATABASE_URL`
+
+**Vector search:** Naive cosine similarity with lexical fallback when embeddings unavailable
+
+**Embedding providers:**
+- ✅ OpenAI: text-embedding-3-small (default)
+- ✅ Google: Stub implementation (placeholder)
+
+**API endpoints:**
+- `POST /memory/retrieve` (cross-axis search with query, top_k, axes filter)
+- `POST /memory/store` (store content with optional embedding generation)
+- `GET /memory/stats` (database statistics)
+
+**Tools:** `memory.search`, `memory.store` integrated with chat system
+
+**Chat integration:** `include_memory=true` automatically augments system prompt with relevant context
 
 ## MCP Integration
 - Orchestrator exposes internal tools as MCP tools.
@@ -75,9 +112,19 @@ Configuration selects provider per session.
 - Structured JSON logs with trace_id for correlation.
 - Metrics: tool latency, failure ratios, token usage, cost per session.
 
-## Roadmap (Condensed)
-Wave 1 (MVP): Chat UI, provider abstraction, FS/Git/Terminal tools, basic planner, Cloud Run deploy tool (skeleton), STT(TTS) stub.
-Wave 2: Retrieval + embeddings, PR automation, speech full, cost accounting, vector store.
+## Roadmap (Updated)
+**Wave 1 (MVP) ✅ COMPLETED:**
+- ✅ Chat UI, provider abstraction, FS/Git/Terminal tools
+- ✅ Speech subsystem (OpenAI Whisper + TTS, Google stub)
+- ✅ Memory/persistence layer (4-axis with naive vector search)
+- ✅ Basic planner with memory context integration
+
+**Wave 2 (In Progress):**
+- [ ] Advanced vector similarity with pgvector
+- [ ] PR automation tools
+- [ ] Real Google Cloud Speech integration  
+- [ ] Cost accounting and token tracking
+- [ ] Enhanced retrieval algorithms
 Wave 3: Multi-agent orchestration, advanced UI diff/patch viewer, desktop wrapper.
 Wave 4: Plugin store, local model integration, advanced sandbox isolation.
 
