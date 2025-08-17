@@ -300,7 +300,7 @@ importers:
         specifier: ^3.58.1
         version: 3.58.1
       '@types/leaflet':
-        specifier: ^1.9.17
+        specifier: ^1.9.20
         version: 1.9.20
       '@types/node':
         specifier: ^20
