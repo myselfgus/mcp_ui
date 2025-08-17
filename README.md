@@ -331,6 +331,38 @@ Contributions, ideas, and bug reports are welcome! See the [contribution guideli
 
 Apache License 2.0 © [The MCP-UI Authors](LICENSE)
 
+## ☁️ Deploy em Cloud Run (Fast-Agent Integrado)
+
+Este repositório inclui o código do **fast-agent** em `third_party/fast-agent` com um `Dockerfile` preparado para deploy no Cloud Run. O container expõe o servidor MCP (HTTP/SSE) na porta `8000`.
+
+### Variáveis de Ambiente Principais
+Configure como *secrets* no GitHub para o workflow `deploy-cloudrun.yml`:
+- `GCP_PROJECT_ID` – ID do projeto GCP
+- `GCP_SA_KEY` – JSON da service account com permissões `Cloud Run Admin`, `Artifact Registry Writer` e `Service Account User`
+- `GEMINI_API_KEY` – Chave para modelos Gemini (opcional se não usar)
+- `GOOGLE_CLOUD_PROJECT` – (pode ser igual a `GCP_PROJECT_ID`)
+- `GOOGLE_CLOUD_LOCATION` – Região, ex: `us-east1`
+
+### Build Local (Opcional)
+```bash
+cd third_party/fast-agent
+docker build -t fast-agent:local .
+docker run -p 8000:8000 fast-agent:local
+```
+
+### Deploy Manual via GitHub Actions
+1. Vá em *Actions* > *Deploy Cloud Run (fast-agent)* > *Run workflow*.
+2. (Opcional) Informe `image_tag`.
+3. Acompanhe logs; ao final mostrará a URL do serviço.
+
+### Produção por Tag
+Crie uma tag no formato `fast-agent-vX.Y.Z` para disparar build + deploy automático.
+
+### UI Resources de Exemplo
+O adaptador `mcp_agent/ui_adapter.py` inclui `example_status_component()` que produz um `UIResource` HTML simples com botão que dispara evento `notify`.
+
+> Para expor esse recurso em uma resposta MCP, retorne o dicionário do adaptador em um tool/agent do fast-agent.
+
 ## Disclaimer
 
 This project is provided "as is", without warranty of any kind. The `mcp-ui` authors and contributors shall not be held liable for any damages, losses, or issues arising from the use of this software. Use at your own risk.
