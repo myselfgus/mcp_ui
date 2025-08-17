@@ -1,0 +1,14 @@
+[submodule "third_party/ai2go"]
+	path = third_party/ai2go
+	url = https://github.com/myselfgus/ai2go.git
+	branch = main
+
+[submodule "third_party/fast-agent"]
+	path = third_party/fast-agent
+	url = https://github.com/evalstate/fast-agent.git
+	branch = main
+
+[submodule "third_party/tools"]
+	path = third_party/tools
+	url = https://github.com/myselfgus/tools.git
+	branch = main

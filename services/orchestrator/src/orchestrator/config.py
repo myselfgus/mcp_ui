@@ -9,7 +9,25 @@ class Settings(BaseSettings):
     allow_fs_base: str = Field(default="/workspaces", alias="ALLOW_FS_BASE")
     enable_terminal: bool = Field(default=True, alias="ENABLE_TERMINAL")
     enable_git: bool = Field(default=True, alias="ENABLE_GIT")
-    allowed_tools: List[str] = Field(default_factory=lambda: ["fs.read", "fs.write", "git.status", "terminal.exec"], alias="ALLOWED_TOOLS")
+    enable_memory: bool = Field(default=True, alias="ENABLE_MEMORY")
+    enable_speech: bool = Field(default=True, alias="ENABLE_SPEECH")
+    database_url: str | None = Field(default=None, alias="DATABASE_URL")
+    speech_model: str = Field(default="whisper-1", alias="SPEECH_MODEL")
+    tts_voice: str = Field(default="alloy", alias="TTS_VOICE")
+    embedding_model: str = Field(default="text-embedding-3-small", alias="EMBEDDING_MODEL")
+    allowed_tools: List[str] = Field(
+        default_factory=lambda: [
+            "fs.read",
+            "fs.write",
+            "fs.apply_patch",
+            "git.status",
+            "terminal.exec",
+            "speech.transcribe",
+            "speech.synthesize",
+            "memory.search",
+        ],
+        alias="ALLOWED_TOOLS",
+    )
 
     class Config:
         case_sensitive = False

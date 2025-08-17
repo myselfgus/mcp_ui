@@ -1,0 +1,65 @@
+name: Cleanup Merged Branches
+
+on:
+  schedule:
+    - cron: '0 3 * * 0'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (true/false)'
+        required: false
+        default: 'true'
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Prune remotes
+        run: git fetch --prune
+      - name: Find merged branches >30 days old
+        id: find
+        run: |
+          set -euo pipefail
+          DRY_RUN="${{ github.event.inputs.dry_run || 'true' }}"
+          echo "Dry run: $DRY_RUN"
+          protected_prefixes="main master release prod dependabot" # never delete
+          cutoff=$(date -u -d '30 days ago' +%s)
+          to_delete=()
+          while read -r ref; do
+            b=${ref#origin/}
+            skip=0
+            for p in $protected_prefixes; do
+              if [[ $b == $p* ]]; then skip=1; break; fi
+            done
+            [[ $skip -eq 1 ]] && continue
+            if [[ $b == 'HEAD' || $b == 'main' ]]; then continue; fi
+            ts=$(git log -1 --format=%ct refs/remotes/origin/$b 2>/dev/null || echo 0)
+            if [[ $ts -lt $cutoff ]]; then
+              if git branch --remotes --merged origin/main | grep -q "origin/$b"; then
+                to_delete+=("$b")
+              fi
+            fi
+          done < <(git branch -r | grep -v '->')
+          printf '%s\n' "${to_delete[@]}" > merged_old.txt
+          echo "branches=$(paste -sd, merged_old.txt)" >> $GITHUB_OUTPUT
+          echo "Candidates:"; cat merged_old.txt || true
+          if [[ $DRY_RUN == 'false' ]]; then
+            while read -r b; do
+              [[ -z $b ]] && continue
+              echo "Deleting origin/$b"
+              git push origin --delete "$b" || echo "Failed $b"
+            done < merged_old.txt
+          else
+            echo "Dry run enabled; not deleting."
+          fi
+      - name: Summary
+        run: |
+          echo "Merged branches older than 30 days:" >> $GITHUB_STEP_SUMMARY
+          cat merged_old.txt >> $GITHUB_STEP_SUMMARY || echo "(none)" >> $GITHUB_STEP_SUMMARY

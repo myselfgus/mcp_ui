@@ -6,6 +6,8 @@ Implements chat streaming, provider abstraction (OpenAI + Gemini stub), tool reg
 - `POST /chat/stream` (SSE): body `{message: string, session_id?: string, model?: string, provider?: string, tool_calls?: [{name, params}]}`
 - `GET /tools` list registered tools.
 - `GET /healthz` health & allowed tools.
+- `POST /speech/transcribe` body `{audio_base64, provider?, language?}` -> `{text, provider}`
+- `POST /speech/tts` body `{text, provider?, voice?, format?}` -> `{audio_base64, voice, format}`
 
 ## Streaming Event Types
 ```json
@@ -45,6 +47,8 @@ uv run pytest -q
 - fs.apply_patch
 - git.status
 - terminal.exec (whitelist)
+- speech.transcribe
+- speech.synthesize
 
 ## Planned Tools / Features
 - speech.transcribe / speech.synthesize
@@ -52,6 +56,7 @@ uv run pytest -q
 - git.create_pr
 - deploy.cloud_run
 - rate limiting & auth
+ - memory.search (after persistence layer)
 
 ## Notes
-This service is an MVP foundation. Add persistence & speech in next iteration.
+This service is an evolving MVP. Persistence & memory (retrieval / embeddings / graphs) coming next.
