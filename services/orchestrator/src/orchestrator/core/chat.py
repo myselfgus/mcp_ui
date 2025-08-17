@@ -13,7 +13,7 @@ async def run_tools(tool_calls: List[Dict[str, Any]]):
         params = call.get("params", {})
         tool = tool_registry.get(name)
         result = await tool.run(**params)
-    logger.info("tool_run", extra={"tool": name})
+        logger.info("tool_run", extra={"tool": name})
         yield {"type": "tool_result", "tool": name, "data": result}
 
 async def chat_stream(messages: List[Dict[str, str]], model: str | None = None, provider: str = "openai", tool_calls: List[Dict[str, Any]] | None = None) -> AsyncIterator[Dict[str, Any]]:
