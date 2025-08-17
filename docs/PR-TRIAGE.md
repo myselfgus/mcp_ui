@@ -20,9 +20,9 @@ Purpose: Provide a clear, incremental plan to reduce 15 open PRs to a clean, upâ
 
 ## Dependabot / Maintenance PRs (Mergeable)
 Batch A (Low risk: GH Actions infra)
-- PR #2 pnpm/action-setup 3 -> 4  Status: [ ]
-- PR #3 actions/checkout 4 -> 5   Status: [ ]
-- PR #4 actions/configure-pages 4 -> 5 Status: [ ]
+- PR #2 pnpm/action-setup 3 -> 4  Status: [x]
+- PR #3 actions/checkout 4 -> 5   Status: [x]
+- PR #4 actions/configure-pages 4 -> 5 Status: [x]
 
 Batch B (Low risk: patch/minor libs)
 - PR #5 isbot patch              Status: [ ]
