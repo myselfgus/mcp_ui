@@ -1,7 +1,3 @@
-[#] Git submodules for third_party external dependencies
-[#] To update: git submodule update --init --recursive
-[#] To add new ones, edit this file then run: git submodule sync --recursive
-
 [submodule "third_party/ai2go"]
 	path = third_party/ai2go
 	url = https://github.com/myselfgus/ai2go.git
